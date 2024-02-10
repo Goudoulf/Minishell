@@ -1,24 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/10 23:04:40 by cassie           ###   ########.fr       */
+/*   Created: 2024/02/10 22:12:26 by cassie            #+#    #+#             */
+/*   Updated: 2024/02/10 23:10:03 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include <minishell.h>
 
-# include "../lib/libft/includes/libft.h"
-# include "../lib/ft_printf/includes/ft_printf.h"
+#define CYELLOW "\001\e[0;31m\002"
+#define RESET   "\001\e[0m\002"
 
-# include <stdio.h>
-# include <stdlib.h>
-# include <readline/readline.h>
-# include <readline/history.h>
+int main(void)
+{
+	char *input;
 
-#endif
+	while(1)
+	{
+		input = readline(CYELLOW "[Minishell]: " RESET);
+		if (!ft_strncmp(input, "exit", 4))
+		{
+			free(input);
+			exit(0);
+		}
+		free(input);
+	}
+}
+

@@ -12,7 +12,7 @@
 
 NAME = minishell
 
-SRCS_FILE =
+SRCS_FILE = main.c
 
 INC = includes
 
@@ -36,7 +36,7 @@ RM = rm -rf
 all: libft ft_printf ${NAME}
 
 ${NAME}: ${OBJS} ${FT_PRINTF} ${LIBFT}
-	${CC} ${OBJS} ${FT_PRINTF} ${LIBFT} -o $(NAME)
+	${CC} ${OBJS} -lreadline ${FT_PRINTF} ${LIBFT} -o $(NAME)
 
 libft: ${LIBFT_DIR}
 	${MAKE} -C ./lib/libft all
