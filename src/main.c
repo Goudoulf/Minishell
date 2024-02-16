@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:12:26 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/14 13:35:51 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/16 15:33:35 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,33 @@
 #define CYELLOW "\001\e[0;31m\002"
 #define RESET   "\001\e[0m\002"
 
-struct sigaction old_action;
-struct sigaction action;
 
-void sigint_handler(int	sig_no)
+void sigint_handler(int	sig)
 {
-	sig_no = 0;
+	(void)sig;
+	write(0, "\n", 1);
+	rl_replace_line("", 0);
+    rl_on_new_line();
+    rl_redisplay();
 }
 
+void sigquit_handler(int sig)
+{
+	(void)sig;
+}
 
 int main(void)
 {
 	char *input;
+	struct sigaction old_action;
+	struct sigaction action;
 
 	while(1)
 	{
-		memset(&action, 0, sizeof(action));
 		action.sa_handler = &sigint_handler;
 		sigaction(SIGINT, &action, &old_action);
+		action.sa_handler = &sigquit_handler;
+		sigaction(SIGQUIT, &action, &old_action);
 		input = readline(CYELLOW "[Minishell]: " RESET);
 		if (input && *input)
 			add_history(input);
@@ -46,4 +55,3 @@ int main(void)
 		free(input);
 	}
 }
-
