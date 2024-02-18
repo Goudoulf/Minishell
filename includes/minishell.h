@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/11 09:56:01 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/18 15:19:53 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,36 @@
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+
+typedef struct s_list
+{
+	char			*string;
+	char			*var;
+	char			*var_content;
+	struct s_list	*next;
+}				t_list;
+
+typedef struct s_data
+{
+	t_list	*env;
+}				t_data;
+
+// core
+void	check_cmd(char *input, t_list **env);
+
+// cmd
+int	ft_echo(char *str, char *arg, t_list **env);
+int	ft_pwd(void);
+
+// init
+
+void	init_all(t_list **env, char **envp);
+
+// list
+
+t_list	*ft_lst_new(char *content);
+void	ft_lstadd_back(t_list **lst, t_list *new);
+void	ft_lst_print(t_list *list);
+void	ft_lstclear(t_list **lst);
 
 #endif

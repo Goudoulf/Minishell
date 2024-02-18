@@ -1,31 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_back_bonus.c                             :+:      :+:    :+:   */
+/*   ft_lst_print.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/17 15:06:00 by cassie            #+#    #+#             */
-/*   Updated: 2023/11/20 10:49:13 by cassie           ###   ########.fr       */
+/*   Created: 2024/02/17 15:14:44 by cassie            #+#    #+#             */
+/*   Updated: 2024/02/18 13:11:25 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
+void	ft_lst_print(t_list *list)
 {
 	t_list	*temp;
 
-	temp = *lst;
-	if (new == NULL)
-		return ;
-	if (*lst == NULL)
+	temp = list;
+	while (temp != NULL)
 	{
-		*lst = new;
-		new->next = NULL;
-		return ;
-	}
-	while (temp->next != NULL)
+		printf("%s\n", temp->string);
+		//printf("var = %s\n", temp->var);
+		//printf("var_content = %s\n", temp->var_content);
 		temp = temp->next;
-	temp->next = new;
+	}
 }

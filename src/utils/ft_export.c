@@ -1,26 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstsize_bonus.c                                 :+:      :+:    :+:   */
+/*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/17 12:59:13 by cassie            #+#    #+#             */
-/*   Updated: 2023/11/22 15:38:51 by cassie           ###   ########.fr       */
+/*   Created: 2024/02/17 08:31:17 by cassie            #+#    #+#             */
+/*   Updated: 2024/02/17 11:34:00 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-int	ft_lstsize(t_list *lst)
+static size_t env_size(char **env)
+{
+	size_t	i;
+
+	i = 0;
+	while (env[i])
+		i++;
+	return (i);
+}
+
+static void	env_print_declare(**tab)
 {
 	int	i;
 
 	i = 0;
-	while (lst != NULL)
-	{
-		i++;
-		lst = lst->next;
-	}
-	return (i);
+	while (tab[i])
+		ft_printf("declare -x %s\n", tab[i++]);
+
+}
+
+static char	**env_add(t_data **data, char *arg)
+{
+	size_t	size;
+
+	size = env_size(data->env);
+}
+
+int	ft_export(t_data **data, char *arg)
+{
+	int	i;
+
+	i = 0;
+	if (!arg)
+		return (envp_print_declare(data->env), 1);
 }

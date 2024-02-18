@@ -1,31 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstclear_bonus.c                                :+:      :+:    :+:   */
+/*   check_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/18 12:44:20 by cassie            #+#    #+#             */
-/*   Updated: 2023/11/22 15:36:00 by cassie           ###   ########.fr       */
+/*   Created: 2024/02/18 15:06:40 by cassie            #+#    #+#             */
+/*   Updated: 2024/02/18 17:58:43 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	ft_lstclear(t_list **lst, void (*del)(void*))
+void	check_cmd(char *input, t_list **env)
 {
-	t_list	*temp;
-	t_list	*next;
-
-	temp = *lst;
-	if (!*lst || !del)
-		return ;
-	while (temp != NULL)
+	if (!ft_strncmp(input, "echo", 4))
+		ft_echo(&input[5], NULL, env);
+	if (!ft_strncmp(input, "pwd", 4))
+		ft_pwd();
+	if (!ft_strncmp(input, "env", 4))
+		ft_lst_print(*env);
+	if (input && !ft_strncmp(input, "exit", 4))
 	{
-		next = temp->next;
-		del(temp->content);
-		free(temp);
-		temp = next;
+		free(input);
+		rl_clear_history();
+		ft_lstclear(env);
+		ft_printf("exit\n");
+		exit(0);
 	}
-	*lst = NULL;
 }

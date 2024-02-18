@@ -1,21 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdelone_bonus.c                               :+:      :+:    :+:   */
+/*   ft_lst_clear.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/17 19:01:53 by cassie            #+#    #+#             */
-/*   Updated: 2023/11/22 15:42:27 by cassie           ###   ########.fr       */
+/*   Created: 2024/02/18 12:12:52 by cassie            #+#    #+#             */
+/*   Updated: 2024/02/18 12:16:28 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	ft_lstdelone(t_list *lst, void (*del)(void*))
+void	ft_lstclear(t_list **lst)
 {
-	if (!lst || !del)
+	t_list	*temp;
+	t_list	*current;
+
+	if (!lst)
 		return ;
-	del(lst->content);
-	free (lst);
+	current = *lst;
+	while (current != NULL)
+	{
+		temp = current->next;
+		free(current->string);
+		free(current->var);
+		free(current->var_content);
+		current = temp;
+	}
+	*lst = NULL;
 }
+
