@@ -19,11 +19,6 @@
 
 // use getenv()
 
-int main(int argc, char **argv, char **envp)
-{
-	char *input;
-	t_list	*env;
-
 void sigint_handler(int	sig)
 {
 	(void)sig;
@@ -36,10 +31,13 @@ void sigint_handler(int	sig)
 void sigquit_handler(int sig)
 {
 	(void)sig;
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
 
-int main(void)
+int main(int argc, char **argv, char **envp)
 {
+	t_list	*env;
 	char *input;
 	struct sigaction old_action;
 	struct sigaction action;
@@ -50,10 +48,10 @@ int main(void)
 	init_all(&env, envp);
 	while(1)
 	{
-		action.sa_handler = &sigint_handler;
-		sigaction(SIGINT, &action, &old_action);
 		action.sa_handler = &sigquit_handler;
 		sigaction(SIGQUIT, &action, &old_action);
+		action.sa_handler = &sigint_handler;
+		sigaction(SIGINT, &action, &old_action);
 		input = readline(CYELLOW "[Minishell]: " RESET);
 		if (input && *input)
 			add_history(input);
