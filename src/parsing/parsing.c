@@ -1,27 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lst_print.c                                     :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/17 15:14:44 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/19 18:47:33 by cassie           ###   ########.fr       */
+/*   Created: 2024/02/19 19:08:44 by cassie            #+#    #+#             */
+/*   Updated: 2024/02/19 19:17:44 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_lst_print(t_list **list)
+void	line_parsing(t_cmd **cmd, char *line)
 {
-	t_list	*temp;
-
-	temp = *list;
-	while (temp != NULL)
-	{
-		printf("%s\n", temp->string);
-		//printf("var = %s\n", temp->var);
-		//printf("var_content = %s\n", temp->var_content);
-		temp = temp->next;
-	}
+	//clean string line : remove unnessary space "" and ''
+	//split line in block at each pipe
+	//check content of each block and put it in linked list
 }

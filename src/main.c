@@ -17,8 +17,6 @@
 #define CYELLOW "\001\e[0;31m\002"
 #define RESET   "\001\e[0m\002"
 
-// use getenv()
-
 void sigint_handler(int	sig)
 {
 	(void)sig;
@@ -38,14 +36,15 @@ void sigquit_handler(int sig)
 int main(int argc, char **argv, char **envp)
 {
 	t_cmd	*cmd;
+	t_list	*env;
 	char	*input;
 	struct sigaction action;
 
-	void(argc);
-	void(argv);
-	data.cmd = NULL;
-	data.env = NULL;
-	init_all(&cmd, envp);
+	(void)argc;
+	(void)argv;
+	env = NULL;
+	cmd = NULL;
+	init_all(&cmd, &env, envp);
 	while(1)
 	{
 		action.sa_handler = &sigquit_handler;
@@ -54,7 +53,10 @@ int main(int argc, char **argv, char **envp)
 		sigaction(SIGINT, &action, NULL);
 		input = readline(CYELLOW "[Minishell]: " RESET);
 		if (input && *input)
+		{
 			add_history(input);
+			line_parsing(&cmd, line);
+		}
 		check_cmd(input, &env);
 		free(input);
 	}
