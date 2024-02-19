@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/18 15:19:53 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/19 15:01:48 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,16 @@ typedef struct s_list
 	struct s_list	*next;
 }				t_list;
 
-typedef struct s_data
+typedef struct s_cmd
 {
-	t_list	*env;
-}				t_data;
+	t_list			**env;
+	char			*line_block;
+	char			**cmd;
+	char			*path;
+	char			**input_file;
+	char			**output_file;
+	struct s_cmd	*next;
+}				t_cmd;
 
 // core
 void	check_cmd(char *input, t_list **env);

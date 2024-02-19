@@ -37,21 +37,21 @@ void sigquit_handler(int sig)
 
 int main(int argc, char **argv, char **envp)
 {
-	t_list	*env;
-	char *input;
-	struct sigaction old_action;
+	t_cmd	*cmd;
+	char	*input;
 	struct sigaction action;
 
-	(void)argc;
-	(void)argv;
-	env = NULL;
-	init_all(&env, envp);
+	void(argc);
+	void(argv);
+	data.cmd = NULL;
+	data.env = NULL;
+	init_all(&cmd, envp);
 	while(1)
 	{
 		action.sa_handler = &sigquit_handler;
-		sigaction(SIGQUIT, &action, &old_action);
+		sigaction(SIGQUIT, &action, NULL);
 		action.sa_handler = &sigint_handler;
-		sigaction(SIGINT, &action, &old_action);
+		sigaction(SIGINT, &action, NULL);
 		input = readline(CYELLOW "[Minishell]: " RESET);
 		if (input && *input)
 			add_history(input);
