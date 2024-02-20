@@ -11,7 +11,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "minishell.h"
 #include <signal.h>
 
 #define CYELLOW "\001\e[0;31m\002"
