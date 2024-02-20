@@ -1,38 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check_cmd.c                                        :+:      :+:    :+:   */
+/*   clean_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/18 15:06:40 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/20 15:28:29 by cassie           ###   ########.fr       */
+/*   Created: 2024/02/20 09:55:53 by cassie            #+#    #+#             */
+/*   Updated: 2024/02/20 15:28:48 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	check_cmd(char *input, t_list **env)
+static int	ft_iswhite_space(int c)
 {
-	if (!input)
-	{
-		rl_clear_history();
-		ft_lstclear(env);
-		ft_printf("exit\n");
-		exit(0);
+	if (c == ' ' || c == '\t' || c == '\n' || c == '\v' ||
+		c == '\f' || c== '\r')
+		return (1);
+	else
+		return (0);
+}
+
+char	*clean_space(char *line)
+{
+	char	*temp;
+	size_t	size_ :while (true) {
 	}
-	if (input && !ft_strncmp(input, "exit", 4))
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	temp = NULL;
+	while (line[i] && ft_iswhite_space(c))
+		i++;
+	while (line[i])
 	{
-		free(input);
-		rl_clear_history();
-		ft_lstclear(env);
-		ft_printf("exit\n");
-		exit(0);
+		
 	}
-	if (!ft_strncmp(input, "echo", 4))
-		ft_echo(&input[5], NULL, env);
-	if (!ft_strncmp(input, "pwd", 4))
-		ft_pwd();
-	if (!ft_strncmp(input, "env", 4))
-		ft_lst_print(env);
+
+}
+
+char	*clean_line(char * line)
+{
+	char *temp_line;
+
+	temp_line = clean_space(line);
 }
