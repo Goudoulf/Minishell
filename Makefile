@@ -14,7 +14,7 @@ NAME = minishell
 
 SRCS_FILE = main.c check_cmd.c ./utils/ft_echo.c ./utils/ft_pwd.c ./utils/list/ft_lst_add_back.c \
 			./utils/list/ft_lst_clear.c ./utils/list/ft_lst_print.c ./utils/list/ft_lst_new.c\
-			init/init.c
+			init/init.c ./parsing/parsing.c ./parsing/clean_line.c
 
 INC = includes
 
