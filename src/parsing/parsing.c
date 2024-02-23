@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 19:08:44 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/22 10:43:15 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/23 16:15:56 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,16 @@
 
 void	line_parsing(t_cmd **cmd, char *line)
 {
+	char	*line_temp;
+	char	**line_tab;
+
 	(void)cmd;
-	clean_line(line);
-	//clean string line : remove unnessary space "" and ''
-	//split line in block at each pipe
+	line_temp  = clean_line(line);
+	line_tab = split_pipe(line_temp);
+	while (*line_tab)
+	{
+		line_to_cmd(cmd, *line_tab);
+		line_tab++;
+	}
 	//check content of each block and put it in linked list
 }

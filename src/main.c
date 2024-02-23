@@ -29,8 +29,6 @@ void sigint_handler(int	sig)
 void sigquit_handler(int sig)
 {
 	(void)sig;
-	rl_replace_line("", 0);
-	rl_redisplay();
 }
 
 int main(int argc, char **argv, char **envp)

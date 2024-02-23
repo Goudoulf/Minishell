@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strtok.c                                        :+:      :+:    :+:   */
+/*   ft_strtok_quote.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/23 10:08:41 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/23 12:43:32 by cassie           ###   ########.fr       */
+/*   Created: 2024/02/23 12:42:30 by cassie            #+#    #+#             */
+/*   Updated: 2024/02/23 14:08:06 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static unsigned int is_delim(char c, char *delim)
     return 0;
 }
 
-char *ft_strtok(char *string, char *delim)
+char *ft_strtok_quote(char *string, char *delim)
 {
     static char *string_copy;
     char *ret;
@@ -37,6 +37,12 @@ char *ft_strtok(char *string, char *delim)
         return NULL;
     while(1)
     {
+        if (*string == '\"' || *string == '\'')
+        {
+            quote = !quote;
+            string++;
+            continue;
+        }
         if(is_delim(*string, delim) && !quote)
         {
             string++;
@@ -49,6 +55,13 @@ char *ft_strtok(char *string, char *delim)
     ret = string;
     while(1)
     {
+        if (*string == '\"' || *string == '\'')
+        {
+            *string = '\0';
+            quote = !quote;
+            string_copy = string + 1;
+            return ret;
+        }
         if(*string == '\0')
         {
             string_copy = string;
