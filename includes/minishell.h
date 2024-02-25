@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/23 16:24:37 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/24 10:29:27 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ t_list	*ft_lst_new(char *content);
 void	ft_lstadd_back(t_list **lst, t_list *new);
 void	ft_lst_print(t_list **list);
 void	ft_lstclear(t_list **lst);
+void	ft_cmdclear(t_cmd **cmd);
+void	ft_cmd_print(t_cmd **cmd);
 
 // parsing
 

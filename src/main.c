@@ -56,6 +56,9 @@ int main(int argc, char **argv, char **envp)
 			line_parsing(&cmd, input);
 		}
 		check_cmd(input, &env);
+		ft_cmdclear(&cmd);
 		free(input);
 	}
+	ft_lstclear(&env);
+	free(env);
 }

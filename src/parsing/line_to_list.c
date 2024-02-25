@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 11:31:34 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/23 16:22:47 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/25 19:16:15 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ static char	**create_tab(size_t nelem)
 
 	i = 0;
 	tab = NULL;
-	tab = malloc(sizeof(char *) * nelem + 1);
+	if (nelem == 0)
+		return (NULL);
+	tab = malloc(sizeof(char *) * (nelem + 1));
 	if (!tab)
 		return (NULL);
 	while (i < nelem)
@@ -27,7 +29,7 @@ static char	**create_tab(size_t nelem)
 		tab[i] = NULL;
 		i++;
 	}
-	tab[i] = NULL;
+	tab[i] = 0; 
 	return (tab);
 }
 
@@ -44,19 +46,6 @@ static t_cmd	*ft_cmd_new(char **command, char **input, char **output)
 	new->output_file = output;
 	new->next = NULL;
 	return (new);
-}
-
-static void	ft_cmd_print(t_cmd **cmd)
-{
-	t_cmd	*temp;
-
-	temp = *cmd;
-	while (temp != NULL)
-	{
-		printf("cmd0 =%s\n", temp->cmd[0]);
-		printf("in = %s\n", temp->input_file[0]);
-		temp = temp->next;
-	}
 }
 
 static void	ft_cmdadd_back(t_cmd **cmd, t_cmd *new)
@@ -104,8 +93,7 @@ void	line_to_cmd(t_cmd **cmd, char *line)
 			output[j++] = ft_strdup(token);
 		else if (token)
 			command[k++] = ft_strdup(token);
-		token = ft_strtok_quote(line, " ");
+		token = ft_strtok_quote(NULL, " ");
 	}
 	ft_cmdadd_back(cmd, ft_cmd_new(command, input, output));
-	ft_cmd_print(cmd);
 }

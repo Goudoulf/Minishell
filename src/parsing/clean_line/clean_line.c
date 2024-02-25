@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 09:55:53 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/23 09:00:41 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/25 19:30:22 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static char	*clean_space(char *line)
 	temp = NULL;
 	new_size = chevron_space_size(line);
 	temp = malloc(sizeof(char) * new_size + 1);
-	while (j <= new_size)
+	while (j < new_size)
 	{
 		temp[j] = line[i];
 		if (ft_is_chevron(line[i]))
@@ -74,7 +74,7 @@ static char	*clean_space(char *line)
 		i++;
 		j++;
 	}
-	temp[j] = '\0';
+	temp[j] = 0;
 	return (temp);
 }
 

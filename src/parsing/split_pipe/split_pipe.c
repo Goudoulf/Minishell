@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 09:04:47 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/23 13:34:21 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/25 19:17:10 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static char	**create_tab(char **tab, size_t nelem)
 	size_t	i;
 
 	i = 0;
-	tab = malloc(sizeof(char *) * nelem + 1);
+	tab = malloc(sizeof(char *) * (nelem + 1));
 	if (!tab)
 		return (NULL);
 	while (i < nelem)
@@ -65,6 +65,5 @@ char	**split_pipe(char *line)
 		token = ft_strtok(NULL, delim);
 		i++;
 	}
-	temp_tab[i] = NULL;
 	return (temp_tab);
 }

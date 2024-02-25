@@ -6,12 +6,11 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 13:40:57 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/23 16:18:43 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/25 18:41:58 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 size_t	cmd_count(char const *s, char c)
 {
@@ -36,28 +35,32 @@ size_t	cmd_count(char const *s, char c)
 
 size_t infile_count(char *line)
 {
+	size_t	i;
 	size_t	count;
 
+	i = 0;
 	count = 0;
-	while(*line)
+	while(line[i])
 	{
-		if (*line == '<' && *line + 1 != '<')
+		if (line[i] == '<' && line[i + 1] != '<')
 			count++;
-		line++;
+		i++;
 	}
 	return (count);
 }
 
 size_t outfile_count(char *line)
 {
+	size_t	i;
 	size_t	count;
 
+	i = 0;
 	count = 0;
-	while(*line)
+	while(line[i])
 	{
-		if (*line == '>' && *line + 1 != '>')
+		if (line[i] == '>' && line[i + 1] != '>')
 			count++;
-		line++;
+		i++;
 	}
 	return (count);
 }

@@ -1,34 +1,52 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lst_clear.c                                     :+:      :+:    :+:   */
+/*   ft_cmd_clear.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/18 12:12:52 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/25 19:48:30 by cassie           ###   ########.fr       */
+/*   Created: 2024/02/24 09:54:13 by cassie            #+#    #+#             */
+/*   Updated: 2024/02/25 19:50:36 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_lstclear(t_list **lst)
+static void	free_tab(char **tab)
 {
-	t_list	*temp;
-	t_list	*current;
-
-	if (!lst)
+	if (!tab)
 		return ;
-	current = *lst;
+	while (*tab)
+	{
+		free(*tab);
+		tab++;
+	}
+}
+
+void	ft_cmdclear(t_cmd **cmd)
+{
+	t_cmd	*temp;
+	t_cmd	*current;
+
+	if (!cmd)
+		return ;
+	current = *cmd;
 	while (current != NULL)
 	{
 		temp = current->next;
-		free(current->string);
-		free(current->var);
-		free(current->var_content);
+		free_tab(current->cmd);
+		if (current->cmd)
+			free(current->cmd);
+		if (current->path)
+			free(current->path);
+		free_tab(current->input_file);
+		if (current->input_file)
+			free(current->input_file);
+		free_tab(current->output_file);
+		if (current->output_file)
+			free(current->output_file);
 		free(current);
 		current = temp;
 	}
-	*lst = NULL;
+	*cmd = NULL;
 }
-
