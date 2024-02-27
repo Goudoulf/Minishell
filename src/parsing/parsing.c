@@ -1,31 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/17 11:48:48 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/25 19:35:44 by cassie           ###   ########.fr       */
+/*   Created: 2024/02/19 19:08:44 by cassie            #+#    #+#             */
+/*   Updated: 2024/02/27 15:58:10 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_list	**init_env_list(t_list **env, char **envp)
+void	line_parsing(t_cmd **cmd, char *line)
 {
-	int	i;
+	char	*line_temp;
+	char	**line_tab;
+	int		i;
 
-	i = -1;
-	if (!envp)
-		return (NULL);
-	while (envp[++i])
-		ft_lstadd_back(env, ft_lst_new(envp[i]));
-	return (env);
-}
-
-void	init_all(t_cmd **cmd, t_list **env, char **envp)
-{
-	init_env_list(env, envp);
+	i = 0;
 	(void)cmd;
+	line_temp  = clean_line(line);
+	line_tab = split_pipe(line_temp);
+	while (line_tab[i])
+	{
+		line_to_cmd(cmd, line_tab[i]);
+		i++;
+	}
+	free(line_tab);
+//	ft_cmd_print(cmd);
+	//check content of each block and put it in linked list
 }

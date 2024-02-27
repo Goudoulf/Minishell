@@ -6,13 +6,13 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 15:06:40 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/19 09:45:20 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/26 10:26:42 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	check_cmd(char *input, t_list **env)
+void	check_cmd(char *input, t_list **env, t_cmd **cmd)
 {
 	if (!input)
 	{
@@ -25,6 +25,7 @@ void	check_cmd(char *input, t_list **env)
 	{
 		free(input);
 		rl_clear_history();
+		ft_cmdclear(cmd);
 		ft_lstclear(env);
 		ft_printf("exit\n");
 		exit(0);
@@ -34,5 +35,5 @@ void	check_cmd(char *input, t_list **env)
 	if (!ft_strncmp(input, "pwd", 4))
 		ft_pwd();
 	if (!ft_strncmp(input, "env", 4))
-		ft_lst_print(*env);
+		ft_lst_print(env);
 }

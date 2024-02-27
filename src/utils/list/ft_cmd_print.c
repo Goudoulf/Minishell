@@ -1,27 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lst_print.c                                     :+:      :+:    :+:   */
+/*   ft_cmd_print.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/17 15:14:44 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/19 18:47:33 by cassie           ###   ########.fr       */
+/*   Created: 2024/02/24 10:28:38 by cassie            #+#    #+#             */
+/*   Updated: 2024/02/25 19:22:06 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_lst_print(t_list **list)
+void	ft_cmd_print(t_cmd **cmd)
 {
-	t_list	*temp;
+	t_cmd	*temp;
+	int	d;
 
-	temp = *list;
+	d = 0;
+	temp = *cmd;
 	while (temp != NULL)
 	{
-		printf("%s\n", temp->string);
-		//printf("var = %s\n", temp->var);
-		//printf("var_content = %s\n", temp->var_content);
+		int	i = 0;
+		int	j = 0;
+		int	k = 0;
+		printf("Block[%d]\n", d++);
+		while (temp->cmd && temp->cmd[i])
+		{
+			printf("	cmd[%d] =%s\n",i, temp->cmd[i]);
+			i++;
+		}
+		while (temp->input_file && temp->input_file[j])
+		{
+			printf("	in[%d] =%s\n", j, temp->input_file[j]);
+			j++;
+		}
+		while (temp->output_file && temp->output_file[k])
+		{
+			printf("	out[%d] =%s\n", k, temp->output_file[k]);
+			k++;
+		}
 		temp = temp->next;
 	}
 }
