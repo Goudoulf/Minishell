@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 12:42:30 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/25 19:19:02 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/27 14:20:25 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,14 @@ char *ft_strtok_quote(char *string, char *delim)
             string_copy = string + 1;
             return ret;
         }
-        if(is_delim(*string, delim) && !quote)
+        if (!quote && (*string == '\"' || *string == '\''))
+        {
+            *string = '\0';
+            quote = !quote;
+            string_copy = string + 1;
+            return ret;
+        }
+        if((is_delim(*string, delim) && !quote ))
         {
             *string = '\0';
             string_copy = string + 1;

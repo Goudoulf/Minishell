@@ -12,31 +12,16 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <signal.h>
 
 #define CYELLOW "\001\e[0;31m\002"
 #define RESET   "\001\e[0m\002"
 
-void sigint_handler(int	sig)
-{
-	(void)sig;
-	write(0, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-}
-
-void sigquit_handler(int sig)
-{
-	(void)sig;
-}
 
 int main(int argc, char **argv, char **envp)
 {
 	t_cmd	*cmd;
 	t_list	*env;
 	char	*input;
-	struct sigaction action;
 
 	(void)argc;
 	(void)argv;
@@ -45,17 +30,15 @@ int main(int argc, char **argv, char **envp)
 	init_all(&cmd, &env, envp);
 	while(1)
 	{
-		action.sa_handler = &sigquit_handler;
-		sigaction(SIGQUIT, &action, NULL);
-		action.sa_handler = &sigint_handler;
-		sigaction(SIGINT, &action, NULL);
+		// a ajouter dans heredoc
+		signal_handling();
 		input = readline(CYELLOW "[Minishell]: " RESET);
 		if (input && *input)
 		{
 			add_history(input);
 			line_parsing(&cmd, input);
 		}
-		check_cmd(input, &env);
+		check_cmd(input, &env, &cmd);
 		ft_cmdclear(&cmd);
 		free(input);
 	}

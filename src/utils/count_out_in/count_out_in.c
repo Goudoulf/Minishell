@@ -6,19 +6,23 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 13:40:57 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/25 18:41:58 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/27 12:54:11 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-size_t	cmd_count(char const *s, char c)
+size_t	cmd_count(char *s, char c)
 {
-	int	i;
+	char	*token;
+	char	*str;
+	//int	i;
+	(void)c;
 	size_t	count;
 
-	i = 0;
 	count = 0;
+	str = ft_strdup(s);
+/*	i = 0;
 	while (s[i])
 	{
 		while (s[i] == c)
@@ -29,6 +33,12 @@ size_t	cmd_count(char const *s, char c)
 			i++;
 		if (s[i])
 			i++;
+	}*/
+	token = ft_strtok_quote(str, " ");
+	while (token)
+	{
+		count++;
+		token = ft_strtok_quote(NULL, " ");
 	}
 	return (count);
 }

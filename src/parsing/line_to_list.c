@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 11:31:34 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/25 19:16:15 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/27 12:55:12 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ static char	**create_tab(size_t nelem)
 
 	i = 0;
 	tab = NULL;
+	printf("size = %zu\n", nelem);
 	if (nelem == 0)
 		return (NULL);
 	tab = malloc(sizeof(char *) * (nelem + 1));
@@ -95,5 +96,6 @@ void	line_to_cmd(t_cmd **cmd, char *line)
 			command[k++] = ft_strdup(token);
 		token = ft_strtok_quote(NULL, " ");
 	}
+	free(line);
 	ft_cmdadd_back(cmd, ft_cmd_new(command, input, output));
 }

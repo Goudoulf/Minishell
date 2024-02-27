@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/24 10:29:27 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/27 12:38:12 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "../lib/ft_printf/includes/ft_printf.h"
 
 # include <stdio.h>
+# include <signal.h>
 # include <stdlib.h>
 # include <stdbool.h>
 # include <readline/readline.h>
@@ -40,7 +41,7 @@ typedef struct s_cmd
 }				t_cmd;
 
 // core
-void	check_cmd(char *input, t_list **env);
+void	check_cmd(char *input, t_list **env, t_cmd **cmd);
 
 // cmd
 int	ft_echo(char *str, char *arg, t_list **env);
@@ -56,6 +57,10 @@ char *ft_strtok(char *string, char *delim);
 char *ft_strtok_quote(char *string, char *delim);
 size_t infile_count(char *line);
 size_t outfile_count(char *line);
+
+// signal
+
+void	signal_handling(void);
 
 // list
 
@@ -73,7 +78,7 @@ char	*clean_line(char *line);
 char	**split_pipe(char *line);
 void	line_to_cmd(t_cmd **cmd, char *line);
 
-size_t	cmd_count(char const *s, char c);
+size_t	cmd_count(char *s, char c);
 size_t infile_count(char *line);
 size_t outfile_count(char *line);
 

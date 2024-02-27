@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 09:04:47 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/25 19:17:10 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/26 10:04:34 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ char	**split_pipe(char *line)
 
 	temp_tab = NULL;
 	i = 0;
+	if (!line)
+		return (NULL);
 	n_pipe = pipe_count(line);
 	delim = "|";
 	temp_tab = create_tab(temp_tab, n_pipe); 
@@ -65,5 +67,6 @@ char	**split_pipe(char *line)
 		token = ft_strtok(NULL, delim);
 		i++;
 	}
+	free(line);
 	return (temp_tab);
 }
