@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/27 12:38:12 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/27 16:18:33 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,10 @@
 # include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <string.h>
+# include <fcntl.h>
+# include <sys/wait.h>
+# include <errno.h>
 
 typedef struct s_list
 {
@@ -81,5 +85,11 @@ void	line_to_cmd(t_cmd **cmd, char *line);
 size_t	cmd_count(char *s, char c);
 size_t infile_count(char *line);
 size_t outfile_count(char *line);
+
+// exec
+
+int	exec_line(t_cmd *cmd, char **envp);
+char	*ft_join(const char *s1, const char *s2);
+char	*find_path(char *cmd, char *path);
 
 #endif

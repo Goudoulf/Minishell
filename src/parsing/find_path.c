@@ -1,33 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   find_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/19 19:08:44 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/27 15:58:10 by cassie           ###   ########.fr       */
+/*   Created: 2024/02/27 16:12:35 by cassie            #+#    #+#             */
+/*   Updated: 2024/02/27 16:23:53 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	line_parsing(t_cmd **cmd, char *line)
+static char	*check_path(char **paths, char *arg)
 {
-	char	*line_temp;
-	char	**line_tab;
+	char	*cmd;
 	int		i;
 
 	i = 0;
-	(void)cmd;
-	line_temp  = clean_line(line);
-	line_tab = split_pipe(line_temp);
-	while (line_tab[i])
+	cmd = NULL;
+	if (!paths || !arg)
+		return (NULL);
+	if (access(arg, X_OK) == 0)
+		return (ft_strdup(arg));
+	while (paths[i])
 	{
-		line_to_cmd(cmd, line_tab[i]);
+		cmd = ft_join(paths[i], arg);
+		if (access(cmd, X_OK) == 0)
+			return (cmd);
+		free(cmd);
 		i++;
 	}
-	free(line_tab);
-//	ft_cmd_print(cmd);
-	//check content of each block and put it in linked list
+	return (NULL);
+}
+
+char	*find_path(char *cmd, char *path)
+{
+	char	**paths;
+
+	paths = NULL;
+	paths = ft_split(path, ':');
+
+	path = check_path(paths, cmd);
+	return (path);
 }

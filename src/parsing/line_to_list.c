@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 11:31:34 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/27 12:55:12 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/27 16:21:10 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static char	**create_tab(size_t nelem)
 
 	i = 0;
 	tab = NULL;
-	printf("size = %zu\n", nelem);
+//	printf("size = %zu\n", nelem);
 	if (nelem == 0)
 		return (NULL);
 	tab = malloc(sizeof(char *) * (nelem + 1));
@@ -39,10 +39,11 @@ static t_cmd	*ft_cmd_new(char **command, char **input, char **output)
 	t_cmd	*new;
 
 	new = malloc(sizeof(t_cmd));
+	char *env = "/home/cassie/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin";
 	if (!new)
 		return (NULL);
 	new->cmd = command;
-	new->path = NULL;
+	new->path = find_path(*command, env);
 	new->input_file = input;
 	new->output_file = output;
 	new->next = NULL;

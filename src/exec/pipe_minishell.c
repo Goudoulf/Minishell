@@ -3,16 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
+/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/02/23 15:50:02 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/02/27 16:04:42 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "minishell.h"
 
-void	closepipe(int pipe[2])
+static int    isdirectory(char *str)
+{
+    size_t    i;
+
+    i = 0;
+    while (str[i])
+    {
+        if (str[i] == '/')
+            return (1);
+        i++;
+    }
+    return (0);
+}
+
+static void	closepipe(int pipe[2])
 {
 	if (close(pipe[0]) == -1)
 		perror(ft_itoa(pipe[0]));
@@ -20,7 +34,7 @@ void	closepipe(int pipe[2])
 		perror(ft_itoa(pipe[1]));
 }
 
-int	ft_lstsize(t_list *lst)
+/*static int	ft_lstsize(t_list *lst)
 {
 	int	lsize;
 
@@ -31,9 +45,9 @@ int	ft_lstsize(t_list *lst)
 		lsize++;
 	}
 	return (lsize);
-}
+}*/
 
-char	**lst_to_tab(t_list *lst)
+/*static char	**lst_to_tab(t_list *lst)
 {
 	int		i;
 	int		j;
@@ -56,7 +70,7 @@ char	**lst_to_tab(t_list *lst)
 		lst = lst->next;
 	}
 	return (tab);
-}
+}*/
 
 static void	print_error(char *error, char *str)
 {
@@ -66,22 +80,22 @@ static void	print_error(char *error, char *str)
 	write(2, "\n", 1);
 }
 
-void	dchevron(char *str, int *fd)
+static void	dchevron(char *str, int *fd)
 {
 	char	*buf;
 
 	*fd = open("tmp", O_CREAT | O_RDWR);
 	buf = readline(">");
-	write(fd, buf, ft_strlen(buf));
+	write(*fd, buf, ft_strlen(buf));
 	while (ft_strncmp(buf, str, ft_strlen(str)) != 0)
 	{
 		free(buf);
 		buf = readline(">");
-		write(fd, buf, ft_strlen(buf));
+		write(*fd, buf, ft_strlen(buf));
 	}
 }
 
-void	redir_input(int fd, int pipe[2], int redir)
+static void	redir_input(int fd, int pipe[2], int redir)
 {
 	if (dup2(fd, redir) == -1)
 	{
@@ -99,7 +113,7 @@ void	redir_input(int fd, int pipe[2], int redir)
 	}
 }
 
-void	do_input(t_cmd *cmd, int pipe[2])
+static void	do_input(t_cmd *cmd, int pipe[2])
 {
 	int		i;
 	int		j;
@@ -127,7 +141,7 @@ void	do_input(t_cmd *cmd, int pipe[2])
 	redir_input(fd, pipe, redir);
 }
 
-void	redir_output(int fd, int pipe[2], int redir)
+static void	redir_output(int fd, int pipe[2], int redir)
 {
 	if (dup2(fd, redir) == -1)
 	{
@@ -145,7 +159,7 @@ void	redir_output(int fd, int pipe[2], int redir)
 	}
 }
 
-void	do_output(t_cmd *cmd, int pipe[2])
+static void	do_output(t_cmd *cmd, int pipe[2])
 {
 	int	i;
 	int	j;
@@ -176,9 +190,10 @@ void	do_output(t_cmd *cmd, int pipe[2])
 		}
 		i++;
 	}
+	redir_output(fd, pipe, redir);
 }
 
-void	do_cmd(t_cmd *cmd, char **envp)
+static void	do_cmd(t_cmd *cmd, char **envp)
 {
 	execve(cmd->path, cmd->cmd, envp);
 	if (!cmd->cmd[0])
@@ -197,7 +212,7 @@ void	do_cmd(t_cmd *cmd, char **envp)
 	exit((close(0), close(1), 127));
 }
 
-void	child(t_cmd *cmd, int pipe[2], char **envp)
+static void	child(t_cmd *cmd, int pipe[2], char **envp)
 {
 	if (cmd->input_file)
 		do_input(cmd, pipe);
@@ -208,7 +223,7 @@ void	child(t_cmd *cmd, int pipe[2], char **envp)
 		do_cmd(cmd, envp);
 }
 
-void	exec_line(t_cmd *cmd, char **envp)
+int	exec_line(t_cmd *cmd, char **envp)
 {
 	int		fd[2];
 	int		status;
@@ -228,8 +243,8 @@ void	exec_line(t_cmd *cmd, char **envp)
 	closepipe(fd);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
-		exit(WEXITSTATUS(status));
-	exit(0);
+		return(WEXITSTATUS(status));
+	return(0);
 }
 
 // int	main(int argc, char **argv, char **envp)
