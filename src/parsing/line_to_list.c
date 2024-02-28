@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 11:31:34 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/27 16:21:10 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/28 12:43:47 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,17 @@ static char	**create_tab(size_t nelem)
 	return (tab);
 }
 
-static t_cmd	*ft_cmd_new(char **command, char **input, char **output)
+static t_cmd	*ft_cmd_new(char **command, char **input, char **output, t_list **env)
 {
 	t_cmd	*new;
+	char	*path;
 
 	new = malloc(sizeof(t_cmd));
-	char *env = "/home/cassie/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin";
+	path = get_value(env, "PATH");
 	if (!new)
 		return (NULL);
 	new->cmd = command;
-	new->path = find_path(*command, env);
+	new->path = find_path(*command, path);
 	new->input_file = input;
 	new->output_file = output;
 	new->next = NULL;
@@ -68,7 +69,7 @@ static void	ft_cmdadd_back(t_cmd **cmd, t_cmd *new)
 	temp->next = new;
 }
 
-void	line_to_cmd(t_cmd **cmd, char *line)
+void	line_to_cmd(t_cmd **cmd, char *line, t_list **env)
 {
 	char	**command;
 	char	**input;
@@ -98,5 +99,5 @@ void	line_to_cmd(t_cmd **cmd, char *line)
 		token = ft_strtok_quote(NULL, " ");
 	}
 	free(line);
-	ft_cmdadd_back(cmd, ft_cmd_new(command, input, output));
+	ft_cmdadd_back(cmd, ft_cmd_new(command, input, output, env));
 }

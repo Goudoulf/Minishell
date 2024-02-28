@@ -36,7 +36,7 @@ int main(int argc, char **argv, char **envp)
 		if (input && *input)
 		{
 			add_history(input);
-			line_parsing(&cmd, input);
+			line_parsing(&cmd, input, &env);
 			exec_line(cmd, envp);
 		}
 		check_cmd(input, &env, &cmd);

@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/27 16:18:33 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/28 14:04:18 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,14 +77,15 @@ void	ft_cmd_print(t_cmd **cmd);
 
 // parsing
 
-void	line_parsing(t_cmd **cmd, char *line);
+void	line_parsing(t_cmd **cmd, char *line, t_list **env);
 char	*clean_line(char *line);
 char	**split_pipe(char *line);
-void	line_to_cmd(t_cmd **cmd, char *line);
+void	line_to_cmd(t_cmd **cmd, char *line, t_list **env);
 
 size_t	cmd_count(char *s, char c);
 size_t infile_count(char *line);
 size_t outfile_count(char *line);
+char	*get_value(t_list **env, char *s);
 
 // exec
 
