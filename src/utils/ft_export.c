@@ -6,13 +6,49 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 08:31:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/29 14:48:08 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/29 20:07:13 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static size_t env_size(char **env)
+static size_t	tab_size(char **cmd)
+{
+	size_t	i;
+
+	i = 0;
+	while (cmd[i])
+		i++;
+	return (i);
+}
+
+static char	*str_from_char(char *str)
+{
+	int	i;
+
+	i = 0;
+	while(str[i] && str[i] != '=')
+		i++;
+	if (!str[i])
+		return (NULL);
+	if (str[i] == '=' && !str[i + 1])
+		return (NULL);
+	return(ft_substr(str, i + 1, ft_strlen(str)));
+}
+
+static char	*str_to_char(char *str)
+{
+	int	i;
+
+	i = 0;
+	while(str[i] && str[i] != '=')
+		i++;
+	if (!str[i])
+		return (ft_strdup(str));
+	return (ft_substr(str, 0, i));
+}
+
+/*static size_t env_size(char **env)
 {
 	size_t	i;
 
@@ -20,9 +56,9 @@ static size_t env_size(char **env)
 	while (env[i])
 		i++;
 	return (i);
-}
+}*/
 
-static void	env_print(t_list **env, int fd)
+static void	env_print(t_list **env)
 {
 	t_list *temp;
 
@@ -33,7 +69,8 @@ static void	env_print(t_list **env, int fd)
 		ft_putstr_fd(temp->var, 1);
 		ft_putstr_fd("=", 1);
 		ft_putstr_fd("\"", 1);
-		ft_putstr_fd(temp->var_content, 1);
+		if (temp->var_content)
+			ft_putstr_fd(temp->var_content, 1);
 		ft_putstr_fd("\"", 1);
 		ft_putstr_fd("\n", 1);
 		temp = temp->next;
@@ -60,22 +97,24 @@ static t_list	*check_cmd_env(char *arg, t_list **env)
 	temp = *env;
 	while (temp)
 	{
-		if (!ft_strcmp(temp->var, arg, ft_strlen(arg)))
+		if (!ft_strncmp(temp->var, arg, ft_strlen(arg)))
 			return (temp);
 		temp = temp->next;
 	}
 	return (NULL);
 }
 
-int	ft_export(t_list **env, char **cmd, int	fd)
+int	ft_export(t_list **env, char **cmd)
 {
 	int	i;
-	t_list temp;
+	t_list *temp;
 
 	i = 1;
-	temp = NULL;
 	if (tab_size(cmd) < 2)
-		return (envp_print(env, fd), 0);
+	{	
+		env_print(env);
+		return (0);
+	}
 	while (cmd[i])
 	{
 		temp = check_cmd_env(cmd[i], env);

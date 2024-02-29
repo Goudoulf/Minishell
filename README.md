@@ -145,13 +145,20 @@ ajouter la gestions des builts in
 ### Camille
 
 cat sans rien prompt * 2
+
 unclosed quote 
-pipe dans quote
+
+<!pipe dans quote> semble ok
+
 check erreur pre parsing et parsing ( tripe chevron , pipe vide)
+
 a gerer cat'<'infile
+
 dollars dans dquote (on remplace si besoin pendant le parsing) + $?
 
-builtin
+mettre a jour la liste chainee
+
+#### builtin
 
 echo a finir + -n
 cd a faire

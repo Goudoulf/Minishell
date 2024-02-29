@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 19:08:44 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/28 11:32:27 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/29 18:17:46 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,5 @@ void	line_parsing(t_cmd **cmd, char *line, t_list **env)
 		i++;
 	}
 	free(line_tab);
-//	ft_cmd_print(cmd);
-	//check content of each block and put it in linked list
+	ft_cmd_print(cmd);
 }

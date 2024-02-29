@@ -6,62 +6,85 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 10:26:14 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/29 13:55:03 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/29 19:15:19 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_lstdel(t_list **lst, char *cmd)
+static size_t	tab_size(char **cmd)
+{
+	size_t	i;
+
+	i = 0;
+	while (cmd[i])
+		i++;
+	return (i);
+}
+
+static void	free_link(t_list *env_link)
+{
+	if (env_link->var)
+		free(env_link->var);
+	if (env_link->var_content)
+		free(env_link->var_content);
+	free(env_link);
+}
+
+static void	ft_lstdel(t_list **lst, char *cmd)
 {
 	t_list	*temp;
 	t_list	*current;
-	char	*var_cmd;
+	t_list	*next_current;
 
 	if (!lst)
 		return ;
 	current = *lst;
-
-	while (current != NULL)
+	next_current = current->next;
+	if (!ft_strncmp(current->var, cmd, ft_strlen(cmd)))
 	{
-		temp = current->next;
-		free(current->string);
-		free(current->var);
-		free(current->var_content);
-		free(current);
-		current = temp;
+		*lst = next_current;
+		free_link(current);
+		return ;
 	}
-	*lst = NULL;
+	while (next_current)
+	{
+		temp = next_current->next;
+		if (!ft_strncmp(next_current->var, cmd, ft_strlen(cmd)))
+		{
+			free_link(next_current);
+			current->next = temp;
+			return ;
+		}
+		current = next_current;
+		next_current = temp;
+	}
 }
 
-static t_list	*check_cmd_env(char *arg, t_list **env)
+/*static t_list	*check_cmd_env(char *arg, t_list **env)
 {
 	t_list	*temp;
 
 	temp = *env;
 	while (temp)
 	{
-		if (!ft_strcmp(temp->var, arg, ft_strlen(arg)))
+		if (!ft_strncmp(temp->var, arg, ft_strlen(arg)))
 			return (temp);
 		temp = temp->next;
 	}
 	return (NULL);
-}
+}*/
 
 int	ft_unset(t_list **env, char **cmd)
 {
 	int		i;
-	t_list *temp;
 
 	i = 1;
-	temp = NULL;
 	if (tab_size(cmd) < 2)
 		return (0);
 	while (cmd[i])
 	{
-		temp = check_cmd_env(cmd[i], env);
-		if (temp)
-			env_update(temp, cmd[i]);
+		ft_lstdel(env, cmd[i]);
 		i++;
 	}
 	return (0);

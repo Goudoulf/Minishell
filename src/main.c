@@ -37,7 +37,7 @@ int main(int argc, char **argv, char **envp)
 		{
 			add_history(input);
 			line_parsing(&cmd, input, &env);
-			exec_line(cmd, envp);
+			//exec_line(cmd, envp);
 		}
 		check_cmd(input, &env, &cmd);
 		ft_cmdclear(&cmd);

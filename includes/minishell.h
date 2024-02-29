@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/28 14:04:18 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/29 18:45:41 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,11 @@ typedef struct s_cmd
 // core
 void	check_cmd(char *input, t_list **env, t_cmd **cmd);
 
-// cmd
+// builtins
 int	ft_echo(char *str, char *arg, t_list **env);
 int	ft_pwd(void);
+int	ft_export(t_list **env, char **cmd);
+int	ft_unset(t_list **env, char **cmd);
 
 // init
 
