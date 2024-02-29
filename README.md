@@ -160,6 +160,7 @@ export faire le tri et +x declare voir comment savoir si on est dans sous bash
 unset finir delete chainnons list
 env
 exit gerer argument avec atoi et la valeur retourner par lexec;
+segfault avec commande <in
 
 
 ## Command to keep for final test
