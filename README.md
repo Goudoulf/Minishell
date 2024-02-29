@@ -132,7 +132,35 @@
 
 
 ## Minishell todo
- ...
+ 
+### Romain
+
+voir les pipes
+heredoc avant les redirections
+heredoc rajouter signal handling
+return le code function 
+check les errors ecrite pour lexec
+ajouter la gestions des builts in
+
+### Camille
+
+cat sans rien prompt * 2
+unclosed quote 
+pipe dans quote
+check erreur pre parsing et parsing ( tripe chevron , pipe vide)
+a gerer cat'<'infile
+dollars dans dquote (on remplace si besoin pendant le parsing) + $?
+
+builtin
+
+echo a finir + -n
+cd a faire
+pwd fini
+export faire le tri et +x declare voir comment savoir si on est dans sous bash
+unset finir delete chainnons list
+env
+exit gerer argument avec atoi et la valeur retourner par lexec;
+
 
 ## Command to keep for final test
 

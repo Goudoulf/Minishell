@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 12:44:20 by cassie            #+#    #+#             */
-/*   Updated: 2023/11/22 20:29:15 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/29 10:12:47 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	ft_strncmp(char *s1, char *s2, unsigned int n)
 			return (str1[i] - str2[i]);
 		i++;
 	}
-	if (i < n)
+	if (i != n)
 		return (str1[i] - str2[i]);
 	return (0);
 }

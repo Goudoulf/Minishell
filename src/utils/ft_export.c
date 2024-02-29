@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 08:31:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/28 20:34:56 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/29 14:48:08 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,31 +40,19 @@ static void	env_print(t_list **env, int fd)
 	}
 }
 
-/*static int	ft_strcmp(char *s1, char *s2, unsigned int n)
-{
-	unsigned int	i;
-	unsigned char	*str1;
-	unsigned char	*str2;
-
-	str1 = (unsigned char *)s1;
-	str2 = (unsigned char *)s2;
-	i = 0;
-	while ((s1[i] || s2[i]) && (i < n))
-	{
-		if (str1[i] != str2[i])
-			return (str1[i] - str2[i]);
-		i++;
-	}
-	if (i < n)
-		return (str1[i] - str2[i]);
-	return (0);
-}*/
 static void	env_update(t_list *env, char *content)
 {
+	if (env->string)
+		free(env->string);
 	env->string = ft_strdup(content);
+	if (env->var)
+		free(env->var);
 	env->var = str_to_char(content);
+	if (env->var_content)
+		free(env->var_content);
 	env->var_content = str_from_char(content);
 }
+
 static t_list	*check_cmd_env(char *arg, t_list **env)
 {
 	t_list	*temp;
@@ -77,13 +65,6 @@ static t_list	*check_cmd_env(char *arg, t_list **env)
 		temp = temp->next;
 	}
 	return (NULL);
-}
-
-static char	**env_add(t_data **data, char *arg)
-{
-	size_t	size;
-
-	size = env_size(data->env);
 }
 
 int	ft_export(t_list **env, char **cmd, int	fd)
