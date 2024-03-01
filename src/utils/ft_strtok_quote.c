@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 12:42:30 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/29 14:16:33 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/01 09:01:33 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,7 @@ char *ft_strtok_quote(char *string, char *delim)
     static bool    quote;
 
     c_quote = '\0';
-    if (!quote)
-        quote = false;
+    quote = false;
     if(!string)
         string = string_copy;
     if(!string)

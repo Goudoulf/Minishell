@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 14:48:16 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/29 17:48:37 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/01 08:14:05 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static char	*str_from_char(char *str)
 	if (!str[i])
 		return (NULL);
 	if (str[i] == '=' && !str[i + 1])
-		return (NULL);
+		return (ft_strdup(""));
 	return(ft_substr(str, i + 1, ft_strlen(str)));
 }
 

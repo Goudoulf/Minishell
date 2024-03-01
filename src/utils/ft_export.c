@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 08:31:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/29 20:07:13 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/01 08:00:26 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,16 @@ static size_t	tab_size(char **cmd)
 	return (i);
 }
 
+static size_t	ft_strlen_equal(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i] && s[i] != '=')
+		i++;
+	return (i);
+}
+
 static char	*str_from_char(char *str)
 {
 	int	i;
@@ -30,9 +40,9 @@ static char	*str_from_char(char *str)
 	while(str[i] && str[i] != '=')
 		i++;
 	if (!str[i])
-		return (NULL);
+		return (ft_strdup("\0"));
 	if (str[i] == '=' && !str[i + 1])
-		return (NULL);
+		return (ft_strdup("\0"));
 	return(ft_substr(str, i + 1, ft_strlen(str)));
 }
 
@@ -67,11 +77,13 @@ static void	env_print(t_list **env)
 	while (temp)
 	{
 		ft_putstr_fd(temp->var, 1);
-		ft_putstr_fd("=", 1);
-		ft_putstr_fd("\"", 1);
 		if (temp->var_content)
+		{
+			ft_putstr_fd("=", 1);
+			ft_putstr_fd("\"", 1);
 			ft_putstr_fd(temp->var_content, 1);
-		ft_putstr_fd("\"", 1);
+			ft_putstr_fd("\"", 1);
+		}
 		ft_putstr_fd("\n", 1);
 		temp = temp->next;
 	}
@@ -97,7 +109,7 @@ static t_list	*check_cmd_env(char *arg, t_list **env)
 	temp = *env;
 	while (temp)
 	{
-		if (!ft_strncmp(temp->var, arg, ft_strlen(arg)))
+		if (!ft_strncmp(temp->var, arg, ft_strlen_equal(arg)))
 			return (temp);
 		temp = temp->next;
 	}
