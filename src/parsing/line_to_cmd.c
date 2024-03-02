@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   line_to_list.c                                     :+:      :+:    :+:   */
+/*   line_to_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 11:31:34 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/28 12:43:47 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/02 09:09:27 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,11 @@ void	line_to_cmd(t_cmd **cmd, char *line, t_list **env)
 	i = 0;
 	j = 0;
 	k = 0;
+	// group input and output together in same tab in order
 	input = create_tab(infile_count(line));
 	output = create_tab(outfile_count(line));
 	command = create_tab(cmd_count(line, ' ') - infile_count(line) - outfile_count(line));
+	// special token for export
 	token = ft_strtok_quote(line, " ");
 	while (token)
 	{

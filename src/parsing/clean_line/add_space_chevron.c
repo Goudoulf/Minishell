@@ -1,14 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   clean_line.c                                       :+:      :+:    :+:   */
+/*   add_space_chevron.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/20 09:55:53 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/02 18:27:07 by cassie           ###   ########.fr       */
+/*   Created: 2024/03/02 09:18:20 by cassie            #+#    #+#             */
+/*   Updated: 2024/03/02 11:54:11 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "minishell.h"
 
 #include "minishell.h"
 // gerer size 0 ou null
@@ -27,6 +29,14 @@ static void	set_quote(bool *quote, char *c_quote, char char_line)
 	}
 }
 
+static int	ft_is_space(int c)
+{
+	if (c == ' ' || c == '\t')
+		return (1);
+	else
+		return (0);
+}
+
 static int	ft_is_chevron(int c)
 {
 	if (c == '<' || c == '>')
@@ -35,53 +45,54 @@ static int	ft_is_chevron(int c)
 		return (0);
 }
 
-static size_t	chevron_space_size(char *str, size_t i, size_t j, char c_quote)
+static size_t	chevron_add_space_size(char *str, size_t i)
 {
+	size_t	space;
+	char	c_quote;
+
+	space = 0;
+	c_quote = 0;
+	if (!str)
+		return (0);
 	while (str[i])
 	{
 		if ((str[i] == '\"' || str[i] == '\''))
 		{
 			c_quote = str[i++];
-			j++;
 			while (str[i] && str[i] != c_quote)
-			{
 				i++;
-				j++;
-			}
+			if (str[i] == c_quote)
+				i++;
 			c_quote = 0;
+			continue ;
 		}
-		else if (ft_is_chevron(str[i]))
-		{
-			while (str[i + 1] == ' ')
-				i++;
-		}
+		if (!ft_is_space(str[i]) && !ft_is_chevron(str[i]) && ft_is_chevron(str[i + 1]))
+			space++;
 		i++;
-		j++;
 	}
-	return (j);
+	return (i + space);
 }
 
-static char	*clean_space(char *line, size_t i, size_t j, bool quote, char c_quote)
+static char	*add_space(char *line, size_t i, size_t j, char c_quote)
 {
 	char	*temp;
 	size_t	new_size;
+	bool quote;
 
-	new_size = chevron_space_size(line, 0, 0, 0);
+	quote = false;
+	new_size = chevron_add_space_size(line, 0);
 	temp = malloc(sizeof(char) * new_size + 1);
 	if (!temp)
 		return (NULL);
 	while (j < new_size)
-	{
+	{	
 		if (quote == false && (line[i] == '\"' || line[i] == '\''))
 			set_quote(&quote, &c_quote, line[i]);
 		else if (quote == true && line[i] == c_quote)
 			set_quote(&quote, &c_quote, line[i]);
 		temp[j] = line[i];
-		if (quote == false && ft_is_chevron(line[i]))
-		{
-			while (line[i + 1] == ' ')
-				i++;
-		}
+		if (!quote && !ft_is_space(line[i]) && !ft_is_chevron(line[i]) && ft_is_chevron(line[i + 1]))
+			temp[++j] = ' ';
 		i++;
 		j++;
 	}
@@ -89,10 +100,11 @@ static char	*clean_space(char *line, size_t i, size_t j, bool quote, char c_quot
 	return (temp);
 }
 
-char	*clean_line(char *line)
+char	*add_space_chevron(char *line)
 {
 	char *temp_line;
 
-	temp_line = clean_space(line, 0, 0, 0, 0);
+	temp_line = add_space(line, 0, 0 , 0);
+	free(line);
 	return (temp_line);
 }

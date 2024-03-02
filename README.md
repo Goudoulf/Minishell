@@ -148,11 +148,8 @@ cat sans rien prompt * 2
 
 unclosed quote 
 
-<!pipe dans quote> semble ok
 
 check erreur pre parsing et parsing ( tripe chevron , pipe vide)
-
-a gerer cat'<'infile
 
 dollars dans dquote (on remplace si besoin pendant le parsing) + $?
 
@@ -162,14 +159,18 @@ mettre a jour la liste chainee
 
 echo a finir + -n
 cd a faire
-pwd fini
 export faire le tri et +x declare voir comment savoir si on est dans sous bash
-unset finir delete chainnons list
-env
 exit gerer argument avec atoi et la valeur retourner par lexec;
-segfault avec commande <in
+segfault avec commande '<'in
 
+### FAIT
 
+pwd fini
+env
+unset finir delete chainnons list
+pipe dans quote semble ok
+
+a gerer cat'<'infile ok
 ## Command to keep for final test
 
  ...
