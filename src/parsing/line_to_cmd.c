@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 11:31:34 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/02 09:09:27 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/03 09:27:21 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,10 @@ static t_cmd	*ft_cmd_new(char **command, char **input, char **output, t_list **e
 	if (!new)
 		return (NULL);
 	new->cmd = command;
-	new->path = find_path(*command, path);
+	if (command)
+		new->path = find_path(command[0], path);
+	else
+		new->path = NULL;
 	new->input_file = input;
 	new->output_file = output;
 	new->next = NULL;

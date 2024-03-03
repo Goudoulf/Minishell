@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 14:48:16 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/01 08:14:05 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/03 09:24:51 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ static char	*str_from_char(char *str)
 	int	i;
 
 	i = 0;
+	if (!str)
+		return (NULL);
 	while(str[i] && str[i] != '=')
 		i++;
 	if (!str[i])
@@ -31,6 +33,8 @@ static char	*str_to_char(char *str)
 	int	i;
 
 	i = 0;
+	if (!str)
+		return (NULL);
 	while(str[i] && str[i] != '=')
 		i++;
 	if (!str[i])

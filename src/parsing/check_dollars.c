@@ -6,12 +6,41 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 11:58:58 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/02 18:37:28 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/03 11:38:02 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+/*
+static char	ft_strcpy8(char *destination, const char *source)
+{
+	int	i;
 
+	i = 0;
+	while (source[i])
+	{
+		destination[i] = source[i];
+		i++;
+	}
+	destination[i] = '\0';
+	return (*destination);
+}
+
+static char	*ft_strjoin_free(const char *s1, const char *s2)
+{
+	char	*temp;
+
+	temp = NULL;
+	if ((s1) && (s2))
+	{
+		temp = malloc((ft_strlen(s1)) + (ft_strlen(s2) + 1));
+		if (!temp)
+			return (NULL);
+		ft_strcpy8(temp, s1);
+		ft_strcpy8(&temp[ft_strlen(s1)], s2);
+	}
+	return (temp);
+}*/
 static int	ft_is_end(int c)
 {
 	if (c == ' ' || c == '\t' || c == '\'' || c == '\"' || c == '|' || c == '\0' || c == '$')
@@ -104,18 +133,16 @@ static char *replace_dollar(char *line, t_list **env, int start, int end)
 	char *temp3;
 	char *final;
 
-	start = start_dollar(line, 0);
+	start = start_dollar(line, start);
 	if (ft_is_end(line[start + 1]))
 		return (line);
 	end = end_dollar(line, start);
-	printf("start = %d\n", start);
-	printf("end = %d\n", end);
 	temp1 = ft_substr(line, 0, start);
-	printf("temp1=%s\n", temp1);
+//	printf("temp1 =%s\n", temp1);
 	temp2 = ft_substr(line, start + 1 + end, ft_strlen(line));
-	printf("temp2=%s\n", temp2);
+//	printf("temp2 =%s\n", temp2);
 	temp3 = ft_substr(line, start + 1, end);
-	printf("temp3=%s\n", temp3);
+//	printf("temp3 =%s\n", temp3);
 	env_match = check_cmd_env(temp3, env);
 	free(temp3);
 	if (!env_match)
@@ -127,20 +154,48 @@ static char *replace_dollar(char *line, t_list **env, int start, int end)
 	free(temp3);
 	temp1 = ft_strjoin(final, temp2);
 	free(temp2);
+	free(final);
 	free(line);
 	return (temp1);
+}
+
+static int count_dollar(char *line)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (line[i])
+	{
+		if (line[i] == '$')
+			count++;
+		i++;
+	}
+	return (count);
 }
 
 char	*check_dollars(char *line, t_list **env)
 {
 	int	i;
+	int	j;
+	int	old_count;
+	int	new_count;
 
-	i = 0;
-	if (start_dollar(line, 0) < 0)
+	i = start_dollar(line, 0);
+	j = 0;
+	old_count = count_dollar(line);
+	if (i < 0)
 		return (line);
-	while(start_dollar(line, i) > 0)
+	while(i >= 0)
 	{
-		line = replace_dollar(line, env, 0, 0);
+		line = replace_dollar(line, env, j, 0);
+		new_count = count_dollar(line);
+		if ( new_count == old_count)
+			j++;
+		else
+			old_count = new_count;
+		i = start_dollar(line, j);
 	}
 	return (line);
 }

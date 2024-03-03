@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 12:44:20 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/21 08:01:34 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/03 10:06:12 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,11 @@ static void	*ft_free_malloc(char **tab, int i)
 	return (NULL);
 }
 
-static char	**ft_split_split(char const*s, char c, int start)
+static char	**ft_split_split(char const *s, char c, size_t start, int i)
 {
 	int		count;
-	int		i;
 	char	**tab;
 
-	i = 0;
 	count = ft_count(s, c);
 	if (count == 0)
 		count = 1;
@@ -81,9 +79,11 @@ static char	**ft_split_split(char const*s, char c, int start)
 			return (ft_free_malloc(tab, i));
 		ft_strlcpy(tab[i], (char *) &s[start], ft_strlen2(&s[start], c) + 1);
 		start = start + ft_strlen2((char *) &s[start], c) + 1;
-		i++;
+		if (start > ft_strlen(s))
+			start = ft_strlen(s);
 		while (s[start] == c)
 			start++;
+		i++;
 	}
 	tab[i] = 0;
 	return (tab);
@@ -102,6 +102,6 @@ char	**ft_split(char const *s, char c)
 	str = (char *) s;
 	while ((str) && (str[start] == c))
 		start++;
-	tab = ft_split_split(s, c, start);
+	tab = ft_split_split(s, c, start, 0);
 	return (tab);
 }

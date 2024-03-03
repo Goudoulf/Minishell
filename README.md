@@ -151,7 +151,7 @@ unclosed quote
 
 check erreur pre parsing et parsing ( tripe chevron , pipe vide)
 
-dollars dans dquote (on remplace si besoin pendant le parsing) + $?
+OK reste $?(dollars dans dquote (on remplace si besoin pendant le parsing) + $?)
 
 mettre a jour la liste chainee
 
@@ -161,10 +161,10 @@ echo a finir + -n
 cd a faire
 export faire le tri et +x declare voir comment savoir si on est dans sous bash
 exit gerer argument avec atoi et la valeur retourner par lexec;
-segfault avec commande '<'in
 
 ### FAIT
 
+segfault avec commande '<'in
 pwd fini
 env
 unset finir delete chainnons list

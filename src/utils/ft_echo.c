@@ -6,12 +6,12 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/16 20:21:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/21 13:22:52 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/03 13:35:43 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+/*
 static char *clear_str(char *str)
 {
 	int	i;
@@ -35,7 +35,6 @@ static char *clear_str(char *str)
 	temp = ft_substr(str, k, j);
 	return (temp);
 }
-
 static void	check_env(char *str, t_list **env)
 {
 	char *temp;
@@ -63,13 +62,11 @@ static void	check_env(char *str, t_list **env)
 		env_cpy = env_cpy->next;
 	}
 	free(temp);
-}
+}*/
 
-int	ft_echo(char *str, char *arg, t_list **env)
+int	ft_echo(char **cmd, t_list **env)
 {
-	if (ft_strchr(str, '$'))
-		check_env(str, env);
-	else if (str)
+	if (str)
 		write(1, str, ft_strlen(str));
 	if (!arg)
 		write(1, "\n", 1);
