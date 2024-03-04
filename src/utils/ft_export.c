@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 08:31:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/01 08:00:26 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/04 15:41:03 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,10 @@ static void	env_print(t_list **env)
 {
 	t_list *temp;
 
-	temp = *env;
-// ajouter tri en ascii
+	temp = get_next_min(env);
 	while (temp)
 	{
+		ft_putstr_fd("declare -x ", 1);
 		ft_putstr_fd(temp->var, 1);
 		if (temp->var_content)
 		{
@@ -85,8 +85,9 @@ static void	env_print(t_list **env)
 			ft_putstr_fd("\"", 1);
 		}
 		ft_putstr_fd("\n", 1);
-		temp = temp->next;
+		temp = get_next_min(env);
 	}
+	ft_lst_set_isprint(env);
 }
 
 static void	env_update(t_list *env, char *content)

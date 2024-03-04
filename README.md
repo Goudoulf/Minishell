@@ -148,22 +148,20 @@ cat sans rien prompt * 2
 
 unclosed quote 
 
-
 check erreur pre parsing et parsing ( tripe chevron , pipe vide)
-
-OK reste $?(dollars dans dquote (on remplace si besoin pendant le parsing) + $?)
-
-mettre a jour la liste chainee
 
 #### builtin
 
-echo a finir + -n
 cd a faire
-export faire le tri et +x declare voir comment savoir si on est dans sous bash
-exit gerer argument avec atoi et la valeur retourner par lexec;
 
 ### FAIT
 
+export +x declare voir comment savoir si on est dans sous bash
+OK reste $?(dollars dans dquote (on remplace si besoin pendant le parsing) + $?)
+exit gerer argument avec atoi et la valeur retourner par lexec;
+export faire le tri 
+echo a finir + -n
+mettre a jour la liste chainee
 segfault avec commande '<'in
 pwd fini
 env

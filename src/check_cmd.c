@@ -6,13 +6,13 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 15:06:40 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/29 19:20:38 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/04 14:18:13 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	check_cmd(char *input, t_list **env, t_cmd **command)
+void	check_cmd(char *input, t_list **env, t_cmd **command, t_error *err)
 {
 	t_cmd *temp;
 	char **com;
@@ -33,19 +33,23 @@ void	check_cmd(char *input, t_list **env, t_cmd **command)
 		ft_export(env, com);
 	if (com && !ft_strncmp(com[0], "unset", 7))
 		ft_unset(env, com);
-	if (input && !ft_strncmp(input, "exit", 5))
+	if (com && !ft_strncmp(com[0], "exit", 5))
 	{
-		free(input);
-		rl_clear_history();
-		ft_cmdclear(command);
-		ft_lstclear(env);
-		ft_printf("exit\n");
-		exit(0);
+		ft_exit(com, err);
 	}
-	if (!ft_strncmp(input, "echo", 5))
-		ft_echo(&input[5], NULL, env);
+	if (com && !ft_strncmp(com[0], "echo", 5))
+		ft_echo(com, env);
 	if (!ft_strncmp(input, "pwd", 4))
 		ft_pwd();
 	if (!ft_strncmp(input, "env", 5))
 		ft_lst_print(env);
+	if (err->do_exit == true)
+	{	
+		free(input);
+		rl_clear_history();
+		ft_cmdclear(command);
+		ft_lstclear(env);
+		ft_putstr_fd("exit\n", 1);
+		exit(err->code);
+	}
 }

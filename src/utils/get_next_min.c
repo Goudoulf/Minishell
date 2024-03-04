@@ -1,35 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lst_clear.c                                     :+:      :+:    :+:   */
+/*   get_next_min.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/18 12:12:52 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/04 10:32:14 by cassie           ###   ########.fr       */
+/*   Created: 2024/03/04 10:11:17 by cassie            #+#    #+#             */
+/*   Updated: 2024/03/04 11:25:28 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_lstclear(t_list **lst)
+t_list	*get_next_min(t_list **stack)
 {
-	t_list	*temp;
-	t_list	*current;
+	t_list	*head;
+	t_list	*min;
+	int		new_min;
 
-	if (!lst)
-		return ;
-	current = *lst;
-	while (current != NULL)
+	min = NULL;
+	new_min = 0;
+	head = *stack;
+	if (!head)
+		return (min);
+	while (head)
 	{
-		temp = current->next;
-		free(current->string);
-		free(current->var);
-		free(current->var_content);
-		current->isprint = 0;
-		free(current);
-		current = temp;
+		if ((head->isprint == -1) && (!new_min || ft_strncmp(min->var, head->var, ft_strlen(head->var)) > 0 ))
+		{
+			min = head;
+			new_min = 1;
+		}
+		head = head->next;
 	}
-	*lst = NULL;
+	if (min)
+		min->isprint = 1;
+	return (min);
 }
-

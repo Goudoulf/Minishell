@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 11:58:58 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/03 11:38:02 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/04 15:54:34 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ static int	start_dollar(char *line, int dollar_num)
 	return (-1);
 }
 
-static char *replace_dollar(char *line, t_list **env, int start, int end)
+static char *replace_dollar(char *line, t_list **env, int start, int end, t_error *err)
 {
 	t_list *env_match;
 	char *temp1;
@@ -145,7 +145,9 @@ static char *replace_dollar(char *line, t_list **env, int start, int end)
 //	printf("temp3 =%s\n", temp3);
 	env_match = check_cmd_env(temp3, env);
 	free(temp3);
-	if (!env_match)
+	if (!env_match && !ft_strncmp("?", temp3, ft_strlen(temp3)))
+		temp3 = ft_itoa(err->code);
+	else if (!env_match)
 		temp3 = ft_strdup("\0");
 	else
 		temp3 = ft_strdup(env_match->var_content);
@@ -175,7 +177,7 @@ static int count_dollar(char *line)
 	return (count);
 }
 
-char	*check_dollars(char *line, t_list **env)
+char	*check_dollars(char *line, t_list **env, t_error *err)
 {
 	int	i;
 	int	j;
@@ -189,7 +191,7 @@ char	*check_dollars(char *line, t_list **env)
 		return (line);
 	while(i >= 0)
 	{
-		line = replace_dollar(line, env, j, 0);
+		line = replace_dollar(line, env, j, 0, err);
 		new_count = count_dollar(line);
 		if ( new_count == old_count)
 			j++;

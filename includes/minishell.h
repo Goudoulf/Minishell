@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/02 17:57:21 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/04 15:51:38 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct s_list
 	char			*string;
 	char			*var;
 	char			*var_content;
+	int				isprint;
 	struct s_list	*next;
 }				t_list;
 
@@ -39,23 +40,30 @@ typedef struct s_cmd
 {
 	char			**cmd;
 	char			*path;
-	char			**input_file;
-	char			**output_file;
+	char			**redirection;
 	struct s_cmd	*next;
 }				t_cmd;
 
+typedef struct s_error
+{
+	unsigned int	code;
+	bool			do_exit;
+}				t_error;
+
 // core
-void	check_cmd(char *input, t_list **env, t_cmd **cmd);
+void	check_cmd(char *input, t_list **env, t_cmd **cmd, t_error *err);
 
 // builtins
-int	ft_echo(char *str, char *arg, t_list **env);
+int	ft_echo(char **cmd, t_list **env);
 int	ft_pwd(void);
 int	ft_export(t_list **env, char **cmd);
 int	ft_unset(t_list **env, char **cmd);
+void	ft_exit(char **cmd, t_error *err);
 
 // init
 
-void	init_all(t_cmd **cmd, t_list **env, char **envp);
+void	init_all(t_cmd **cmd, t_list **env, t_error *err, char **envp);
+void	inc_shell_lvl(t_list **env);
 
 // utils
 
@@ -76,13 +84,15 @@ void	ft_lst_print(t_list **list);
 void	ft_lstclear(t_list **lst);
 void	ft_cmdclear(t_cmd **cmd);
 void	ft_cmd_print(t_cmd **cmd);
+t_list	*get_next_min(t_list **stack);
+void	ft_lst_set_isprint(t_list **lst);
 
 // parsing
 
-void	line_parsing(t_cmd **cmd, char *line, t_list **env);
+void	line_parsing(t_cmd **cmd, char *line, t_list **env, t_error *err);
 char	*clean_line(char *line);
 char	*add_space_chevron(char *line);
-char	*check_dollars(char *line, t_list **env);
+char	*check_dollars(char *line, t_list **env, t_error *err);
 char	**split_pipe(char *line);
 void	line_to_cmd(t_cmd **cmd, char *line, t_list **env);
 
@@ -93,7 +103,7 @@ char	*get_value(t_list **env, char *s);
 
 // exec
 
-int	exec_line(t_cmd *cmd, char **envp);
+//int	exec_line(t_cmd *cmd, char **envp);
 char	*ft_join(const char *s1, const char *s2);
 char	*find_path(char *cmd, char *path);
 

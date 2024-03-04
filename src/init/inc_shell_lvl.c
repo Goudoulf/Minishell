@@ -1,35 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lst_clear.c                                     :+:      :+:    :+:   */
+/*   inc_shell_lvl.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/18 12:12:52 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/04 10:32:14 by cassie           ###   ########.fr       */
+/*   Created: 2024/03/04 15:07:50 by cassie            #+#    #+#             */
+/*   Updated: 2024/03/04 15:36:51 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_lstclear(t_list **lst)
+void	inc_shell_lvl(t_list **env)
 {
 	t_list	*temp;
-	t_list	*current;
+	char *old;
+	int	new_int;
 
-	if (!lst)
+	temp = *env;
+	if (!env)
 		return ;
-	current = *lst;
-	while (current != NULL)
+	while (temp)
 	{
-		temp = current->next;
-		free(current->string);
-		free(current->var);
-		free(current->var_content);
-		current->isprint = 0;
-		free(current);
-		current = temp;
+		if (!ft_strncmp(temp->var, "SHLVL", ft_strlen(temp->var)))
+		{
+			old = temp->var_content;
+			if (!old)
+				return ;
+			new_int = ft_atoi(old) + 1;
+			free(temp->var_content);
+			temp->var_content = ft_itoa(new_int);
+			return ;
+		}
+		temp = temp->next;
 	}
-	*lst = NULL;
 }
-

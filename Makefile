@@ -17,10 +17,11 @@ SRCS_FILE = main.c check_cmd.c signal.c ./utils/ft_echo.c ./utils/ft_pwd.c ./uti
 			init/init.c ./parsing/parsing.c ./parsing/clean_line/clean_line.c \
 			./parsing/split_pipe/split_pipe.c ./utils/ft_strtok.c ./parsing/line_to_cmd.c \
 			./utils/count_out_in/count_out_in.c ./utils/ft_strtok_quote.c ./utils/list/ft_cmd_clear.c \
-			./utils/list/ft_cmd_print.c ./exec/pipe_minishell.c ./parsing/find_path.c ./utils/ft_join.c \
+			./utils/list/ft_cmd_print.c ./parsing/find_path.c ./utils/ft_join.c \
 			./utils/get_value.c ./utils/ft_export.c ./utils/ft_unset.c \
-			./parsing/clean_line/add_space_chevron.c ./parsing/check_dollars.c
-
+			./parsing/clean_line/add_space_chevron.c ./parsing/check_dollars.c \
+			./utils/get_next_min.c ./utils/list/ft_lst_set_isprint.c ./utils/ft_exit.c init/inc_shell_lvl.c
+#./exec/pipe_minishell.c 
 INC = includes
 
 FT_PRINTF_DIR = ./lib/ft_printf/

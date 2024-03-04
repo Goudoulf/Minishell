@@ -1,35 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lst_clear.c                                     :+:      :+:    :+:   */
+/*   ft_lst_set_isprint.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/18 12:12:52 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/04 10:32:14 by cassie           ###   ########.fr       */
+/*   Created: 2024/03/04 10:33:47 by cassie            #+#    #+#             */
+/*   Updated: 2024/03/04 10:47:13 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_lstclear(t_list **lst)
+void	ft_lst_set_isprint(t_list **lst)
 {
 	t_list	*temp;
-	t_list	*current;
 
 	if (!lst)
 		return ;
-	current = *lst;
-	while (current != NULL)
+	temp = *lst;
+	while (temp != NULL)
 	{
-		temp = current->next;
-		free(current->string);
-		free(current->var);
-		free(current->var_content);
-		current->isprint = 0;
-		free(current);
-		current = temp;
+		temp->isprint = -1;
+		temp = temp->next;
 	}
-	*lst = NULL;
 }
-

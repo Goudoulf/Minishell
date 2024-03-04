@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 14:48:16 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/03 09:24:51 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/04 15:06:07 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ t_list	*ft_lst_new(char *content)
 	new->string = ft_strdup(content);
 	new->var = str_to_char(content);
 	new->var_content = str_from_char(content);
+	new->isprint = -1;
 	new->next = NULL;
 	return (new);
 }

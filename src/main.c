@@ -21,13 +21,14 @@ int main(int argc, char **argv, char **envp)
 {
 	t_cmd	*cmd;
 	t_list	*env;
+	t_error	err;
 	char	*input;
 
 	(void)argc;
 	(void)argv;
 	env = NULL;
 	cmd = NULL;
-	init_all(&cmd, &env, envp);
+	init_all(&cmd, &env, &err, envp);
 	while(1)
 	{
 		// a ajouter dans heredoc
@@ -36,10 +37,10 @@ int main(int argc, char **argv, char **envp)
 		if (input && *input)
 		{
 			add_history(input);
-			line_parsing(&cmd, input, &env);
+			line_parsing(&cmd, input, &env, &err);
 			//exec_line(cmd, envp);
 		}
-		check_cmd(input, &env, &cmd);
+		check_cmd(input, &env, &cmd, &err);
 		ft_cmdclear(&cmd);
 		free(input);
 	}
