@@ -146,16 +146,15 @@ ajouter la gestions des builts in
 
 cat sans rien prompt * 2
 
-unclosed quote 
-
 check erreur pre parsing et parsing ( tripe chevron , pipe vide)
 
 #### builtin
 
-cd a faire
+cd a faire + oldpwd null at begin
 
 ### FAIT
 
+unclosed quote 
 export +x declare voir comment savoir si on est dans sous bash
 OK reste $?(dollars dans dquote (on remplace si besoin pendant le parsing) + $?)
 exit gerer argument avec atoi et la valeur retourner par lexec;

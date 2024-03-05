@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/04 15:51:38 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/05 16:53:28 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ int	ft_pwd(void);
 int	ft_export(t_list **env, char **cmd);
 int	ft_unset(t_list **env, char **cmd);
 void	ft_exit(char **cmd, t_error *err);
+int	ft_cd(char **cmd, t_list **env);
 
 // init
 
@@ -95,6 +96,7 @@ char	*add_space_chevron(char *line);
 char	*check_dollars(char *line, t_list **env, t_error *err);
 char	**split_pipe(char *line);
 void	line_to_cmd(t_cmd **cmd, char *line, t_list **env);
+void clean_quote(t_cmd **cmd);
 
 size_t	cmd_count(char *s, char c);
 size_t infile_count(char *line);

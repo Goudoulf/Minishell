@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 15:06:40 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/04 14:18:13 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/05 16:51:41 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	check_cmd(char *input, t_list **env, t_cmd **command, t_error *err)
 	}
 	if (com && !ft_strncmp(com[0], "echo", 5))
 		ft_echo(com, env);
+	if (com && !ft_strncmp(com[0], "cd", 5))
+		ft_cd(com, env);
 	if (!ft_strncmp(input, "pwd", 4))
 		ft_pwd();
 	if (!ft_strncmp(input, "env", 5))
