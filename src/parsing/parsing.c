@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 19:08:44 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/05 13:17:15 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/06 14:30:16 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,12 @@ void	line_parsing(t_cmd **cmd, char *line, t_list **env, t_error *err)
 	int		i;
 
 	i = 0;
-	(void)cmd;
 	line_temp  = clean_line(line);
+	printf("line_temp =%s\n", line_temp);
 	line_temp = add_space_chevron(line_temp);
+	printf("line_temp =%s\n", line_temp);
 	line_temp = check_dollars(line_temp, env, err);
+	printf("line_temp =%s\n", line_temp);
 	line_tab = split_pipe(line_temp);
 	while (line_tab[i])
 	{

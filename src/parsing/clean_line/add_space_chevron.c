@@ -6,11 +6,9 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 09:18:20 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/02 11:54:11 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/06 12:50:43 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "minishell.h"
 
 #include "minishell.h"
 // gerer size 0 ou null
