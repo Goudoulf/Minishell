@@ -29,20 +29,38 @@ int main(int argc, char **argv, char **envp)
 	env = NULL;
 	cmd = NULL;
 	init_all(&cmd, &env, &err, envp);
+	signal_handling();
 	while(1)
 	{
 		// a ajouter dans heredoc
-		signal_handling();
 		input = readline(CYELLOW "[Minishell]: " RESET);
+		if (!input)
+		{
+			rl_clear_history();
+			ft_lstclear(&env);
+			ft_cmdclear(&cmd);
+			ft_printf("exit\n");
+			exit(0);
+		}
 		if (input && *input)
 		{
 			add_history(input);
-			line_parsing(&cmd, input, &env, &err);
+			if (check_line_error(input))
+				line_parsing(&cmd, input, &env, &err);
+			else
+			{
+				ft_putstr_fd("error\n", 2);
+				free(input);
+				input = NULL;
+			}
 			//exec_line(cmd, envp);
 		}
-		check_cmd(input, &env, &cmd, &err);
-		ft_cmdclear(&cmd);
-		free(input);
+		if (input)
+		{
+			check_cmd(input, &env, &cmd, &err);
+			ft_cmdclear(&cmd);
+			free(input);
+		}
 	}
 	ft_lstclear(&env);
 	free(env);

@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 09:55:53 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/06 12:49:26 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/07 11:01:41 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ static size_t	chevron_space_size(char *str, size_t i, size_t j, char c_quote)
 		{
 			while (str[i + 1] == ' ')
 				i++;
+			if (!ft_is_chevron(str[i]) && ft_is_chevron(str[i + 1]))
+				i--;
 		}
 		i++;
 		j++;
@@ -77,10 +79,12 @@ static char	*clean_space(char *line, size_t i, size_t j, bool quote, char c_quot
 		else if (quote == true && line[i] == c_quote)
 			set_quote(&quote, &c_quote, line[i]);
 		temp[j] = line[i];
-		if (quote == false && ft_is_chevron(line[i]))
+		if (quote == false && ft_is_chevron(line[i]) && !ft_is_chevron(line[i + 1]))
 		{
 			while (line[i + 1] == ' ')
 				i++;
+			if (!ft_is_chevron(line[i]) && ft_is_chevron(line[i + 1]))
+				i--;
 		}
 		i++;
 		j++;

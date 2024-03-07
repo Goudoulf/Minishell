@@ -21,7 +21,7 @@ SRCS_FILE = main.c check_cmd.c signal.c ./utils/ft_echo.c ./utils/ft_pwd.c ./uti
 			./utils/get_value.c ./utils/ft_export.c ./utils/ft_unset.c \
 			./parsing/clean_line/add_space_chevron.c ./parsing/check_dollars.c \
 			./utils/get_next_min.c ./utils/list/ft_lst_set_isprint.c ./utils/ft_exit.c init/inc_shell_lvl.c \
-			./parsing/clean_quote.c ./utils/ft_cd.c
+			./parsing/clean_quote.c ./utils/ft_cd.c ./error/check_line_error.c
 #./exec/pipe_minishell.c 
 INC = includes
 

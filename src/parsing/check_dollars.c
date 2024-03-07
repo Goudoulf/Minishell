@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 11:58:58 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/06 12:52:09 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/07 14:24:06 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,13 +103,21 @@ static char *replace_dollar(char *line, t_list **env, int start, int end, t_erro
 	temp2 = ft_substr(line, start + 1 + end, ft_strlen(line));
 	temp3 = ft_substr(line, start + 1, end);
 	env_match = check_cmd_env(temp3, env);
-	free(temp3);
 	if (!env_match && !ft_strncmp("?", temp3, ft_strlen(temp3)))
+	{
+		free(temp3);
 		temp3 = ft_itoa(err->code);
+	}
 	else if (!env_match)
+	{
+		free(temp3);
 		temp3 = ft_strdup("\0");
+	}
 	else
+	{
+		free(temp3);
 		temp3 = ft_strdup(env_match->var_content);
+	}
 	final = ft_strjoin(temp1, temp3);
 	free(temp1);
 	free(temp3);

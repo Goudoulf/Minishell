@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 11:31:34 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/06 14:01:42 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/07 11:00:35 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,8 @@ void	line_to_cmd(t_cmd **cmd, char *line, t_list **env)
 	command = create_tab(cmd_count(line, ' ') - infile_count(line) - outfile_count(line));
 	// special token for export
 	token = ft_strtok_quote(line, " ");
-	printf("line =%s\n", line);
 	while (token)
 	{
-		printf("i =%d\n", i);
-		printf("k =%d\n", k);
 		if (!token)
 			break;
 		else if (token[0] == '<' || token[0] == '>')

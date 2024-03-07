@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 09:11:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/06 15:16:17 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/07 17:02:34 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ static void sigint_handler(int	sig)
 
 static void sigquit_handler(void)
 {
-	//ft_putstr_fd("\b\b  \b\b", 2);
 	struct sigaction act;
 
 	ft_memset(&act, 0, sizeof(act));

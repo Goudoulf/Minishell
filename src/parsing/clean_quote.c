@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 13:17:32 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/05 14:26:36 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/07 11:02:11 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ static char *delete_quote(char *cmd_arg)
 	j = 0;
 	c_quote = 0;
 	size = new_size(cmd_arg);
-	printf("oldsize %zu\n", ft_strlen(cmd_arg));
-	printf("newsize %zu\n", size);
 	temp = malloc(sizeof(char) * (size + 1));
 	if (!temp)
 		return (NULL);
@@ -98,7 +96,7 @@ void clean_quote(t_cmd **cmd)
 	while (temp)
 	{
 		i = 0;
-		while (temp->cmd[i])
+		while (temp->cmd && temp->cmd[i])
 		{
 			temp->cmd[i] = delete_quote(temp->cmd[i]);
 			i++;

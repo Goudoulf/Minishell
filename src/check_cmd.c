@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 15:06:40 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/05 16:51:41 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/07 15:13:26 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,6 @@ void	check_cmd(char *input, t_list **env, t_cmd **command, t_error *err)
 	temp = *command;
 	if (temp)
 		com = temp->cmd;
-
-	if (!input)
-	{
-		rl_clear_history();
-		ft_lstclear(env);
-		ft_printf("exit\n");
-		exit(0);
-	}
 	if (com && !ft_strncmp(com[0], "export", 7))
 		ft_export(env, com);
 	if (com && !ft_strncmp(com[0], "unset", 7))

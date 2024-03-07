@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/05 16:53:28 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/07 10:51:33 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ void	ft_lst_set_isprint(t_list **lst);
 
 void	line_parsing(t_cmd **cmd, char *line, t_list **env, t_error *err);
 char	*clean_line(char *line);
+int	check_line_error(char *line);
 char	*add_space_chevron(char *line);
 char	*check_dollars(char *line, t_list **env, t_error *err);
 char	**split_pipe(char *line);

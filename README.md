@@ -145,14 +145,15 @@ ajouter la gestions des builts in
 ### Camille
 
 cat sans rien prompt * 2
-
-check erreur pre parsing et parsing ( tripe chevron , pipe vide)
+pwd max size 4096 path byte
+signal dans boucle infini
 
 #### builtin
 
 
 ### FAIT
 
+check erreur pre parsing et parsing ( tripe chevron , pipe vide)
 unclosed quote 
 cd a faire + oldpwd null at begin
 export +x declare voir comment savoir si on est dans sous bash
