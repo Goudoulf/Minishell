@@ -6,33 +6,11 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/01 15:52:06 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/07 18:55:42 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	isdirectory(char *str)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '/')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-static void	closepipe(int pipe[2])
-{
-	if (close(pipe[0]) == -1)
-		perror(ft_itoa(pipe[0]));
-	if (close(pipe[1]) == -1)
-		perror(ft_itoa(pipe[1]));
-}
 
 /*static int	ft_lstsize(t_list *lst)
 {
@@ -72,14 +50,6 @@ static void	closepipe(int pipe[2])
 	return (tab);
 }*/
 
-static void	print_error(char *error, char *str)
-{
-	write(2, str, ft_strlen(str));
-	write(2, " :", 2);
-	write(2, error, ft_strlen(error));
-	write(2, "\n", 1);
-}
-
 /*char	*ft_realloc(char *str, char *buf)
 {
 	char	*new_str;
@@ -103,30 +73,61 @@ static void	print_error(char *error, char *str)
 	return (new_str);
 }*/
 
-static void	dchevron(char *limiter, int *fd)
+size_t	count_child(t_cmd *cmd)
 {
-	char	*buf;
-	int		pipefd[2];
+	size_t	i;
 
-	pipe(pipefd);
-	buf = readline("> ");
-	while (buf != NULL)
+	i = 0;
+	while (cmd)
 	{
-		if (strncmp(buf, limiter, strlen(limiter)) == 0)
-		{
-			free(buf);
-			break ;
-		}
-		write(pipefd[1], buf, strlen(buf));
-		write(pipefd[1], "\n", 1);
-		free(buf);
-		buf = readline("> ");
+		i++;
+		cmd = cmd->next;
 	}
-	close(pipefd[1]);
-	*fd = pipefd[0];
+	return (i);
 }
 
-static void	redir_input(int fd, int pipe[2])
+static int	isdirectory(char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '/')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+static void	closepipe(int pipe[2])
+{
+	if (close(pipe[0]) == -1)
+		perror(ft_itoa(pipe[0]));
+	if (close(pipe[1]) == -1)
+		perror(ft_itoa(pipe[1]));
+}
+
+bool	is_dechevron(t_cmd *cmd)
+{
+	size_t	i;
+
+	i = -1;
+	while (cmd->input_file && cmd->input_file[++i])
+		if (ft_strncmp(cmd->input_file[i], "<<", 2) == 0)
+			return (true);
+	return (false);
+}
+
+static void	print_error(char *error, char *str)
+{
+	write(2, str, ft_strlen(str));
+	write(2, " :", 2);
+	write(2, error, ft_strlen(error));
+	write(2, "\n", 1);
+}
+
+static void	redir_input(int fd, int pipe[2], t_cmd *cmd)
 {
 	if (fd != 0)
 	{
@@ -139,18 +140,49 @@ static void	redir_input(int fd, int pipe[2])
 		if (close(fd) == -1)
 			perror(ft_itoa(fd));
 	}
-	if (pipe)
+	if (pipe && !is_dechevron(cmd) && !cmd->output_file || cmd->next)
 	{
+		close(pipe[0]);
 		if (dup2(pipe[1], 1) == -1)
 		{
 			perror(ft_itoa(fd));
 			closepipe(pipe);
 			exit(1);
 		}
+		close(pipe[1]);
 	}
 }
 
-static void	redir_output(int fd, int pipe[2])
+static void	do_input(t_cmd *cmd, int pipe[2])
+{
+	int		i;
+	int		fd;
+	bool	dchevron;
+
+	i = 0;
+	fd = 0;
+	dchevron = false;
+	while (cmd->input_file && cmd->input_file[i] != NULL)
+		i++;
+	i--;
+	if (ft_strncmp(cmd->input_file[i], "<<", 2) == 0)
+	{
+		close(cmd->pipe_dchevron[1]);
+		fd = cmd->pipe_dchevron[0];
+		dchevron = true;
+	}
+	else if (cmd->input_file[i][0] == '<')
+	{
+		if (fd != 0)
+			close(fd);
+		fd = open(&cmd->input_file[i][1], O_RDONLY);
+	}
+	if (fd == -1)
+		exit((perror(&cmd->input_file[i][1]), 1));
+	redir_input(fd, pipe, cmd);
+}
+
+static void	redir_output(int fd, int pipe[2], t_cmd *cmd)
 {
 	if (fd != 1)
 	{
@@ -163,38 +195,17 @@ static void	redir_output(int fd, int pipe[2])
 		if (close(fd) == -1)
 			perror(ft_itoa(fd));
 	}
-	if (pipe)
+	if (pipe && !is_dechevron(cmd) && !cmd->input_file)
 	{
+		close(pipe[1]);
 		if (dup2(pipe[0], 0) == -1)
 		{
 			perror(ft_itoa(pipe[0]));
 			closepipe(pipe);
 			exit(1);
 		}
+		close(pipe[0]);
 	}
-}
-
-static void	do_input(t_cmd *cmd, int pipe[2])
-{
-	int		i;
-	int		j;
-	int		fd;
-
-	i = -1;
-	fd = 0;
-	while (cmd->input_file && cmd->input_file[++i])
-	{
-		j = ft_isdigit(cmd->input_file[i][0]);
-		if (fd != 0)
-			close(fd);
-		if (ft_strncmp(&cmd->input_file[i][j], "<<", 2) == 0)
-			dchevron(&cmd->input_file[i][2 + j], &fd);
-		else if (cmd->input_file[i][j] == '<')
-			fd = open(&cmd->input_file[i][++j], O_RDONLY);
-		if (fd == -1)
-			exit((perror(&cmd->input_file[i][j]), 1));
-	}
-	redir_input(fd, pipe);
 }
 
 static void	do_output(t_cmd *cmd, int pipe[2])
@@ -207,20 +218,20 @@ static void	do_output(t_cmd *cmd, int pipe[2])
 	fd = 1;
 	while (cmd->output_file && cmd->output_file[++i])
 	{
-		j = ft_isdigit(cmd->output_file[i][0]);
+		j = 0;
 		if (fd != 1)
 			close(fd);
 		if (ft_strncmp(&cmd->output_file[i][j], ">>", 2) == 0)
 		{
-			fd = open(&cmd->output_file[i][2 + j], O_CREAT | O_WRONLY | O_APPEND, 00644);
 			j += 2;
+			fd = open(&cmd->output_file[i][j], O_CREAT | O_WRONLY | O_APPEND, 00644);
 		}
 		else if (cmd->output_file[i][j] == '>')
 			fd = open(&cmd->output_file[i][++j], O_CREAT | O_WRONLY | O_TRUNC, 00644);
 		if (fd == -1)
 			exit((perror(&cmd->output_file[i][j]), 1));
 	}
-	redir_output(fd, pipe);
+	redir_output(fd, pipe, cmd);
 }
 
 static void	do_cmd(t_cmd *cmd, char **envp)
@@ -244,6 +255,8 @@ static void	do_cmd(t_cmd *cmd, char **envp)
 
 static void	child(t_cmd *cmd, char **envp)
 {
+	// if (cmd->redirection)
+	// 	do_redirection(cmd, NULL);
 	if (cmd->input_file)
 		do_input(cmd, NULL);
 	if (cmd->output_file)
@@ -254,14 +267,17 @@ static void	child(t_cmd *cmd, char **envp)
 
 static void	last_child(t_cmd *cmd, int pipe[2], char **envp)
 {
+	if (cmd->input_file)
+		do_input(cmd, pipe);
 	if (cmd->output_file)
 		do_output(cmd, pipe);
-	else
+	if (!cmd->input_file && !cmd->output_file)
 	{
 		close(pipe[1]);
 		dup2(pipe[0], 0);
 		close(pipe[0]);
 	}
+	//closepipe(pipe);
 	if (cmd->cmd)
 		do_cmd(cmd, envp);
 }
@@ -276,6 +292,8 @@ static void	first_child(t_cmd *cmd, int pipe[2], char **envp)
 		dup2(pipe[1], 1);
 		close(pipe[1]);
 	}
+	if (cmd->output_file)
+		do_output(cmd, pipe);
 	if (cmd->cmd)
 		do_cmd(cmd, envp);
 }
@@ -292,7 +310,7 @@ static void	child_pipe(t_cmd *cmd, int pipe1[2], int pipe2[2], char **envp)
 	}
 	if (cmd->output_file)
 		do_output(cmd, pipe1);
-	else
+	else if (!cmd->input_file)
 	{
 		close(pipe1[1]);
 		dup2(pipe1[0], 0);
@@ -302,17 +320,17 @@ static void	child_pipe(t_cmd *cmd, int pipe1[2], int pipe2[2], char **envp)
 		do_cmd(cmd, envp);
 }
 
-static int	exec_last(t_cmd *cmd, char **envp, int pipe1[2], pid_t *pid)
+static int	exec_last(t_cmd *cmd, char **envp, int pipe1[2])
 {
-	*pid = fork();
-	if (*pid == -1)
+	cmd->pid = fork();
+	if (cmd->pid == -1)
 		return (1);
-	if (*pid == 0)
+	if (cmd->pid == 0)
 		last_child(cmd, pipe1, envp);
 	return (0);
 }
 
-static int	for_eachpipe(t_cmd *cmd, char **envp, int pipe1[2], pid_t *pid)
+static int	for_eachpipe(t_cmd *cmd, char **envp, int pipe1[2])
 {
 	int	pipe2[2];
 	size_t	i;
@@ -321,15 +339,15 @@ static int	for_eachpipe(t_cmd *cmd, char **envp, int pipe1[2], pid_t *pid)
 	while (cmd)
 	{
 		if (!cmd->next)
-			return (exec_last(cmd, envp, pipe1, &pid[i]));
+			exec_last(cmd, envp, pipe1);
 		else
 		{
 			if (pipe(pipe2) == -1)
 				return (1);
-			pid[i] = fork();
-			if (pid[i] == -1)
+			cmd->pid = fork();
+			if (cmd->pid == -1)
 				return (1);
-			if (pid[i] == 0)
+			if (cmd->pid == 0)
 				child_pipe(cmd, pipe1, pipe2, envp);
 			else
 			{
@@ -338,65 +356,101 @@ static int	for_eachpipe(t_cmd *cmd, char **envp, int pipe1[2], pid_t *pid)
 				pipe1[1] = pipe2[1];
 			}
 		}
+		if (is_dechevron(cmd))
+			closepipe(cmd->pipe_dchevron);
 		cmd = cmd->next;
 		i++;
 	}
+	if (count_child(cmd) > 2)
+		closepipe(pipe2);
 	return (0);
 }
 
-static int	exec_pipe(t_cmd *cmd, char **envp, pid_t *pid, int pipe1[2])
+static void	dchevron(char *limiter, int pipefd[2])
 {
-	if (pipe(pipe1) == -1)
-		return (1);
-	pid[0] = fork();
-	if (pid[0] == -1)
-		return (1);
-	if (pid[0] == 0)
-		first_child(cmd, pipe1, envp);
-	cmd = cmd->next;
-	for_eachpipe(cmd, envp, pipe1, pid);
-	closepipe(pipe1);
-	return (0);
+	char	*buf;
+	size_t	size;
+
+	buf = readline("> ");
+	size = ft_strlen(buf);
+	if (ft_strlen(limiter) > ft_strlen(buf))
+		size = ft_strlen(limiter);
+	while (ft_strncmp(buf, limiter, size))
+	{
+		write(pipefd[1], buf, ft_strlen(buf));
+		write(pipefd[1], "\n", 1);
+		free(buf);
+		buf = readline("> ");
+	}
+	free(buf);
 }
 
-size_t	count_child(t_cmd *cmd)
+void	for_each_dchevron(t_cmd *cmd)
 {
 	size_t	i;
+	size_t	count;
 
-	i = 0;
 	while (cmd)
 	{
-		i++;
+		//pipe(cmd->pipe_dchevron);
+		count = 0;
+		i = -1;
+		while (cmd->input_file && cmd->input_file[++i])
+		{
+			if (ft_strncmp(cmd->input_file[i], "<<", 2) == 0)
+			{
+				if (count++ > 0)
+					closepipe(cmd->pipe_dchevron);
+				pipe(cmd->pipe_dchevron);
+				dchevron(&cmd->input_file[i][2], cmd->pipe_dchevron);
+			}
+		}
 		cmd = cmd->next;
 	}
-	return (i);
+}
+
+static int	exec_pipe(t_cmd *cmd, char **envp)
+{
+	int	pipefd[2];
+
+	for_each_dchevron(cmd);
+	if (pipe(pipefd) == -1)
+		return (1);
+	cmd->pid = fork();
+	if (cmd->pid == -1)
+		return (1);
+	if (cmd->pid == 0)
+		first_child(cmd, pipefd, envp);
+	if (is_dechevron(cmd))
+		closepipe(cmd->pipe_dchevron);
+	cmd = cmd->next;
+	for_eachpipe(cmd, envp, pipefd);
+	closepipe(pipefd);
+	return (0);
 }
 
 int	exec_line(t_cmd *cmd, char **envp)
 {
-	int		pipe1[2];
 	int		status;
-	int		nbchild;
-	int		i;
-	pid_t	*pid;
 
-	nbchild = count_child(cmd);
-	pid = malloc(sizeof (pid_t) * nbchild);
 	if (!cmd->next)
 	{
-		if (!pid)
+		for_each_dchevron(cmd);
+		cmd->pid = fork();
+		if (cmd->pid == -1)
 			return (1);
-		pid[0] = fork();
-		if (pid[0] == -1)
-			return (1);
-		if (pid[0] == 0)
+		if (cmd->pid == 0)
 			child(cmd, envp);
+		if (is_dechevron(cmd))
+			closepipe(cmd->pipe_dchevron);
 	}
 	else
-		exec_pipe(cmd, envp, pid, pipe1);
-	i = -1;
-	while (++i < nbchild)
-		waitpid(pid[i], &status, 0);
+		exec_pipe(cmd, envp);
+	while (cmd)
+	{
+		waitpid(cmd->pid, &status, 0);
+		cmd = cmd->next;
+	}
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	return (0);
