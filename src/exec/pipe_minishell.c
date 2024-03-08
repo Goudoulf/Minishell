@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
+/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/08 12:39:56 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/08 12:52:22 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -432,7 +432,7 @@ void	for_each_dchevron(t_cmd *cmd)
 				closepipe(cmd->pipe_dchevron);
 			first = false;
 			pipe(cmd->pipe_dchevron);
-			dchevron(&cmd->redirection[i][2], cmd->pipe_dchevron);
+			dchevron(&cmd->here_doc[i][2], cmd->pipe_dchevron);
 		}
 		cmd = cmd->next;
 	}

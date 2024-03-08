@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/08 10:51:50 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/08 12:01:47 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_cmd
 	char			**cmd;
 	char			*path;
 	char			**redirection;
+	char			**here_doc;
 	pid_t			pid;
 	int				pipe_dchevron[2];
 	struct s_cmd	*next;
@@ -101,6 +102,7 @@ char	*check_dollars(char *line, t_list **env, t_error *err);
 char	**split_pipe(char *line);
 void	line_to_cmd(t_cmd **cmd, char *line, t_list **env);
 void clean_quote(t_cmd **cmd);
+void	clean_redirection(t_cmd **cmd);
 
 size_t	cmd_count(char *s, char c);
 size_t infile_count(char *line);

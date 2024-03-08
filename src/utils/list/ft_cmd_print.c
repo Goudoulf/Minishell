@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 10:28:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/04 11:41:00 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/08 13:02:46 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	ft_cmd_print(t_cmd **cmd)
 	{
 		int	i = 0;
 		int	j = 0;
+		int	k = 0;
 		printf("Block[%d]\n", d++);
 		while (temp->cmd && temp->cmd[i])
 		{
@@ -33,6 +34,11 @@ void	ft_cmd_print(t_cmd **cmd)
 		{
 			printf("	redirection[%d] =%s\n", j, temp->redirection[j]);
 			j++;
+		}
+		while (temp->here_doc && temp->here_doc[k])
+		{
+			printf("	here_doc[%d] =%s\n", k, temp->here_doc[k]);
+			k++;
 		}
 		temp = temp->next;
 	}

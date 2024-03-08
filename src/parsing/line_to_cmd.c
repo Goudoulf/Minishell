@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 11:31:34 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/07 11:00:35 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/08 12:45:36 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ static t_cmd	*ft_cmd_new(char **command, char **redirection, t_list **env)
 	else
 		new->path = NULL;
 	new->redirection = redirection;
+	new->here_doc = NULL;
 	new->next = NULL;
 	return (new);
 }
