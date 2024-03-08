@@ -135,12 +135,8 @@
  
 ### Romain
 
-voir les pipes
-heredoc avant les redirections
-heredoc rajouter signal handling
-return le code function 
-check les errors ecrite pour lexec
 ajouter la gestions des builts in
+<< stop > test
 
 ### Camille
 

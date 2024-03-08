@@ -6,11 +6,12 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 11:58:58 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/07 14:24:06 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/08 17:10:26 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 static int	ft_is_end(int c)
 {
 	if (c == ' ' || c == '\t' || c == '\'' || c == '\"' || c == '|' || c == '\0' || c == '$')
@@ -87,13 +88,45 @@ static int	start_dollar(char *line, int dollar_num)
 	return (-1);
 }
 
-static char *replace_dollar(char *line, t_list **env, int start, int end, t_error *err)
+static void	free_temp(char *s2, char *s3, char *s4)
+{
+	if (s2)
+		free(s2);
+	if (s3)
+		free(s3);
+	if (s4)
+		free(s4);
+}
+
+static char *env_replace(char *temp, t_list *env_m, t_error *err)
+{
+	if (!env_m && !ft_strncmp("?", temp, ft_strlen(temp)))
+	{
+		free(temp);
+		temp = ft_itoa(err->code);
+		return (temp);
+	}
+	else if (!env_m)
+	{
+		free(temp);
+		temp = ft_strdup("\0");
+		return (temp);
+	}
+	else
+	{
+		free(temp);
+		temp = ft_strdup(env_m->var_content);
+		return (temp);
+	}
+}
+
+static char *replace_dollar(char *line, t_list **env, int start, t_error *err)
 {
 	t_list *env_match;
 	char *temp1;
 	char *temp2;
 	char *temp3;
-	char *final;
+	int	end;
 
 	start = start_dollar(line, start);
 	if (ft_is_end(line[start + 1]))
@@ -103,28 +136,12 @@ static char *replace_dollar(char *line, t_list **env, int start, int end, t_erro
 	temp2 = ft_substr(line, start + 1 + end, ft_strlen(line));
 	temp3 = ft_substr(line, start + 1, end);
 	env_match = check_cmd_env(temp3, env);
-	if (!env_match && !ft_strncmp("?", temp3, ft_strlen(temp3)))
-	{
-		free(temp3);
-		temp3 = ft_itoa(err->code);
-	}
-	else if (!env_match)
-	{
-		free(temp3);
-		temp3 = ft_strdup("\0");
-	}
-	else
-	{
-		free(temp3);
-		temp3 = ft_strdup(env_match->var_content);
-	}
-	final = ft_strjoin(temp1, temp3);
-	free(temp1);
-	free(temp3);
-	temp1 = ft_strjoin(final, temp2);
-	free(temp2);
-	free(final);
+	temp3 = env_replace(temp3, env_match, err);
 	free(line);
+	line = ft_strjoin(temp1, temp3);
+	free(temp1);
+	temp1 = ft_strjoin(line, temp2);
+	free_temp(temp2, temp3, line);
 	return (temp1);
 }
 
@@ -158,7 +175,7 @@ char	*check_dollars(char *line, t_list **env, t_error *err)
 		return (line);
 	while(i >= 0)
 	{
-		line = replace_dollar(line, env, j, 0, err);
+		line = replace_dollar(line, env, j, err);
 		new_count = count_dollar(line);
 		if ( new_count == old_count)
 			j++;

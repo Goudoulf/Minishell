@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 09:55:53 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/08 10:05:18 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/08 16:39:40 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ static char	*clean_space(char *line, size_t i, size_t j, char c_quote)
 		{
 			while (line[i + 1] == ' ')
 				i++;
-			if (!ft_is_chevron(line[i]) && ft_is_chevron(line[i + 1]))
-				i--;
+//			if (!ft_is_chevron(line[i]) && ft_is_chevron(line[i + 1]))
+//				i--;
 		}
 		i++;
 		j++;

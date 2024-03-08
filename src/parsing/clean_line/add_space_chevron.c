@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 09:18:20 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/08 10:37:50 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/08 16:42:31 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,6 @@ static void	set_quote(bool *quote, char *c_quote, char char_line)
 		*quote = false;
 		*c_quote = 0;
 	}
-}
-
-static int	ft_is_space(int c)
-{
-	if (c == ' ' || c == '\t')
-		return (1);
-	else
-		return (0);
 }
 
 static size_t	chevron_add_space_size(char *str, size_t i)

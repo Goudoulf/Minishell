@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/08 12:01:47 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/08 16:41:02 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ char *ft_strtok_quote(char *string, char *delim);
 size_t infile_count(char *line);
 size_t outfile_count(char *line);
 int	ft_is_chevron(int c);
+int	ft_is_space(int c);
 
 // signal
 

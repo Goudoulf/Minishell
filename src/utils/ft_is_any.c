@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 09:53:07 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/08 09:54:12 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/08 16:40:31 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,14 @@
 int	ft_is_chevron(int c)
 {
 	if (c == '<' || c == '>')
+		return (1);
+	else
+		return (0);
+}
+
+int	ft_is_space(int c)
+{
+	if (c == ' ' || c == '\t')
 		return (1);
 	else
 		return (0);

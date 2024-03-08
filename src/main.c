@@ -46,14 +46,16 @@ int main(int argc, char **argv, char **envp)
 		{
 			add_history(input);
 			if (check_line_error(input))
+			{
 				line_parsing(&cmd, input, &env, &err);
+				exec_line(cmd, envp);
+			}
 			else
 			{
 				ft_putstr_fd("error\n", 2);
 				free(input);
 				input = NULL;
 			}
-			exec_line(cmd, envp);
 		}
 		if (input)
 		{
@@ -64,4 +66,5 @@ int main(int argc, char **argv, char **envp)
 	}
 	ft_lstclear(&env);
 	free(env);
+	return (0);
 }

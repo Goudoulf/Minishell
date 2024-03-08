@@ -6,19 +6,11 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 09:28:16 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/08 10:38:48 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/08 16:58:04 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	ft_is_space(int c)
-{
-	if (c == ' ' || c == '\t')
-		return (1);
-	else
-		return (0);
-}
 
 static int	check_chevron_max(char *line)
 {

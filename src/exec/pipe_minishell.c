@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/08 12:52:22 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/08 15:28:29 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -462,6 +462,7 @@ int	exec_line(t_cmd *cmd, char **envp)
 {
 	int		status;
 
+	status = 0;
 	if (!cmd->next)
 	{
 		for_each_dchevron(cmd);
