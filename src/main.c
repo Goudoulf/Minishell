@@ -29,10 +29,10 @@ int main(int argc, char **argv, char **envp)
 	env = NULL;
 	cmd = NULL;
 	init_all(&cmd, &env, &err, envp);
+	// a ajouter dans heredoc
 	signal_handling();
 	while(1)
 	{
-		// a ajouter dans heredoc
 		input = readline(CYELLOW "[Minishell]: " RESET);
 		if (!input)
 		{
