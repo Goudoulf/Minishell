@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/08 10:36:45 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/08 10:51:50 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ typedef struct s_cmd
 	char			**cmd;
 	char			*path;
 	char			**redirection;
+	pid_t			pid;
+	int				pipe_dchevron[2];
 	struct s_cmd	*next;
 }				t_cmd;
 
