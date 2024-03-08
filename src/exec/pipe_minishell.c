@@ -6,24 +6,24 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/04 11:42:18 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/08 10:34:25 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int    isdirectory(char *str)
+static int	isdirectory(char *str)
 {
-    size_t    i;
+	size_t	i;
 
-    i = 0;
-    while (str[i])
-    {
-        if (str[i] == '/')
-            return (1);
-        i++;
-    }
-    return (0);
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '/')
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 static void	closepipe(int pipe[2])
@@ -80,36 +80,97 @@ static void	print_error(char *error, char *str)
 	write(2, "\n", 1);
 }
 
-static void	dchevron(char *str, int *fd)
+/*char	*ft_realloc(char *str, char *buf)
+{
+	char	*new_str;
+	size_t	i;
+	size_t	j;
+	size_t	strlen;
+	size_t	buflen;
+
+	i = -1;
+	strlen = ft_strlen(str);
+	buflen = ft_strlen(buf);
+	new_str = malloc(sizeof(char) * strlen + buflen + 1);
+	new_str[strlen + buflen] = 0;
+	while (++i < strlen)
+		new_str[i] = str[i];
+	free(str);
+	j = -1;
+	while (++j < buflen)
+		new_str[i + j] = buf[j];
+	free(buf);
+	return (new_str);
+}*/
+
+static void	dchevron(char *limiter, int *fd)
 {
 	char	*buf;
+	int		pipefd[2];
 
-	*fd = open("tmp", O_CREAT | O_RDWR);
-	buf = readline(">");
-	write(*fd, buf, ft_strlen(buf));
-	while (ft_strncmp(buf, str, ft_strlen(str)) != 0)
+	pipe(pipefd);
+	buf = readline("> ");
+	while (buf != NULL)
 	{
+		if (strncmp(buf, limiter, strlen(limiter)) == 0)
+		{
+			free(buf);
+			break ;
+		}
+		write(pipefd[1], buf, strlen(buf));
+		write(pipefd[1], "\n", 1);
 		free(buf);
-		buf = readline(">");
-		write(*fd, buf, ft_strlen(buf));
+		buf = readline("> ");
+	}
+	close(pipefd[1]);
+	*fd = pipefd[0];
+}
+
+static void	redir_input(int fd, int pipe[2])
+{
+	if (fd != 0)
+	{
+		if (dup2(fd, 0) == -1)
+		{
+			perror(ft_itoa(fd));
+			closepipe(pipe);
+			exit(1);
+		}
+		if (close(fd) == -1)
+			perror(ft_itoa(fd));
+	}
+	if (pipe)
+	{
+		if (dup2(pipe[1], 1) == -1)
+		{
+			perror(ft_itoa(fd));
+			closepipe(pipe);
+			exit(1);
+		}
 	}
 }
 
-static void	redir_input(int fd, int pipe[2], int redir)
+static void	redir_output(int fd, int pipe[2])
 {
-	if (dup2(fd, redir) == -1)
+	if (fd != 1)
 	{
-		perror(ft_itoa(fd));
-		closepipe(pipe);
-		exit(1);
+		if (dup2(fd, 1) == -1)
+		{
+			perror(ft_itoa(fd));
+			closepipe(pipe);
+			exit(1);
+		}
+		if (close(fd) == -1)
+			perror(ft_itoa(fd));
 	}
-	if (close(fd) == -1)
-		perror(ft_itoa(fd));
-	if (dup2(pipe[1], 1) == -1)
+	if (pipe)
 	{
-		perror(ft_itoa(fd));
-		closepipe(pipe);
-		exit(1);
+		if (dup2(pipe[0], 0) == -1)
+		{
+			perror(ft_itoa(pipe[0]));
+			closepipe(pipe);
+			exit(1);
+		}
 	}
 }
 
@@ -118,79 +179,48 @@ static void	do_input(t_cmd *cmd, int pipe[2])
 	int		i;
 	int		j;
 	int		fd;
-	int		redir;
 
-	i = 0;
-	while (cmd->input_file[i])
+	i = -1;
+	fd = 0;
+	while (cmd->input_file && cmd->input_file[++i])
 	{
 		j = ft_isdigit(cmd->input_file[i][0]);
-		redir = ((j == 1) * ft_atoi(cmd->input_file[i])) + ((j == 0) * 0);
+		if (fd != 0)
+			close(fd);
 		if (ft_strncmp(&cmd->input_file[i][j], "<<", 2) == 0)
 			dchevron(&cmd->input_file[i][2 + j], &fd);
 		else if (cmd->input_file[i][j] == '<')
-			fd = open(&cmd->input_file[i][1 + j], O_RDONLY);
+			fd = open(&cmd->input_file[i][++j], O_RDONLY);
 		if (fd == -1)
-		{
-			perror(&cmd->input_file[i][j]);
-			//print_error(strerror(errno), &cmd->input_file[i][j]);
-			closepipe(pipe);
-			exit(1);
-		}
-		i++;
+			exit((perror(&cmd->input_file[i][j]), 1));
 	}
-	redir_input(fd, pipe, redir);
-}
-
-static void	redir_output(int fd, int pipe[2], int redir)
-{
-	if (dup2(fd, redir) == -1)
-	{
-		perror(ft_itoa(fd));
-		closepipe(pipe);
-		exit(1);
-	}
-	if (close(fd) == -1)
-		perror(ft_itoa(fd));
-	if (dup2(pipe[0], 0) == -1)
-	{
-		perror(ft_itoa(pipe[0])); //fd / pipe
-		closepipe(pipe);
-		exit(1);
-	}
+	redir_input(fd, pipe);
 }
 
 static void	do_output(t_cmd *cmd, int pipe[2])
 {
 	int	i;
 	int	j;
-	int	redir;
 	int	fd;
 
-	i = 0;
-	while (cmd->output_file[i])
+	i = -1;
+	fd = 1;
+	while (cmd->output_file && cmd->output_file[++i])
 	{
 		j = ft_isdigit(cmd->output_file[i][0]);
-		redir = ((j == 1) * ft_atoi(cmd->output_file[i])) + ((j == 0) * 1);
+		if (fd != 1)
+			close(fd);
 		if (ft_strncmp(&cmd->output_file[i][j], ">>", 2) == 0)
 		{
 			fd = open(&cmd->output_file[i][2 + j], O_CREAT | O_WRONLY | O_APPEND, 00644);
 			j += 2;
 		}
 		else if (cmd->output_file[i][j] == '>')
-		{
-			fd = open(&cmd->output_file[i][1 + j], O_CREAT | O_WRONLY | O_TRUNC, 00644);
-			j += 1;
-		}
+			fd = open(&cmd->output_file[i][++j], O_CREAT | O_WRONLY | O_TRUNC, 00644);
 		if (fd == -1)
-		{
-			perror(&cmd->input_file[i][j]);
-			//print_error(strerror(errno), &cmd->input_file[i][j]);
-			closepipe(pipe);
-			exit(1);
-		}
-		i++;
+			exit((perror(&cmd->output_file[i][j]), 1));
 	}
-	redir_output(fd, pipe, redir);
+	redir_output(fd, pipe);
 }
 
 static void	do_cmd(t_cmd *cmd, char **envp)
@@ -212,64 +242,162 @@ static void	do_cmd(t_cmd *cmd, char **envp)
 	exit((close(0), close(1), 127));
 }
 
-static void	child(t_cmd *cmd, int pipe[2], char **envp)
+static void	child(t_cmd *cmd, char **envp)
 {
 	if (cmd->input_file)
-		do_input(cmd, pipe);
+		do_input(cmd, NULL);
 	if (cmd->output_file)
-		do_output(cmd, pipe);
-	closepipe(pipe);
+		do_output(cmd, NULL);
 	if (cmd->cmd)
 		do_cmd(cmd, envp);
 }
 
-int	exec_line(t_cmd *cmd, char **envp)
+static void	last_child(t_cmd *cmd, int pipe[2], char **envp)
 {
-	int		fd[2];
-	int		status;
-	pid_t	pid;
-
-	if (pipe(fd) == -1)
-		exit(1);
-	while (cmd)
+	if (cmd->output_file)
+		do_output(cmd, pipe);
+	else
 	{
-		pid = fork();
-		if (pid == -1)
-			exit(1);
-		if (pid == 0)
-			child(cmd, fd, envp);
-		cmd = cmd->next;
+		close(pipe[1]);
+		dup2(pipe[0], 0);
+		close(pipe[0]);
 	}
-	closepipe(fd);
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		return(WEXITSTATUS(status));
-	return(0);
+	if (cmd->cmd)
+		do_cmd(cmd, envp);
 }
 
-// int	main(int argc, char **argv, char **envp)
-// {
-// 	char *cmd1[] = {"cat", NULL};
-// 	char *path1 = "/usr/bin/cat";
-// 	char *in1[] = {"<in", NULL};
-// 	char **out1 = NULL;
-// 	char *cmd2[] = {"cat", NULL};
-// 	char *path2 = "/usr/bin/cat";
-// 	char **in2 = NULL;
-// 	char *out2[] = {">out", NULL};
-// 	t_cmd block1;
-// 	t_cmd block2;
-// 	char	**env;
+static void	first_child(t_cmd *cmd, int pipe[2], char **envp)
+{
+	if (cmd->input_file)
+		do_input(cmd, pipe);
+	else
+	{
+		close(pipe[0]);
+		dup2(pipe[1], 1);
+		close(pipe[1]);
+	}
+	if (cmd->cmd)
+		do_cmd(cmd, envp);
+}
 
-// 	block1.cmd = cmd1;
-// 	block2.cmd = cmd2;
-// 	block1.next = &block2;
-// 	block2.next = NULL;
-// 	block1.input_file = in1;
-// 	block2.input_file = in2;
-// 	block1.output_file = out1;
-// 	block2.output_file = out2;
-// 	block1.path = path1;
-// 	block2.path = path2;
-// 	exec_line(&block1, envp);
-// }
+static void	child_pipe(t_cmd *cmd, int pipe1[2], int pipe2[2], char **envp)
+{
+	if (cmd->input_file)
+		do_input(cmd, pipe2);
+	else
+	{
+		close(pipe2[0]);
+		dup2(pipe2[1], 1);
+		close(pipe2[1]);
+	}
+	if (cmd->output_file)
+		do_output(cmd, pipe1);
+	else
+	{
+		close(pipe1[1]);
+		dup2(pipe1[0], 0);
+		close(pipe1[0]);
+	}
+	if (cmd->cmd)
+		do_cmd(cmd, envp);
+}
+
+static int	exec_last(t_cmd *cmd, char **envp, int pipe1[2], pid_t *pid)
+{
+	*pid = fork();
+	if (*pid == -1)
+		return (1);
+	if (*pid == 0)
+		last_child(cmd, pipe1, envp);
+	return (0);
+}
+
+static int	for_eachpipe(t_cmd *cmd, char **envp, int pipe1[2], pid_t *pid)
+{
+	int	pipe2[2];
+	size_t	i;
+
+	i = 1;
+	while (cmd)
+	{
+		if (!cmd->next)
+			return (exec_last(cmd, envp, pipe1, &pid[i]));
+		else
+		{
+			if (pipe(pipe2) == -1)
+				return (1);
+			pid[i] = fork();
+			if (pid[i] == -1)
+				return (1);
+			if (pid[i] == 0)
+				child_pipe(cmd, pipe1, pipe2, envp);
+			else
+			{
+				closepipe(pipe1);
+				pipe1[0] = pipe2[0];
+				pipe1[1] = pipe2[1];
+			}
+		}
+		cmd = cmd->next;
+		i++;
+	}
+	return (0);
+}
+
+static int	exec_pipe(t_cmd *cmd, char **envp, pid_t *pid, int pipe1[2])
+{
+	if (pipe(pipe1) == -1)
+		return (1);
+	pid[0] = fork();
+	if (pid[0] == -1)
+		return (1);
+	if (pid[0] == 0)
+		first_child(cmd, pipe1, envp);
+	cmd = cmd->next;
+	for_eachpipe(cmd, envp, pipe1, pid);
+	closepipe(pipe1);
+	return (0);
+}
+
+size_t	count_child(t_cmd *cmd)
+{
+	size_t	i;
+
+	i = 0;
+	while (cmd)
+	{
+		i++;
+		cmd = cmd->next;
+	}
+	return (i);
+}
+
+int	exec_line(t_cmd *cmd, char **envp)
+{
+	int		pipe1[2];
+	int		status;
+	int		nbchild;
+	int		i;
+	pid_t	*pid;
+
+	nbchild = count_child(cmd);
+	pid = malloc(sizeof (pid_t) * nbchild);
+	if (!cmd->next)
+	{
+		if (!pid)
+			return (1);
+		pid[0] = fork();
+		if (pid[0] == -1)
+			return (1);
+		if (pid[0] == 0)
+			child(cmd, envp);
+	}
+	else
+		exec_pipe(cmd, envp, pid, pipe1);
+	i = -1;
+	while (++i < nbchild)
+		waitpid(pid[i], &status, 0);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	return (0);
+}
