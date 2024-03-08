@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/08 11:40:07 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/08 12:39:56 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -419,22 +419,20 @@ static void	dchevron(char *limiter, int pipefd[2])
 void	for_each_dchevron(t_cmd *cmd)
 {
 	size_t	i;
-	size_t	count;
+	bool	first;
 
 	while (cmd)
 	{
 		//pipe(cmd->pipe_dchevron);
-		count = 0;
+		first = true;
 		i = -1;
-		while (cmd->redirection && cmd->redirection[++i])
+		while (cmd->here_doc && cmd->here_doc[++i])
 		{
-			if (ft_strncmp(cmd->redirection[i], "<<", 2) == 0)
-			{
-				if (count++ > 0)
-					closepipe(cmd->pipe_dchevron);
-				pipe(cmd->pipe_dchevron);
-				dchevron(&cmd->redirection[i][2], cmd->pipe_dchevron);
-			}
+			if (first == false)
+				closepipe(cmd->pipe_dchevron);
+			first = false;
+			pipe(cmd->pipe_dchevron);
+			dchevron(&cmd->redirection[i][2], cmd->pipe_dchevron);
 		}
 		cmd = cmd->next;
 	}
