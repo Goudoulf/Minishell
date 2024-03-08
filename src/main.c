@@ -53,7 +53,7 @@ int main(int argc, char **argv, char **envp)
 				free(input);
 				input = NULL;
 			}
-			//exec_line(cmd, envp);
+			exec_line(cmd, envp);
 		}
 		if (input)
 		{

@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/08 09:53:48 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/08 10:36:45 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ char	*get_value(t_list **env, char *s);
 
 // exec
 
-//int	exec_line(t_cmd *cmd, char **envp);
+int	exec_line(t_cmd *cmd, char **envp);
 char	*ft_join(const char *s1, const char *s2);
 char	*find_path(char *cmd, char *path);
 

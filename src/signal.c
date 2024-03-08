@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 09:11:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/08 10:06:22 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/08 10:37:06 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static void sigquit_handler(void)
 
 void	signal_handling(void)
 {
+	struct sigaction act;
 
 	sigquit_handler();
 	ft_memset(&act, 0, sizeof(act));

@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 09:18:20 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/07 09:19:46 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/08 10:37:50 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,6 @@ static void	set_quote(bool *quote, char *c_quote, char char_line)
 static int	ft_is_space(int c)
 {
 	if (c == ' ' || c == '\t')
-		return (1);
-	else
-		return (0);
-}
-
-static int	ft_is_chevron(int c)
-{
-	if (c == '<' || c == '>')
 		return (1);
 	else
 		return (0);
