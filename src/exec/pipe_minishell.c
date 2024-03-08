@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/07 18:55:42 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/08 10:08:30 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,9 +113,35 @@ bool	is_dechevron(t_cmd *cmd)
 	size_t	i;
 
 	i = -1;
-	while (cmd->input_file && cmd->input_file[++i])
-		if (ft_strncmp(cmd->input_file[i], "<<", 2) == 0)
+	while (cmd->redirection && cmd->redirection[++i])
+		if (ft_strncmp(cmd->redirection[i], "<<", 2) == 0)
 			return (true);
+	return (false);
+}
+
+bool	has_redir_out(t_cmd *cmd)
+{
+	size_t	i;
+
+	i = -1;
+	while (cmd->redirection && cmd->redirection[++i])
+	{
+		if (cmd->redirection[i][0] == '>')
+			return (true);
+	}
+	return (false);
+}
+
+bool	has_redir_in(t_cmd *cmd)
+{
+	size_t	i;
+
+	i = -1;
+	while (cmd->redirection && cmd->redirection[++i])
+	{
+		if (cmd->redirection[i] == '<')
+			return (true);
+	}
 	return (false);
 }
 
@@ -140,7 +166,7 @@ static void	redir_input(int fd, int pipe[2], t_cmd *cmd)
 		if (close(fd) == -1)
 			perror(ft_itoa(fd));
 	}
-	if (pipe && !is_dechevron(cmd) && !cmd->output_file || cmd->next)
+	if (pipe && !is_dechevron(cmd) && !has_redir_out(cmd) || cmd->next)
 	{
 		close(pipe[0]);
 		if (dup2(pipe[1], 1) == -1)
@@ -157,28 +183,25 @@ static void	do_input(t_cmd *cmd, int pipe[2])
 {
 	int		i;
 	int		fd;
-	bool	dchevron;
 
-	i = 0;
+	i = -1;
 	fd = 0;
-	dchevron = false;
-	while (cmd->input_file && cmd->input_file[i] != NULL)
-		i++;
-	i--;
-	if (ft_strncmp(cmd->input_file[i], "<<", 2) == 0)
+	while (cmd->redirection && cmd->redirection[++i])
 	{
-		close(cmd->pipe_dchevron[1]);
-		fd = cmd->pipe_dchevron[0];
-		dchevron = true;
+		if (ft_strncmp(cmd->redirection[i], "<<", 2) == 0)
+		{
+			close(cmd->pipe_dchevron[1]);
+			fd = cmd->pipe_dchevron[0];
+		}
+		else if (cmd->redirection[i][0] == '<')
+		{
+			if (fd != 0)
+				close(fd);
+			fd = open(&cmd->redirection[i][1], O_RDONLY);
+		}
+		if (fd == -1)
+			exit((perror(&cmd->redirection[i][1]), 1));
 	}
-	else if (cmd->input_file[i][0] == '<')
-	{
-		if (fd != 0)
-			close(fd);
-		fd = open(&cmd->input_file[i][1], O_RDONLY);
-	}
-	if (fd == -1)
-		exit((perror(&cmd->input_file[i][1]), 1));
 	redir_input(fd, pipe, cmd);
 }
 
@@ -195,7 +218,7 @@ static void	redir_output(int fd, int pipe[2], t_cmd *cmd)
 		if (close(fd) == -1)
 			perror(ft_itoa(fd));
 	}
-	if (pipe && !is_dechevron(cmd) && !cmd->input_file)
+	if (pipe /*&& !is_dechevron(cmd) */&& !has_redir_in(cmd))
 	{
 		close(pipe[1]);
 		if (dup2(pipe[0], 0) == -1)
@@ -216,20 +239,20 @@ static void	do_output(t_cmd *cmd, int pipe[2])
 
 	i = -1;
 	fd = 1;
-	while (cmd->output_file && cmd->output_file[++i])
+	while (cmd->redirection && cmd->redirection[++i])
 	{
 		j = 0;
 		if (fd != 1)
 			close(fd);
-		if (ft_strncmp(&cmd->output_file[i][j], ">>", 2) == 0)
+		if (ft_strncmp(cmd->redirection[i], ">>", 2) == 0)
 		{
 			j += 2;
-			fd = open(&cmd->output_file[i][j], O_CREAT | O_WRONLY | O_APPEND, 00644);
+			fd = open(&cmd->redirection[i][j], O_CREAT | O_WRONLY | O_APPEND, 00644);
 		}
-		else if (cmd->output_file[i][j] == '>')
-			fd = open(&cmd->output_file[i][++j], O_CREAT | O_WRONLY | O_TRUNC, 00644);
+		else if (cmd->redirection[i][0] == '>')
+			fd = open(&cmd->redirection[i][++j], O_CREAT | O_WRONLY | O_TRUNC, 00644);
 		if (fd == -1)
-			exit((perror(&cmd->output_file[i][j]), 1));
+			exit((perror(&cmd->redirection[i][j]), 1));
 	}
 	redir_output(fd, pipe, cmd);
 }
@@ -253,69 +276,93 @@ static void	do_cmd(t_cmd *cmd, char **envp)
 	exit((close(0), close(1), 127));
 }
 
+static void	do_redirection(t_cmd *cmd, int pipe1[2], int pipe2[2], int child)
+{
+	size_t	i;
+
+	i = -1;
+	while (cmd->redirection && cmd->redirection[++i])
+	{
+		if (child == 0)
+		{
+			if (cmd->redirection[i][0] == '<')
+				do_input(cmd, pipe1);
+			if (cmd->redirection[i][0] == '>')
+				do_output(cmd, pipe1);
+		}
+		else if (child == 1)
+		{
+			if (cmd->redirection[i][0] == '<')
+				do_input(cmd, pipe1);
+			else if (child == 1)
+			{
+				close(pipe1[0]);
+				dup2(pipe1[1], 1);
+				close(pipe1[1]);
+			}
+			if (cmd->redirection[i][0] == '>')
+				do_output(cmd, pipe1);
+		}
+		else if (child == 2)
+		{
+			if (cmd->redirection[i][0] == '<')
+				do_input(cmd, pipe2);
+			else
+			{
+				close(pipe2[0]);
+				dup2(pipe2[1], 1);
+				close(pipe2[1]);
+			}
+			if (cmd->redirection[i][0] == '>')
+				do_output(cmd, pipe1);
+			else if (!has_redir_in)
+			{
+				close(pipe1[1]);
+				dup2(pipe1[0], 0);
+				close(pipe1[0]);
+			}
+		}
+		else if (child == 3)
+		{
+			if (cmd->redirection[i][0] == '<')
+				do_input(cmd, pipe2);
+			if (cmd->redirection[i][0] == '>')
+				do_output(cmd, pipe1);
+			else if (!has_redir_in)
+			{
+				close(pipe1[1]);
+				dup2(pipe1[0], 0);
+				close(pipe1[0]);
+			}
+		}
+	}
+}
+
 static void	child(t_cmd *cmd, char **envp)
 {
-	// if (cmd->redirection)
-	// 	do_redirection(cmd, NULL);
-	if (cmd->input_file)
-		do_input(cmd, NULL);
-	if (cmd->output_file)
-		do_output(cmd, NULL);
+	if (cmd->redirection)
+		do_redirection(cmd, NULL, NULL, 0);
 	if (cmd->cmd)
 		do_cmd(cmd, envp);
 }
 
 static void	last_child(t_cmd *cmd, int pipe[2], char **envp)
 {
-	if (cmd->input_file)
-		do_input(cmd, pipe);
-	if (cmd->output_file)
-		do_output(cmd, pipe);
-	if (!cmd->input_file && !cmd->output_file)
-	{
-		close(pipe[1]);
-		dup2(pipe[0], 0);
-		close(pipe[0]);
-	}
-	//closepipe(pipe);
+	do_redirection(cmd, pipe, NULL, 3);
 	if (cmd->cmd)
 		do_cmd(cmd, envp);
 }
 
 static void	first_child(t_cmd *cmd, int pipe[2], char **envp)
 {
-	if (cmd->input_file)
-		do_input(cmd, pipe);
-	else
-	{
-		close(pipe[0]);
-		dup2(pipe[1], 1);
-		close(pipe[1]);
-	}
-	if (cmd->output_file)
-		do_output(cmd, pipe);
+	do_redirection(cmd, pipe, NULL, 1);
 	if (cmd->cmd)
 		do_cmd(cmd, envp);
 }
 
 static void	child_pipe(t_cmd *cmd, int pipe1[2], int pipe2[2], char **envp)
 {
-	if (cmd->input_file)
-		do_input(cmd, pipe2);
-	else
-	{
-		close(pipe2[0]);
-		dup2(pipe2[1], 1);
-		close(pipe2[1]);
-	}
-	if (cmd->output_file)
-		do_output(cmd, pipe1);
-	else if (!cmd->input_file)
-	{
-		close(pipe1[1]);
-		dup2(pipe1[0], 0);
-		close(pipe1[0]);
-	}
+	do_redirection(cmd, pipe1, pipe2, 2);
 	if (cmd->cmd)
 		do_cmd(cmd, envp);
 }
@@ -395,14 +442,14 @@ void	for_each_dchevron(t_cmd *cmd)
 		//pipe(cmd->pipe_dchevron);
 		count = 0;
 		i = -1;
-		while (cmd->input_file && cmd->input_file[++i])
+		while (cmd->redirection && cmd->redirection[++i])
 		{
-			if (ft_strncmp(cmd->input_file[i], "<<", 2) == 0)
+			if (ft_strncmp(cmd->redirection[i], "<<", 2) == 0)
 			{
 				if (count++ > 0)
 					closepipe(cmd->pipe_dchevron);
 				pipe(cmd->pipe_dchevron);
-				dchevron(&cmd->input_file[i][2], cmd->pipe_dchevron);
+				dchevron(&cmd->redirection[i][2], cmd->pipe_dchevron);
 			}
 		}
 		cmd = cmd->next;
