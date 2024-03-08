@@ -6,72 +6,51 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/16 20:21:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/21 13:22:52 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/04 13:37:40 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char *clear_str(char *str)
+int	ft_echo(char **cmd, t_list **env)
 {
 	int	i;
-	int	k;
 	int	j;
-	char *temp;
+	bool	new_line;
 
-	i = 0;
-	j = 0;
-	k = 0;
-	temp = NULL;
-	while (str[i] != '$')
-		i++;
-	i++;
-	k = i;
-	while (str[i] && str[i] != ' ')
+	i = 1;
+	j = 1;
+	new_line = true;
+	(void)env;
+	while (cmd[i])
 	{
-		i++;
-		j++;
-	}
-	temp = ft_substr(str, k, j);
-	return (temp);
-}
-
-static void	check_env(char *str, t_list **env)
-{
-	char *temp;
-	t_list *env_cpy;
-	size_t	len;
-	size_t	len_cmp;
-
-	env_cpy = *env;
-	temp = clear_str(str);
-	if (!temp || !*temp)
-		ft_printf("$");
-	len = ft_strlen(temp);
-	len_cmp = 0;
-	while (env_cpy != NULL && temp)
-	{
-		if (len >= ft_strlen(env_cpy->var))
-			len_cmp = len;
-		else
-			len_cmp = ft_strlen(env_cpy->var);
-		if (!ft_strncmp(temp, env_cpy->var, len_cmp))
+		if (cmd[i][0] == '-')
 		{
-			ft_printf("%s", env_cpy->var_content);
-			break ;
+			j = 1;
+			while (cmd[i][j])
+			{
+				if (cmd[i][j] != 'n')
+					break ;
+				j++;
+			}
+			if (cmd[i][j] == '\0')
+				new_line = false;
+			else
+			{
+				ft_putstr_fd(cmd[i], 1);
+				if (cmd[i + 1])
+					write(1, " ", 1);
+			}
 		}
-		env_cpy = env_cpy->next;
+		else
+		{
+			ft_putstr_fd(cmd[i], 1);
+			if (cmd[i + 1])
+				write(1, " ", 1);
+		}
+		i++;
 	}
-	free(temp);
-}
-
-int	ft_echo(char *str, char *arg, t_list **env)
-{
-	if (ft_strchr(str, '$'))
-		check_env(str, env);
-	else if (str)
-		write(1, str, ft_strlen(str));
-	if (!arg)
+	if (new_line == true)
 		write(1, "\n", 1);
-	return (1);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 09:54:13 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/27 16:09:19 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/07 17:08:13 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,11 @@ void	ft_cmdclear(t_cmd **cmd)
 		free_tab(current->cmd);
 		if (current->cmd)
 			free(current->cmd);
-		//if (current->path)
-		//	free(current->path);
-		free_tab(current->input_file);
-		if (current->input_file)
-			free(current->input_file);
-		free_tab(current->output_file);
-		if (current->output_file)
-			free(current->output_file);
+		if (current->path)
+			free(current->path);
+		free_tab(current->redirection);
+		if (current->redirection)
+			free(current->redirection);
 		free(current);
 		current = temp;
 	}

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   line_to_list.c                                     :+:      :+:    :+:   */
+/*   line_to_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 11:31:34 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/27 16:21:10 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/07 11:00:35 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,21 @@ static char	**create_tab(size_t nelem)
 	return (tab);
 }
 
-static t_cmd	*ft_cmd_new(char **command, char **input, char **output)
+static t_cmd	*ft_cmd_new(char **command, char **redirection, t_list **env)
 {
 	t_cmd	*new;
+	char	*path;
 
 	new = malloc(sizeof(t_cmd));
-	char *env = "/home/cassie/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin";
+	path = get_value(env, "PATH");
 	if (!new)
 		return (NULL);
 	new->cmd = command;
-	new->path = find_path(*command, env);
-	new->input_file = input;
-	new->output_file = output;
+	if (command)
+		new->path = find_path(command[0], path);
+	else
+		new->path = NULL;
+	new->redirection = redirection;
 	new->next = NULL;
 	return (new);
 }
@@ -68,35 +71,30 @@ static void	ft_cmdadd_back(t_cmd **cmd, t_cmd *new)
 	temp->next = new;
 }
 
-void	line_to_cmd(t_cmd **cmd, char *line)
+void	line_to_cmd(t_cmd **cmd, char *line, t_list **env)
 {
 	char	**command;
-	char	**input;
-	char	**output;
+	char	**redirection;
 	char	*token;
 	int		i;
-	int		j;
 	int		k;
 
 	i = 0;
-	j = 0;
 	k = 0;
-	input = create_tab(infile_count(line));
-	output = create_tab(outfile_count(line));
+	redirection = create_tab(infile_count(line) + outfile_count(line));
 	command = create_tab(cmd_count(line, ' ') - infile_count(line) - outfile_count(line));
+	// special token for export
 	token = ft_strtok_quote(line, " ");
 	while (token)
 	{
 		if (!token)
 			break;
-		else if (token[0] == '<')
-			input[i++] = ft_strdup(token);
-		else if (token[0] == '>')
-			output[j++] = ft_strdup(token);
+		else if (token[0] == '<' || token[0] == '>')
+			redirection[i++] = ft_strdup(token);
 		else if (token)
 			command[k++] = ft_strdup(token);
 		token = ft_strtok_quote(NULL, " ");
 	}
 	free(line);
-	ft_cmdadd_back(cmd, ft_cmd_new(command, input, output));
+	ft_cmdadd_back(cmd, ft_cmd_new(command, redirection, env));
 }

@@ -132,8 +132,43 @@
 
 
 ## Minishell todo
- ...
+ 
+### Romain
 
+voir les pipes
+heredoc avant les redirections
+heredoc rajouter signal handling
+return le code function 
+check les errors ecrite pour lexec
+ajouter la gestions des builts in
+
+### Camille
+
+cat sans rien prompt * 2
+pwd max size 4096 path byte
+signal dans boucle infini
+
+#### builtin
+
+
+### FAIT
+
+check erreur pre parsing et parsing ( tripe chevron , pipe vide)
+unclosed quote 
+cd a faire + oldpwd null at begin
+export +x declare voir comment savoir si on est dans sous bash
+OK reste $?(dollars dans dquote (on remplace si besoin pendant le parsing) + $?)
+exit gerer argument avec atoi et la valeur retourner par lexec;
+export faire le tri 
+echo a finir + -n
+mettre a jour la liste chainee
+segfault avec commande '<'in
+pwd fini
+env
+unset finir delete chainnons list
+pipe dans quote semble ok
+
+a gerer cat'<'infile ok
 ## Command to keep for final test
 
  ...

@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:08:41 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/23 12:43:32 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/05 13:07:08 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,24 @@ char *ft_strtok(char *string, char *delim)
 {
     static char *string_copy;
     char *ret;
-    static bool    quote;
+    char c_quote;
+    bool    quote;
 
-    if (!quote)
-        quote = false;
+    quote = false;
+    c_quote = 0;
     if(!string)
         string = string_copy;
     if(!string)
         return NULL;
     while(1)
     {
+        if ((*string == '\"' || *string == '\''))
+        {
+            quote = !quote;
+            c_quote = *string;
+            //string++;
+            break;
+        }
         if(is_delim(*string, delim) && !quote)
         {
             string++;
@@ -47,6 +55,7 @@ char *ft_strtok(char *string, char *delim)
         break;
     }
     ret = string;
+    string++;
     while(1)
     {
         if(*string == '\0')
@@ -54,7 +63,21 @@ char *ft_strtok(char *string, char *delim)
             string_copy = string;
             return ret;
         }
-        if(is_delim(*string, delim) && !quote)
+        if (*string == c_quote)
+        {
+            quote = false;
+            c_quote = '\0';
+            string++;
+            continue ;
+        }
+        if (!quote && (*string == '\"' || *string == '\''))
+        {
+            quote = !quote;
+            c_quote = *string;
+            string++;
+            continue ;
+        }
+        if(is_delim(*string, delim) && quote == false)
         {
             *string = '\0';
             string_copy = string + 1;

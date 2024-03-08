@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 12:42:30 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/27 14:20:25 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/05 13:07:34 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,10 @@ char *ft_strtok_quote(char *string, char *delim)
     static char *string_copy;
     char *ret;
     char c_quote;
-    static bool    quote;
+    bool    quote;
 
     c_quote = '\0';
-    if (!quote)
-        quote = false;
+    quote = false;
     if(!string)
         string = string_copy;
     if(!string)
@@ -41,10 +40,10 @@ char *ft_strtok_quote(char *string, char *delim)
     {
         if ((*string == '\"' || *string == '\''))
         {
-            quote = !quote;
+            quote = true;
             c_quote = *string;
-            string++;
-            break;
+            break ;
+            //string++;
         }
         if(is_delim(*string, delim) && !quote)
         {
@@ -56,6 +55,7 @@ char *ft_strtok_quote(char *string, char *delim)
         break;
     }
     ret = string;
+    string++;
     while(1)
     { 
         if(*string == '\0')
@@ -65,19 +65,25 @@ char *ft_strtok_quote(char *string, char *delim)
         }
         if (*string == c_quote)
         {
-            *string = '\0';
-            quote = !quote;
-            string_copy = string + 1;
-            return ret;
+            //*string = '\0';
+            quote = false;
+            c_quote = '\0';
+            string++;
+            continue ;
+            //string_copy = string + 1;
+            //return ret;
         }
-        if (!quote && (*string == '\"' || *string == '\''))
+        if (quote == false && (*string == '\"' || *string == '\''))
         {
-            *string = '\0';
-            quote = !quote;
-            string_copy = string + 1;
-            return ret;
+            //*string = '\0';
+            quote = true;
+            c_quote = *string;
+            string++;
+            continue ;
+            //string_copy = string + 1;
+            //return ret;
         }
-        if((is_delim(*string, delim) && !quote ))
+        if((is_delim(*string, delim) && quote == false ))
         {
             *string = '\0';
             string_copy = string + 1;

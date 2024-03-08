@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 12:12:52 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/25 19:48:30 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/06 12:34:28 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	ft_lstclear(t_list **lst)
 		free(current->string);
 		free(current->var);
 		free(current->var_content);
+		current->isprint = 0;
 		free(current);
 		current = temp;
 	}

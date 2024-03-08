@@ -6,44 +6,34 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 09:55:53 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/25 19:30:22 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/08 10:05:18 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 // gerer size 0 ou null
-/*static int	ft_iswhite_space(int c)
-{
-	if (c == ' ' || c == '\t' || c == '\n' || c == '\v' ||
-		c == '\f' || c== '\r')
-		return (1);
-	else
-		return (0);
-}*/
 
-static int	ft_is_chevron(int c)
+static size_t	chevron_space_size(char *str, size_t i, size_t j, char c_quote)
 {
-	if (c == '<' || c == '>')
-		return (1);
-	else
-		return (0);
-}
-
-static size_t	chevron_space_size(char *str)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	if (!str)
-		return (0);
 	while (str[i])
 	{
-		if (ft_is_chevron(str[i]))
+		if ((str[i] == '\"' || str[i] == '\''))
+		{
+			c_quote = str[i++];
+			j++;
+			while (str[i] && str[i] != c_quote)
+			{
+				i++;
+				j++;
+			}
+			c_quote = 0;
+		}
+		else if (ft_is_chevron(str[i]))
 		{
 			while (str[i + 1] == ' ')
 				i++;
+			if (!ft_is_chevron(str[i]) && ft_is_chevron(str[i + 1]))
+				i--;
 		}
 		i++;
 		j++;
@@ -51,25 +41,28 @@ static size_t	chevron_space_size(char *str)
 	return (j);
 }
 
-static char	*clean_space(char *line)
+static char	*clean_space(char *line, size_t i, size_t j, char c_quote)
 {
 	char	*temp;
 	size_t	new_size;
-	size_t		i;
-	size_t		j;
 
-	i = 0;
-	j = 0;
-	temp = NULL;
-	new_size = chevron_space_size(line);
+	new_size = chevron_space_size(line, 0, 0, 0);
 	temp = malloc(sizeof(char) * new_size + 1);
+	if (!temp)
+		return (NULL);
 	while (j < new_size)
 	{
+		if (!c_quote && (line[i] == '\"' || line[i] == '\''))
+			c_quote = line[i];
+		else if (line[i] == c_quote)
+			c_quote = 0;
 		temp[j] = line[i];
-		if (ft_is_chevron(line[i]))
+		if (!c_quote && ft_is_chevron(line[i]) && !ft_is_chevron(line[i + 1]))
 		{
 			while (line[i + 1] == ' ')
 				i++;
+			if (!ft_is_chevron(line[i]) && ft_is_chevron(line[i + 1]))
+				i--;
 		}
 		i++;
 		j++;
@@ -82,6 +75,6 @@ char	*clean_line(char *line)
 {
 	char *temp_line;
 
-	temp_line = clean_space(line);
+	temp_line = clean_space(line, 0, 0, 0);
 	return (temp_line);
 }

@@ -6,12 +6,17 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 11:48:48 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/25 19:35:44 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/04 15:33:50 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static void	init_err(t_error *err)
+{
+	err->code = 0;	
+	err->do_exit = false;	
+}
 static t_list	**init_env_list(t_list **env, char **envp)
 {
 	int	i;
@@ -24,8 +29,10 @@ static t_list	**init_env_list(t_list **env, char **envp)
 	return (env);
 }
 
-void	init_all(t_cmd **cmd, t_list **env, char **envp)
+void	init_all(t_cmd **cmd, t_list **env, t_error *err, char **envp)
 {
 	init_env_list(env, envp);
+	inc_shell_lvl(env);
+	init_err(err);
 	(void)cmd;
 }

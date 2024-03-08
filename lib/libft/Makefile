@@ -6,7 +6,7 @@
 #    By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/10 14:23:58 by cassie            #+#    #+#              #
-#    Updated: 2024/02/18 12:20:52 by cassie           ###   ########.fr        #
+#    Updated: 2024/03/03 09:45:57 by cassie           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ SRCS = $(addprefix ${DIR_SRC},${SRCS_FILE})
 
 CC				= cc
 RM				= rm -f
-CFLAGS			= -Wall -Wextra -Werror -I${INC}
+CFLAGS			= -Wall -Wextra -Werror -g3 -I${INC}
 
 NAME			= libft.a
 

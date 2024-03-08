@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 14:48:16 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/25 19:37:21 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/07 08:45:49 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,14 @@ static char	*str_from_char(char *str)
 	int	i;
 
 	i = 0;
+	if (!str)
+		return (NULL);
 	while(str[i] && str[i] != '=')
 		i++;
 	if (!str[i])
 		return (NULL);
 	if (str[i] == '=' && !str[i + 1])
-		return (NULL);
+		return (ft_strdup(""));
 	return(ft_substr(str, i + 1, ft_strlen(str)));
 }
 
@@ -31,6 +33,8 @@ static char	*str_to_char(char *str)
 	int	i;
 
 	i = 0;
+	if (!str)
+		return (NULL);
 	while(str[i] && str[i] != '=')
 		i++;
 	if (!str[i])
@@ -48,6 +52,7 @@ t_list	*ft_lst_new(char *content)
 	new->string = ft_strdup(content);
 	new->var = str_to_char(content);
 	new->var_content = str_from_char(content);
+	new->isprint = -1;
 	new->next = NULL;
 	return (new);
 }

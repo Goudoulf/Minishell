@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 13:40:57 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/27 12:54:11 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/03 09:33:18 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ size_t	cmd_count(char *s, char c)
 		count++;
 		token = ft_strtok_quote(NULL, " ");
 	}
+	free(str);
 	return (count);
 }
 

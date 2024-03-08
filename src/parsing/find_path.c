@@ -6,11 +6,22 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 16:12:35 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/27 16:23:53 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/03 10:03:30 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	free_tab(char **tab)
+{
+	if (!tab)
+		return ;
+	while (*tab)
+	{
+		free(*tab);
+		tab++;
+	}
+}
 
 static char	*check_path(char **paths, char *arg)
 {
@@ -37,10 +48,14 @@ static char	*check_path(char **paths, char *arg)
 char	*find_path(char *cmd, char *path)
 {
 	char	**paths;
+	char	*new_path;
 
-	paths = NULL;
 	paths = ft_split(path, ':');
-
-	path = check_path(paths, cmd);
-	return (path);
+	new_path = check_path(paths, cmd);
+	if (paths)
+	{
+		free_tab(paths);
+		free(paths);
+	}
+	return (new_path);
 }

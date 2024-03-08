@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 15:14:44 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/19 18:47:33 by cassie           ###   ########.fr       */
+/*   Updated: 2024/02/29 10:24:16 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_lst_print(t_list **list)
 	temp = *list;
 	while (temp != NULL)
 	{
-		printf("%s\n", temp->string);
+		ft_printf("%s=%s\n", temp->var, temp->var_content);
 		//printf("var = %s\n", temp->var);
 		//printf("var_content = %s\n", temp->var_content);
 		temp = temp->next;
