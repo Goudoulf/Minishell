@@ -6,13 +6,13 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 08:03:34 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/07 17:10:22 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/09 14:15:15 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_pwd(void)
+int	ft_pwd(char **cmd)
 {
 	char	*str;
 	char	*temp;
@@ -22,9 +22,14 @@ int	ft_pwd(void)
 	str = NULL;
 	size = 10;
 	i = 1;
+	if (tab_size(cmd) > 2)
+	{
+		ft_putstr_fd("pwd : too many arguments\n", 2);
+		exit (1);
+	}
 	str = malloc(sizeof(char) * size + 1);
 	if (!str)
-		return (0);
+		exit (1);
 	str[size] = '\0';
 	while (i)
 	{
@@ -35,15 +40,15 @@ int	ft_pwd(void)
 			i++;
 			str = malloc(sizeof(char) * size * i + 1);
 			if (!str)
-				return (0);
+				exit (1);
 			str[size * i] = '\0';
 		}
 		else 
 		{
 			ft_printf("%s\n", temp);
 			free(str);
-			return (1);
+			exit (0);
 		}
 	}
-	return (1);
+	exit (0);
 }

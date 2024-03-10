@@ -1,38 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_cmd_clear.c                                     :+:      :+:    :+:   */
+/*   quote_mode.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/24 09:54:13 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/09 11:22:01 by cassie           ###   ########.fr       */
+/*   Created: 2024/03/09 10:23:00 by cassie            #+#    #+#             */
+/*   Updated: 2024/03/09 10:23:35 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_cmdclear(t_cmd **cmd)
+void	quote_mode(char *c_quote, char char_line)
 {
-	t_cmd	*temp;
-	t_cmd	*current;
-
-	if (!cmd)
-		return ;
-	current = *cmd;
-	while (current != NULL)
+	if (!(*c_quote))
 	{
-		temp = current->next;
-		free_tab(current->cmd);
-		if (current->cmd)
-			free(current->cmd);
-		if (current->path)
-			free(current->path);
-		free_tab(current->redirection);
-		if (current->redirection)
-			free(current->redirection);
-		free(current);
-		current = temp;
+		*c_quote = char_line;
 	}
-	*cmd = NULL;
+	else if ((*c_quote) && *c_quote == char_line)
+		*c_quote = 0;
 }

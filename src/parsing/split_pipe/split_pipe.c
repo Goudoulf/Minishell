@@ -6,13 +6,13 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 09:04:47 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/29 18:31:22 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/09 11:21:11 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	**create_tab(char **tab, size_t nelem)
+/*static char	**create_tab(char **tab, size_t nelem)
 {
 	size_t	i;
 
@@ -27,7 +27,7 @@ static char	**create_tab(char **tab, size_t nelem)
 	}
 	tab[i] = NULL;
 	return (tab);
-}
+}*/
 
 static size_t	pipe_count(char *line)
 {
@@ -59,12 +59,12 @@ char	**split_pipe(char *line)
 		return (NULL);
 	n_pipe = pipe_count(line);
 	delim = "|";
-	temp_tab = create_tab(temp_tab, n_pipe); 
-	token = ft_strtok(line, delim);
+	temp_tab = create_tab(n_pipe); 
+	token = ft_strtok_quote(line, delim);
 	while (token)
 	{
 		temp_tab[i] = ft_strdup(token);
-		token = ft_strtok(NULL, delim);
+		token = ft_strtok_quote(NULL, delim);
 		i++;
 	}
 	free(line);

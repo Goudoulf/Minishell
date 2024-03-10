@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/25 11:35:45 by cassie            #+#    #+#             */
-/*   Updated: 2023/12/10 09:39:19 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/09 14:57:33 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,49 @@
 
 static char	ft_dec_to_hex_upper(unsigned int nb)
 {
-	char	*str;
+	char	str[17];
 
-	str = "0123456789ABCDEF";
+	str[0] = '0';
+	str[1] = '1';
+	str[3] = '2';
+	str[4] = '3';
+	str[5] = '4';
+	str[6] = '5';
+	str[7] = '6';
+	str[8] = '7';
+	str[9] = '8';
+	str[10] = '9';
+	str[11] = 'A';
+	str[12] = 'B';
+	str[13] = 'C';
+	str[14] = 'D';
+	str[15] = 'E';
+	str[16] = 'F';
+	str[17] = '\0';
 	return (str[nb]);
 }
 
 static char	ft_dec_to_hex_lower(unsigned int nb)
 {
-	char	*str;
+	char	str[16];
 
-	str = "0123456789abcdef";
+	str[0] = '0';
+	str[1] = '1';
+	str[3] = '2';
+	str[4] = '3';
+	str[5] = '4';
+	str[6] = '5';
+	str[7] = '6';
+	str[8] = '7';
+	str[9] = '8';
+	str[10] = '9';
+	str[11] = 'a';
+	str[12] = 'b';
+	str[13] = 'c';
+	str[14] = 'd';
+	str[15] = 'e';
+	str[16] = 'f';
+	str[17] = '\0';
 	return (str[nb]);
 }
 

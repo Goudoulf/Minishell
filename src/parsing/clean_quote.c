@@ -6,34 +6,28 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 13:17:32 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/07 11:02:11 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/09 10:57:03 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static size_t new_size(char *str)
+static size_t new_size(char *str, size_t i)
 {
-	size_t	i;
 	size_t	count;
-	bool quote;
 	char	c_quote;
 
-	quote = false;
 	c_quote = 0;
-	i = 0;
 	count = 0;
 	while (str[i])
 	{
-		if ((str[i] == '\'' || str[i] == '\"') && !quote)
+		if ((str[i] == '\'' || str[i] == '\"') && !c_quote)
 		{
-			quote = true;
 			c_quote = str[i];
 			i++;
 		}
-		else if (str[i] == c_quote && quote == true)
+		else if (str[i] == c_quote)
 		{
-			quote = false;
 			c_quote = 0;
 			i++;
 		}
@@ -46,39 +40,26 @@ static size_t new_size(char *str)
 	return (count);
 }
 
-static char *delete_quote(char *cmd_arg)
+static char *delete_quote(char *cmd_arg, size_t i, size_t j, char c_quote)
 {
 	char *temp;
-	size_t	i;
-	size_t	j;
 	size_t size;
-	char	c_quote;
 	
-	i = 0;
-	j = 0;
-	c_quote = 0;
-	size = new_size(cmd_arg);
+	size = new_size(cmd_arg, 0);
 	temp = malloc(sizeof(char) * (size + 1));
 	if (!temp)
 		return (NULL);
 	while (j < size)
 	{
 		if ((cmd_arg[i] == '\'' || cmd_arg[i] == '\"') && !c_quote)
-		{
-			c_quote = cmd_arg[i];
-			i++;
-		}
-		else if (cmd_arg[i] == c_quote && c_quote)
+			c_quote = cmd_arg[i++];
+		else if (cmd_arg[i] == c_quote)
 		{
 			c_quote = 0;
 			i++;
 		}
 		else
-		{
-			temp[j] = cmd_arg[i];
-			j++;
-			i++;
-		}
+			temp[j++] = cmd_arg[i++];
 	}
 	temp[j] = '\0';
 	free(cmd_arg);
@@ -98,7 +79,7 @@ void clean_quote(t_cmd **cmd)
 		i = 0;
 		while (temp->cmd && temp->cmd[i])
 		{
-			temp->cmd[i] = delete_quote(temp->cmd[i]);
+			temp->cmd[i] = delete_quote(temp->cmd[i], 0, 0, 0);
 			i++;
 		}
 		temp = temp->next;

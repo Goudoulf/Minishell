@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 09:28:16 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/08 16:58:04 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/10 12:50:07 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,10 @@ static int	check_pipe(char *line)
 
 	c_quote = 0;
 	i = 0;
+	while (ft_is_space(line[i]))
+		i++;
+	if (line[i] == '|')
+		return (0);
 	while (line[i])
 	{
 		if ((line[i] == '\'' || line[i] == '\"') && !c_quote)

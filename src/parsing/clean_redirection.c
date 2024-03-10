@@ -6,53 +6,11 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 11:25:03 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/08 13:08:17 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/09 11:15:48 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static size_t	tab_size(char **cmd)
-{
-	size_t	i;
-
-	i = 0;
-	while (cmd[i])
-		i++;
-	return (i);
-}
-
-static void	free_tab(char **tab)
-{
-	if (!tab)
-		return ;
-	while (*tab)
-	{
-		free(*tab);
-		tab++;
-	}
-}
-
-static char	**create_tab(size_t nelem)
-{
-	size_t	i;
-	char **tab;
-
-	i = 0;
-	tab = NULL;
-	if (nelem == 0)
-		return (NULL);
-	tab = malloc(sizeof(char *) * (nelem + 1));
-	if (!tab)
-		return (NULL);
-	while (i < nelem)
-	{
-		tab[i] = NULL;
-		i++;
-	}
-	tab[i] = 0; 
-	return (tab);
-}
 
 static size_t	size_of_heredoc(char **redirect)
 {
@@ -97,16 +55,12 @@ static char	**create_here_doc(char **redirect)
 	return (tab);
 }
 
-static char	**delete_here_doc(char **redirect)
+static char	**delete_here_doc(char **redirect, int i, int j)
 {
 	size_t size;
-	int		i;
-	int		j;
 	size_t		count;
 	char	**tab;
 
-	i = 0;
-	j = 0;
 	count = 1;
 	size = size_of_heredoc(redirect);
 	if (!size || size == 1)
@@ -117,19 +71,12 @@ static char	**delete_here_doc(char **redirect)
 		if (redirect[i][0] == '<' && redirect[i][1] == '<')
 		{
 			if (count == size)
-			{
-				tab[j] = ft_strdup(redirect[i]);
-				j++;
-			}
+				tab[j++] = ft_strdup(redirect[i]);
 			i++;
 			count++;
 		}
 		else
-		{
-			tab[j] = ft_strdup(redirect[i]);
-			i++;
-			j++;
-		}
+			tab[j++] = ft_strdup(redirect[i++]);
 	}
 	free_tab(redirect);
 	free(redirect);
@@ -146,7 +93,7 @@ void	clean_redirection(t_cmd **cmd)
 		if (temp->redirection)
 		{
 			temp->here_doc = create_here_doc(temp->redirection);
-			temp->redirection = delete_here_doc(temp->redirection);
+			temp->redirection = delete_here_doc(temp->redirection, 0, 0);
 		}
 		temp = temp->next;
 	}

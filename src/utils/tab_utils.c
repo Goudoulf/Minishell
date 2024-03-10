@@ -1,38 +1,55 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_cmd_clear.c                                     :+:      :+:    :+:   */
+/*   tab_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/24 09:54:13 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/09 11:22:01 by cassie           ###   ########.fr       */
+/*   Created: 2024/03/09 11:16:20 by cassie            #+#    #+#             */
+/*   Updated: 2024/03/09 11:16:56 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_cmdclear(t_cmd **cmd)
+size_t	tab_size(char **cmd)
 {
-	t_cmd	*temp;
-	t_cmd	*current;
+	size_t	i;
 
-	if (!cmd)
+	i = 0;
+	while (cmd[i])
+		i++;
+	return (i);
+}
+
+void	free_tab(char **tab)
+{
+	if (!tab)
 		return ;
-	current = *cmd;
-	while (current != NULL)
+	while (*tab)
 	{
-		temp = current->next;
-		free_tab(current->cmd);
-		if (current->cmd)
-			free(current->cmd);
-		if (current->path)
-			free(current->path);
-		free_tab(current->redirection);
-		if (current->redirection)
-			free(current->redirection);
-		free(current);
-		current = temp;
+		free(*tab);
+		tab++;
 	}
-	*cmd = NULL;
+}
+
+char	**create_tab(size_t nelem)
+{
+	size_t	i;
+	char **tab;
+
+	i = 0;
+	tab = NULL;
+	if (nelem == 0)
+		return (NULL);
+	tab = malloc(sizeof(char *) * (nelem + 1));
+	if (!tab)
+		return (NULL);
+	while (i < nelem)
+	{
+		tab[i] = NULL;
+		i++;
+	}
+	tab[i] = 0; 
+	return (tab);
 }

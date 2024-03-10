@@ -6,13 +6,13 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 12:48:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/06 11:27:58 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/09 11:25:16 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_list	*check_cmd_env(char *arg, t_list **env)
+/*static t_list	*check_cmd_env(char *arg, t_list **env)
 {
 	t_list	*temp;
 
@@ -24,17 +24,7 @@ static t_list	*check_cmd_env(char *arg, t_list **env)
 		temp = temp->next;
 	}
 	return (NULL);
-}
-
-static size_t	tab_size(char **cmd)
-{
-	size_t	i;
-
-	i = 0;
-	while (cmd[i])
-		i++;
-	return (i);
-}
+}*/
 
 int	ft_cd(char **cmd, t_list **env)
 {

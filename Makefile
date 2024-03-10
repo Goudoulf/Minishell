@@ -19,10 +19,11 @@ SRCS_FILE = main.c check_cmd.c signal.c ./utils/ft_echo.c ./utils/ft_pwd.c ./uti
 			./utils/count_out_in/count_out_in.c ./utils/ft_strtok_quote.c ./utils/list/ft_cmd_clear.c \
 			./utils/list/ft_cmd_print.c ./parsing/find_path.c ./utils/ft_join.c \
 			./utils/get_value.c ./utils/ft_export.c ./utils/ft_unset.c \
-			./parsing/clean_line/add_space_chevron.c ./parsing/check_dollars.c \
+			./parsing/clean_line/add_space_chevron.c ./parsing/dollars/check_dollars.c ./parsing/dollars/replace_dollars.c\
 			./utils/get_next_min.c ./utils/list/ft_lst_set_isprint.c ./utils/ft_exit.c init/inc_shell_lvl.c \
 			./parsing/clean_quote.c ./utils/ft_cd.c ./error/check_line_error.c ./exec/pipe_minishell.c ./utils/ft_is_any.c \
-			./parsing/clean_redirection.c
+			./parsing/clean_redirection.c ./utils/cmd/cmd_utils.c ./utils/cmd/cmd_core.c ./utils/quote_mode.c ./utils/tab_utils.c \
+			./utils/list/ft_lst_to_tab.c ./parsing/dollars/check_tilde.c ./parsing/dollars/replace_tilde.c
 
 INC = includes
 

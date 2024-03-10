@@ -6,21 +6,11 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 09:20:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/08 08:46:01 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/09 11:23:33 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static size_t	tab_size(char **cmd)
-{
-	size_t	i;
-
-	i = 0;
-	while (cmd[i])
-		i++;
-	return (i);
-}
 
 static	int	ft_sign(const char *str, int i )
 {

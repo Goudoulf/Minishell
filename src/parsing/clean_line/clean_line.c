@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 09:55:53 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/08 16:39:40 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/09 11:30:54 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static char	*clean_space(char *line, size_t i, size_t j, char c_quote)
 	return (temp);
 }
 
-char	*clean_line(char *line)
+char	*del_space_chevron(char *line)
 {
 	char *temp_line;
 

@@ -16,6 +16,14 @@
 #define CYELLOW "\001\e[0;31m\002"
 #define RESET   "\001\e[0m\002"
 
+static void	quit_eof(t_list **env, t_cmd **cmd, t_error *err)
+{
+	rl_clear_history();
+	ft_lstclear(env);
+	ft_cmdclear(cmd);
+	ft_putstr_fd("exit\n", 1);
+	exit(err->code);
+}
 
 int main(int argc, char **argv, char **envp)
 {
@@ -23,48 +31,58 @@ int main(int argc, char **argv, char **envp)
 	t_list	*env;
 	t_error	err;
 	char	*input;
+	char **env_tab;
 
-	(void)argc;
-	(void)argv;
 	env = NULL;
 	cmd = NULL;
 	init_all(&cmd, &env, &err, envp);
-	// a ajouter dans heredoc
 	signal_handling();
-	while(1)
+	if (argc >= 3 && !ft_strncmp(argv[1], "-c", 3))
 	{
-		input = readline(CYELLOW "[Minishell]: " RESET);
+		input = argv[2];
 		if (!input)
-		{
-			rl_clear_history();
-			ft_lstclear(&env);
-			ft_cmdclear(&cmd);
-			ft_printf("exit\n");
-			exit(0);
-		}
+			quit_eof(&env, &cmd, &err);
 		if (input && *input)
 		{
 			add_history(input);
 			if (check_line_error(input))
 			{
 				line_parsing(&cmd, input, &env, &err);
-				exec_line(cmd, envp);
+				env_tab = ft_lst_to_tab(&env);
+				err.code = exec_line(cmd, env_tab);
+			//	check_cmd(input, &env, &cmd, &err);
 			}
 			else
 			{
+				err.code = 2;
 				ft_putstr_fd("error\n", 2);
-				free(input);
-				input = NULL;
 			}
-		}
-		if (input)
-		{
-			check_cmd(input, &env, &cmd, &err);
 			ft_cmdclear(&cmd);
-			free(input);
 		}
+		exit(err.code);
 	}
-	ft_lstclear(&env);
-	free(env);
-	return (0);
+	while(1)
+	{
+		input = readline(CYELLOW "[Minishell]: " RESET);
+		if (!input)
+			quit_eof(&env, &cmd, &err);
+		if (input && *input)
+		{
+			add_history(input);
+			if (check_line_error(input))
+			{
+				line_parsing(&cmd, input, &env, &err);
+				env_tab = ft_lst_to_tab(&env);
+				exec_line(cmd, env_tab);
+			//	check_cmd(input, &env, &cmd, &err);
+			}
+			else
+			{
+				err.code = 2;
+				ft_putstr_fd("error\n", 2);
+			}
+			ft_cmdclear(&cmd);
+		}
+		free(input);
+	}
 }

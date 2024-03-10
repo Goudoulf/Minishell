@@ -6,22 +6,11 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 16:12:35 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/03 10:03:30 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/09 11:27:51 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	free_tab(char **tab)
-{
-	if (!tab)
-		return ;
-	while (*tab)
-	{
-		free(*tab);
-		tab++;
-	}
-}
 
 static char	*check_path(char **paths, char *arg)
 {

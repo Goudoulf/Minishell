@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/08 15:28:29 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/09 14:09:53 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,7 +249,12 @@ static void	do_output(t_cmd *cmd, int pipe[2], int i)
 
 static void	do_cmd(t_cmd *cmd, char **envp)
 {
-	execve(cmd->path, cmd->cmd, envp);
+	if (cmd->cmd && !ft_strncmp(cmd->cmd[0], "echo", 5))
+		ft_echo(cmd->cmd);
+	else if (cmd->cmd && !ft_strncmp(cmd->cmd[0], "pwd", 4))
+		ft_pwd(cmd->cmd);
+	else
+		execve(cmd->path, cmd->cmd, envp);
 	if (!cmd->cmd[0])
 		print_error("Execution error", cmd->cmd[0]);
 	else if (cmd->cmd[0] && cmd->cmd[0][0] == 0)

@@ -6,13 +6,13 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/16 20:21:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/04 13:37:40 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/09 14:13:26 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_echo(char **cmd, t_list **env)
+int	ft_echo(char **cmd)
 {
 	int	i;
 	int	j;
@@ -21,7 +21,6 @@ int	ft_echo(char **cmd, t_list **env)
 	i = 1;
 	j = 1;
 	new_line = true;
-	(void)env;
 	while (cmd[i])
 	{
 		if (cmd[i][0] == '-')
@@ -52,5 +51,5 @@ int	ft_echo(char **cmd, t_list **env)
 	}
 	if (new_line == true)
 		write(1, "\n", 1);
-	return (0);
+	exit (0);
 }

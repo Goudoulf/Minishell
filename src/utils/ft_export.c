@@ -6,21 +6,11 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 08:31:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/04 15:41:03 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/09 11:22:51 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static size_t	tab_size(char **cmd)
-{
-	size_t	i;
-
-	i = 0;
-	while (cmd[i])
-		i++;
-	return (i);
-}
 
 static size_t	ft_strlen_equal(const char *s)
 {
@@ -103,7 +93,7 @@ static void	env_update(t_list *env, char *content)
 	env->var_content = str_from_char(content);
 }
 
-static t_list	*check_cmd_env(char *arg, t_list **env)
+static t_list	*check_cmd_env_equal(char *arg, t_list **env)
 {
 	t_list	*temp;
 
@@ -130,7 +120,7 @@ int	ft_export(t_list **env, char **cmd)
 	}
 	while (cmd[i])
 	{
-		temp = check_cmd_env(cmd[i], env);
+		temp = check_cmd_env_equal(cmd[i], env);
 		if (!temp)
 			ft_lstadd_back(env, ft_lst_new(cmd[i]));
 		else
