@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/11 17:45:12 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/11 21:13:15 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ bool	has_redir_in(t_cmd *cmd)
 static void	print_error(char *error, char *str)
 {
 	write(2, str, ft_strlen(str));
-	write(2, " :", 2);
+	write(2, ": ", 2);
 	write(2, error, ft_strlen(error));
 	write(2, "\n", 1);
 }
@@ -322,6 +322,8 @@ bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 	return (false);
 }
 
+
+
 static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 {
 	char	**envp;
@@ -338,20 +340,24 @@ static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 		execve(cmd->path, cmd->cmd, envp);
 		free_tab(envp);
 	}
-	if (!cmd->cmd[0])
-		print_error("Execution error", cmd->cmd[0]);
-	else if (cmd->cmd[0] && cmd->cmd[0][0] == 0)
-		print_error("Permission denied", cmd->cmd[0]);
+	if (cmd->path && isdirectory(cmd->path))
+	{
+		write(2, "minishell: ", 11);
+		print_error("Is a directory", cmd->cmd[0]);
+	}
 	else if (cmd->path && isdirectory(cmd->path) && \
 		access(cmd->path, F_OK) == -1)
 		perror(cmd->cmd[0]);
-	else if (errno == 2 || !cmd->path)
+	else if (cmd->cmd[0] && isdirectory(cmd->cmd[0]))
+	{
+		write(2, "minishell: ", 11);
+		print_error("No such file or directory", cmd->cmd[0]);
+	}
+	else if (errno == 2 || !cmd->path || (cmd->cmd[0] && cmd->cmd[0][0] == 0))
 		print_error("Command not found", cmd->cmd[0]);
 	else
 		perror(cmd->cmd[0]);
-	if (cmd->cmd[0] && cmd->cmd[0][0] == '/')
-		exit((close(0), close(1), 126));
-	if (cmd->cmd[0] && cmd->cmd[0][0] == 0)
+	if (cmd->cmd[0] && cmd->cmd[0][0] == '/' && cmd->path)
 		exit((close(0), close(1), 126));
 	exit((close(0), close(1), 127));
 }
