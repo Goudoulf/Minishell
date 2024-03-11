@@ -6,49 +6,51 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/11 11:57:33 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/11 15:02:18 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*static int	ft_lstsize(t_list *lst)
-{
-	int	lsize;
+// static int	ft_lstsize(t_list **lst)
+// {
+// 	int	lsize;
 
-	lsize = 0;
-	while (lst != NULL)
-	{
-		lst = lst->next;
-		lsize++;
-	}
-	return (lsize);
-}*/
+// 	lsize = 0;
+// 	while (lst != NULL && *lst != NULL)
+// 	{
+// 		(*lst) = (*lst)->next;
+// 		lsize++;
+// 	}
+// 	return (lsize);
+// }
 
-/*static char	**lst_to_tab(t_list *lst)
-{
-	int		i;
-	int		j;
-	int		lstsize;
-	int		strsize;
-	char	**tab;
+// static char	**lst_to_tab(t_list **lst)
+// {
+// 	int		i;
+// 	int		j;
+// 	int		lstsize;
+// 	int		strsize;
+// 	char	**tab;
 
-	i = -1;
-	lstsize = ft_lstsize(lst);
-	tab = malloc(sizeof (char *) * lstsize + 1);
-	tab[lstsize] = NULL;
-	while (i++ < lstsize)
-	{
-		j = -1;
-		strsize = ft_strlen(lst->string);
-		tab[i] = malloc (sizeof (char) * strsize + 1);
-		tab[i][strsize] = 0;
-		while (j++ < strsize)
-			tab[i][j] = lst->string[j];
-		lst = lst->next;
-	}
-	return (tab);
-}*/
+// 	i = -1;
+// 	lstsize = ft_lstsize(lst);
+// 	tab = malloc(sizeof (char *) * lstsize + 1);
+// 	if (!tab)
+// 		return NULL;
+// 	tab[lstsize] = NULL;
+// 	while (i++ < lstsize)
+// 	{
+// 		j = -1;
+// 		strsize = ft_strlen((*lst)->string);
+// 		tab[i] = malloc (sizeof (char) * strsize + 1);
+// 		tab[i][strsize] = 0;
+// 		while (j++ < strsize)
+// 			tab[i][j] = (*lst)->string[j];
+// 		(*lst) = (*lst)->next;
+// 	}
+// 	return (tab);
+// }
 
 /*char	*ft_realloc(char *str, char *buf)
 {
@@ -190,11 +192,7 @@ static void	do_input(t_cmd *cmd, int pipe[2], int i)
 		fd = cmd->pipe_dchevron[0];
 	}
 	else if (cmd->redirection[i][0] == '<')
-	{
-		/*if (fd != 0)
-			close(fd);*/
 		fd = open(&cmd->redirection[i][1], O_RDONLY);
-	}
 	if (fd == -1)
 		exit((perror(&cmd->redirection[i][1]), 1));
 	redir_input(fd, pipe, cmd);
@@ -213,7 +211,7 @@ static void	redir_output(int fd, int pipe[2], t_cmd *cmd)
 		if (close(fd) == -1)
 			perror(ft_itoa(fd));
 	}
-	if (pipe /*&& !is_dechevron(cmd) */&& !has_redir_in(cmd))
+	if (pipe && !has_redir_in(cmd))
 	{
 		close(pipe[1]);
 		if (dup2(pipe[0], 0) == -1)
@@ -247,14 +245,99 @@ static void	do_output(t_cmd *cmd, int pipe[2], int i)
 	redir_output(fd, pipe, cmd);
 }
 
-static void	do_cmd(t_cmd *cmd, char **envp)
+bool	is_builtin(t_cmd *cmd)
 {
-	if (cmd->cmd && !ft_strncmp(cmd->cmd[0], "echo", 5))
-		ft_echo(cmd->cmd);
-	else if (cmd->cmd && !ft_strncmp(cmd->cmd[0], "pwd", 4))
-		ft_pwd(cmd->cmd);
-	else
+	if (!ft_strncmp(cmd->cmd[0], "echo", 5))
+		return (true);
+	if (!ft_strncmp(cmd->cmd[0], "pwd", 4))
+		return (true);
+	if (!ft_strncmp(cmd->cmd[0], "cd", 3))
+		return (true);
+	if (!ft_strncmp(cmd->cmd[0], "exit", 4))
+		return (true);
+	if (!ft_strncmp(cmd->cmd[0], "unset", 5))
+		return (true);
+	if (!ft_strncmp(cmd->cmd[0], "export", 6))
+		return (true);
+	if (!ft_strncmp(cmd->cmd[0], "env", 3))
+		return (true);
+	return (false);
+}
+
+void	exec_builtin2(char	**cmd, t_list **list, t_error *err)
+{
+	if (!ft_strncmp(cmd[0], "echo", 5))
+		ft_echo(cmd);
+	if (!ft_strncmp(cmd[0], "pwd", 4))
+		ft_pwd(cmd);
+	if (!ft_strncmp(cmd[0], "cd", 3))
+		ft_cd(cmd, list);
+	if (!ft_strncmp(cmd[0], "exit", 4))
+		ft_exit(cmd, err);
+	if (!ft_strncmp(cmd[0], "unset", 5))
+		ft_unset(list, cmd);
+	if (!ft_strncmp(cmd[0], "export", 6))
+		ft_export(list, cmd);
+	if (!ft_strncmp(cmd[0], "env", 3))
+		ft_lst_print(list);
+}
+
+bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
+{
+	if (!ft_strncmp(cmd[0], "echo", 5))
+	{
+		ft_echo(cmd);
+		exit(err->code);
+	}
+	if (!ft_strncmp(cmd[0], "pwd", 4))
+	{
+		ft_pwd(cmd);
+		exit(err->code);
+	}
+	if (!ft_strncmp(cmd[0], "cd", 3))
+	{
+		ft_cd(cmd, list);
+		exit(err->code);
+	}
+	if (!ft_strncmp(cmd[0], "exit", 4))
+	{
+		ft_exit(cmd, err);
+		exit(err->code);
+	}
+	if (!ft_strncmp(cmd[0], "unset", 5))
+	{
+		ft_unset(list, cmd);
+		exit(err->code);
+	}
+	if (!ft_strncmp(cmd[0], "export", 6))
+	{
+		ft_export(list, cmd);
+		exit(err->code);
+	}
+	if (!ft_strncmp(cmd[0], "env", 3))
+	{
+		ft_lst_print(list);
+		exit(err->code);
+	}
+	return (false);
+}
+
+static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
+{
+	char	**envp;
+
+	//is_builtin(cmd, lst, err);
+	// if (cmd->cmd && !ft_strncmp(cmd->cmd[0], "echo", 5))
+	// 	ft_echo(cmd->cmd);
+	// else if (cmd->cmd && !ft_strncmp(cmd->cmd[0], "pwd", 4))
+	// 	ft_pwd(cmd->cmd);
+	if (!exec_builtin(cmd->cmd, lst, err))
+	{
+		envp = ft_lst_to_tab(lst);
+		//envp = lst_to_tab(lst);
 		execve(cmd->path, cmd->cmd, envp);
+		free_tab(envp);
+	}
 	if (!cmd->cmd[0])
 		print_error("Execution error", cmd->cmd[0]);
 	else if (cmd->cmd[0] && cmd->cmd[0][0] == 0)
@@ -327,50 +410,50 @@ static void	do_redirection(t_cmd *cmd, int pipe1[2], int pipe2[2], int child)
 	}
 }
 
-static void	child(t_cmd *cmd, char **envp)
+static void	child(t_cmd *cmd, t_list **lst, t_error *err)
 {
 	if (cmd->redirection)
 		do_redirection(cmd, NULL, NULL, 0);
 	if (cmd->cmd)
-		do_cmd(cmd, envp);
+		do_cmd(cmd, lst, err);
 	exit (0);
 }
 
-static void	last_child(t_cmd *cmd, int pipe[2], char **envp)
+static void	last_child(t_cmd *cmd, int pipe[2], t_list **lst, t_error *err)
 {
 	do_redirection(cmd, pipe, NULL, 3);
 	if (cmd->cmd)
-		do_cmd(cmd, envp);
+		do_cmd(cmd, lst, err);
 	exit (0);
 }
 
-static void	first_child(t_cmd *cmd, int pipe[2], char **envp)
+static void	first_child(t_cmd *cmd, int pipe[2], t_list **lst, t_error *err)
 {
 	do_redirection(cmd, pipe, NULL, 1);
 	if (cmd->cmd)
-		do_cmd(cmd, envp);
+		do_cmd(cmd, lst, err);
 	exit (0);
 }
 
-static void	child_pipe(t_cmd *cmd, int pipe1[2], int pipe2[2], char **envp)
+static void	child_pipe(t_cmd *cmd, int pipe1[2], int pipe2[2], t_list **lst, t_error *err)
 {
 	do_redirection(cmd, pipe1, pipe2, 2);
 	if (cmd->cmd)
-		do_cmd(cmd, envp);
+		do_cmd(cmd, lst, err);
 	exit (0);
 }
 
-static int	exec_last(t_cmd *cmd, char **envp, int pipe1[2])
+static int	exec_last(t_cmd *cmd, t_list **lst, int pipe1[2], t_error *err)
 {
 	cmd->pid = fork();
 	if (cmd->pid == -1)
 		return (1);
 	if (cmd->pid == 0)
-		last_child(cmd, pipe1, envp);
+		last_child(cmd, pipe1, lst, err);
 	return (0);
 }
 
-static int	for_eachpipe(t_cmd *cmd, char **envp, int pipe1[2])
+static int	for_eachpipe(t_cmd *cmd, t_list **lst, int pipe1[2], t_error *err)
 {
 	int	pipe2[2];
 	size_t	i;
@@ -379,7 +462,7 @@ static int	for_eachpipe(t_cmd *cmd, char **envp, int pipe1[2])
 	while (cmd)
 	{
 		if (!cmd->next)
-			exec_last(cmd, envp, pipe1);
+			exec_last(cmd, lst, pipe1, err);
 		else
 		{
 			if (pipe(pipe2) == -1)
@@ -388,7 +471,7 @@ static int	for_eachpipe(t_cmd *cmd, char **envp, int pipe1[2])
 			if (cmd->pid == -1)
 				return (1);
 			if (cmd->pid == 0)
-				child_pipe(cmd, pipe1, pipe2, envp);
+				child_pipe(cmd, pipe1, pipe2, lst, err);
 			else
 			{
 				closepipe(pipe1);
@@ -447,7 +530,7 @@ void	for_each_dchevron(t_cmd *cmd)
 	}
 }
 
-static int	exec_pipe(t_cmd *cmd, char **envp)
+static int	exec_pipe(t_cmd *cmd, t_list **lst, t_error *err)
 {
 	int	pipefd[2];
 
@@ -458,16 +541,16 @@ static int	exec_pipe(t_cmd *cmd, char **envp)
 	if (cmd->pid == -1)
 		return (1);
 	if (cmd->pid == 0)
-		first_child(cmd, pipefd, envp);
+		first_child(cmd, pipefd, lst, err);
 	if (is_dechevron(cmd))
 		closepipe(cmd->pipe_dchevron);
 	cmd = cmd->next;
-	for_eachpipe(cmd, envp, pipefd);
+	for_eachpipe(cmd, lst, pipefd, err);
 	closepipe(pipefd);
 	return (0);
 }
 
-int	exec_line(t_cmd *cmd, char **envp)
+int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 {
 	int		status;
 
@@ -475,16 +558,23 @@ int	exec_line(t_cmd *cmd, char **envp)
 	if (!cmd->next)
 	{
 		for_each_dchevron(cmd);
+		if (is_builtin(cmd))
+		{
+			if (cmd->redirection)
+				do_redirection(cmd, NULL, NULL, 0);
+			exec_builtin2(cmd->cmd, lst, err);
+			return (0);
+		}
 		cmd->pid = fork();
 		if (cmd->pid == -1)
 			return (1);
 		if (cmd->pid == 0)
-			child(cmd, envp);
+			child(cmd, lst, err);
 		if (is_dechevron(cmd))
 			closepipe(cmd->pipe_dchevron);
 	}
 	else
-		exec_pipe(cmd, envp);
+		exec_pipe(cmd, lst, err);
 	while (cmd)
 	{
 		waitpid(cmd->pid, &status, 0);
