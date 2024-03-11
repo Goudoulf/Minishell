@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 09:20:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/09 11:23:33 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/11 16:53:27 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,12 @@ static unsigned char	ft_char_to_num(const char *str)
 {
 	int			i;
 	int			c;
-	long int	result;
+	long long int	result;
+	long long int	old_result;
 
 	i = 0;
 	result = 0;
+	old_result = 0;
 	c = ft_sign(str, i);
 	if (str[i] == 45 || str[i] == 43)
 		i++;
@@ -43,6 +45,9 @@ static unsigned char	ft_char_to_num(const char *str)
 		if (c < 0 && (result * c > 0))
 			return (0);
 		result = result * 10 + (str[i] - '0');
+		if (result < old_result)
+			return (unsigned char)-2;
+		old_result = result;
 		if ((str[i + 1] < 48) || (str[i + 1] > 57))
 			return ((unsigned char)result * c);
 		i++;
@@ -73,30 +78,54 @@ static int	arg_is_valid(char *arg)
 
 void	ft_exit(char **cmd, t_error *err)
 {
-	
+	unsigned char code;
+
 	if (tab_size(cmd) < 2)
 	{
 		err->do_exit = true;
+		ft_putstr_fd("exit\n", 2);
 		return ;
 	}
 	if (tab_size(cmd) > 2)
 	{	
-		ft_putstr_fd("minishell: exit: too many arguments\n", 1);
-		err->code = 1;
-		return ;
+		if (!arg_is_valid(cmd[1]))
+		{
+			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+			err->code = 1;
+			return ;
+		}
+		else
+		{
+			err->do_exit = true;
+			err->code = 2;
+			ft_putstr_fd("exit\n", 2);
+			ft_putstr_fd("minishell: exit: ", 2);
+			ft_putstr_fd(cmd[1], 2);
+			ft_putstr_fd(": numeric argument required\n", 2);
+		}
 	}
 	if (tab_size(cmd) == 2)
 	{
 		if (!arg_is_valid(cmd[1]))
 		{
 			err->do_exit = true;
-			err->code = ft_char_to_num(cmd[1]);
+			code = ft_char_to_num(cmd[1]);
+			if (code == (unsigned char)-2 && ft_atoi(cmd[1]) != -2)
+			{
+				ft_putstr_fd("minishell: exit: ", 2);
+				ft_putstr_fd(cmd[1], 2);
+				ft_putstr_fd(": numeric argument required\n", 2);
+				err->code = 2;
+				return ;
+			}
+			err->code = code;
 			return ;
 		}
 		err->do_exit = true;
 		err->code = 2;
-		ft_putstr_fd("bash: exit: ", 1);
-		ft_putstr_fd(cmd[1], 1);
-		ft_putstr_fd(": numeric argument required\n", 1);
+		ft_putstr_fd("exit\n", 2);
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(cmd[1], 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
 	}
 }

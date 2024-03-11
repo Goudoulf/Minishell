@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
+/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/11 15:02:18 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/11 17:45:12 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,13 +271,13 @@ void	exec_builtin2(char	**cmd, t_list **list, t_error *err)
 	if (!ft_strncmp(cmd[0], "pwd", 4))
 		ft_pwd(cmd);
 	if (!ft_strncmp(cmd[0], "cd", 3))
-		ft_cd(cmd, list);
+		ft_cd(cmd, list, err);
 	if (!ft_strncmp(cmd[0], "exit", 4))
 		ft_exit(cmd, err);
 	if (!ft_strncmp(cmd[0], "unset", 5))
 		ft_unset(list, cmd);
 	if (!ft_strncmp(cmd[0], "export", 6))
-		ft_export(list, cmd);
+		ft_export(list, cmd, err);
 	if (!ft_strncmp(cmd[0], "env", 3))
 		ft_lst_print(list);
 }
@@ -296,7 +296,7 @@ bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 	}
 	if (!ft_strncmp(cmd[0], "cd", 3))
 	{
-		ft_cd(cmd, list);
+		ft_cd(cmd, list, err);
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "exit", 4))
@@ -311,7 +311,7 @@ bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 	}
 	if (!ft_strncmp(cmd[0], "export", 6))
 	{
-		ft_export(list, cmd);
+		ft_export(list, cmd, err);
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "env", 3))
@@ -349,6 +349,8 @@ static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 		print_error("Command not found", cmd->cmd[0]);
 	else
 		perror(cmd->cmd[0]);
+	if (cmd->cmd[0] && cmd->cmd[0][0] == '/')
+		exit((close(0), close(1), 126));
 	if (cmd->cmd[0] && cmd->cmd[0][0] == 0)
 		exit((close(0), close(1), 126));
 	exit((close(0), close(1), 127));
@@ -563,7 +565,7 @@ int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 			if (cmd->redirection)
 				do_redirection(cmd, NULL, NULL, 0);
 			exec_builtin2(cmd->cmd, lst, err);
-			return (0);
+			return (err->code);
 		}
 		cmd->pid = fork();
 		if (cmd->pid == -1)

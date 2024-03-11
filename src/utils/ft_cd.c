@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 12:48:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/09 11:25:16 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/11 17:09:06 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 	return (NULL);
 }*/
 
-int	ft_cd(char **cmd, t_list **env)
+int	ft_cd(char **cmd, t_list **env, t_error *err)
 {
 	t_list *temp;
 	t_list *temp_current_pwd;
@@ -37,7 +37,10 @@ int	ft_cd(char **cmd, t_list **env)
 	temp_old_pwd = check_cmd_env("OLDPWD", env);
 	current_pwd = ft_strdup(temp_current_pwd->var_content); 
 	if (tab_size(cmd) > 2)
+	{
+		err->code = 1;
 		ft_putstr_fd("cd : too many arguments\n", 2);
+	}
 	if (tab_size(cmd) == 1)
 	{
 		temp = check_cmd_env("HOME", env);
@@ -52,7 +55,10 @@ int	ft_cd(char **cmd, t_list **env)
 	if (tab_size(cmd) == 2)
 	{
 		if (chdir(cmd[1]) != 0)
+		{
 			perror("cd :");
+			err->code = 1;
+		}
 		else
 		{
 			free(temp_current_pwd->var_content);

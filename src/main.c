@@ -25,13 +25,21 @@ static void	quit_eof(t_list **env, t_cmd **cmd, t_error *err)
 	exit(err->code);
 }
 
+static void	quit_exit(t_list **env, t_cmd **cmd, t_error *err)
+{
+	rl_clear_history();
+	ft_lstclear(env);
+	ft_cmdclear(cmd);
+	exit(err->code);
+}
+
+
 int main(int argc, char **argv, char **envp)
 {
 	t_cmd	*cmd;
 	t_list	*env;
 	t_error	err;
 	char	*input;
-	char **env_tab;
 
 	env = NULL;
 	cmd = NULL;
@@ -45,16 +53,15 @@ int main(int argc, char **argv, char **envp)
 		if (input && *input)
 		{
 			add_history(input);
-			if (check_line_error(input))
+			if (check_line_error(input, &err))
 			{
 				line_parsing(&cmd, input, &env, &err);
-				env_tab = ft_lst_to_tab(&env);
-				err.code = exec_line(cmd, env_tab);
+				err.code = exec_line(cmd, &env, &err);
 			//	check_cmd(input, &env, &cmd, &err);
 			}
 			else
 			{
-				err.code = 2;
+				err.code = 1;
 				ft_putstr_fd("error\n", 2);
 			}
 			ft_cmdclear(&cmd);
@@ -69,20 +76,21 @@ int main(int argc, char **argv, char **envp)
 		if (input && *input)
 		{
 			add_history(input);
-			if (check_line_error(input))
+			if (check_line_error(input, &err))
 			{
 				line_parsing(&cmd, input, &env, &err);
-				env_tab = ft_lst_to_tab(&env);
-				exec_line(cmd, env_tab);
+				err.code = exec_line(cmd, &env, &err);
 			//	check_cmd(input, &env, &cmd, &err);
 			}
 			else
 			{
-				err.code = 2;
+				err.code = 1;
 				ft_putstr_fd("error\n", 2);
 			}
 			ft_cmdclear(&cmd);
 		}
 		free(input);
+		if (err.do_exit == true)
+			quit_exit(&env, &cmd, &err);
 	}
 }

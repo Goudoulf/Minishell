@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 13:13:06 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/10 13:52:16 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/11 17:24:51 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,11 @@ static int count_tilde(char *line)
 
 	i = 0;
 	count = 0;
+	if (line[i] == '~' && line[i + 1] == '\0')
+		return (1);
 	while (line[i])
 	{
-		if (line[i] == '~' && line[i + 1] != '~' && (i > 0 && line[i - 1] != '~'))
+		if (line[i] == '~' && line[i + 1] != '~' && ((i > 0 && line[i - 1] != '~')))
 			count++;
 		i++;
 	}

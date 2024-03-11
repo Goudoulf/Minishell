@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 08:11:15 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/09 08:16:41 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/11 13:09:41 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ static int	end_dollar(char *line, int start)
 
 	end = 0;
 	start++;
+	if (ft_isdigit(line[start]))
+		return (end + 1);
 	while (line[start] && !ft_is_end(line[start]))
 	{
 		start++;

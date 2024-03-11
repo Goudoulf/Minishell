@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 09:28:16 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/10 12:50:07 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/11 17:11:22 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,15 +123,27 @@ static int	check_pipe(char *line)
 	return (1);
 }
 
-int	check_line_error(char *line)
+int	check_line_error(char *line, t_error *err)
 {
 	if (!check_chevron_max(line))
+	{
+		err->code = 1;
 		return (0);
+	}
 	if (!check_double_chevron(line))
+	{
+		err->code = 1;
 		return (0);
+	}
 	if (!check_chevron_content(line))
+	{
+		err->code = 1;
 		return (0);
+	}
 	if (!check_pipe(line))
+	{
+		err->code = 1;
 		return (0);
+	}
 	return (1);
 }

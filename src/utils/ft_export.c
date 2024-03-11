@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 08:31:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/09 11:22:51 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/11 17:44:24 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,24 @@ static t_list	*check_cmd_env_equal(char *arg, t_list **env)
 	return (NULL);
 }
 
-int	ft_export(t_list **env, char **cmd)
+static int	cmd_is_valid(char *cmd)
+{
+	int i;
+
+	i = 0;
+	if (cmd && ft_isalpha(cmd[i]))
+		return (0);
+	while (cmd[i])
+	{
+		if (ft_isalnum(cmd[i]) || cmd[i] == '_')
+			i++;
+		else
+			return (0);
+	}
+	return (1);
+}
+
+int	ft_export(t_list **env, char **cmd, t_error *err)
 {
 	int	i;
 	t_list *temp;
@@ -120,6 +137,11 @@ int	ft_export(t_list **env, char **cmd)
 	}
 	while (cmd[i])
 	{
+		if (!cmd_is_valid(cmd[i]))
+		{
+			err->code = 1;
+			return (1);
+		}
 		temp = check_cmd_env_equal(cmd[i], env);
 		if (!temp)
 			ft_lstadd_back(env, ft_lst_new(cmd[i]));

@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/10 13:30:45 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/11 17:44:43 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,10 @@ void	check_cmd(char *input, t_list **env, t_cmd **cmd, t_error *err);
 // builtins
 int	ft_echo(char **cmd);
 int	ft_pwd(char **cmd);
-int	ft_export(t_list **env, char **cmd);
+int	ft_export(t_list **env, char **cmd, t_error *err);
 int	ft_unset(t_list **env, char **cmd);
 void	ft_exit(char **cmd, t_error *err);
-int	ft_cd(char **cmd, t_list **env);
+int	ft_cd(char **cmd, t_list **env, t_error *err);
 
 // init
 
@@ -109,7 +109,7 @@ void	ft_cmd_print(t_cmd **cmd);
 
 void	line_parsing(t_cmd **cmd, char *line, t_list **env, t_error *err);
 char	*del_space_chevron(char *line);
-int	check_line_error(char *line);
+int	check_line_error(char *line, t_error *err);
 char	*add_space_chevron(char *line);
 char	*check_dollars(char *line, t_list **env, t_error *err);
 char *replace_dollar(char *line, t_list **env, int start, t_error *err);
@@ -130,7 +130,7 @@ void	cmd_add_path(t_cmd **cmd, t_list **env);
 
 // exec
 
-int	exec_line(t_cmd *cmd, char **envp);
+int	exec_line(t_cmd *cmd, t_list **list, t_error *err);
 char	*ft_join(const char *s1, const char *s2);
 char	*find_path(char *cmd, char *path);
 

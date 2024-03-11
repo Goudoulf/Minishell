@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 15:06:40 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/09 14:11:58 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/11 17:45:36 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	check_cmd(char *input, t_list **env, t_cmd **command, t_error *err)
 	if (temp)
 		com = temp->cmd;
 	if (com && !ft_strncmp(com[0], "export", 7))
-		ft_export(env, com);
+		ft_export(env, com, err);
 	if (com && !ft_strncmp(com[0], "unset", 7))
 		ft_unset(env, com);
 	if (com && !ft_strncmp(com[0], "exit", 5))
@@ -30,7 +30,7 @@ void	check_cmd(char *input, t_list **env, t_cmd **command, t_error *err)
 	if (com && !ft_strncmp(com[0], "echo", 5))
 		ft_echo(com);
 	if (com && !ft_strncmp(com[0], "cd", 5))
-		ft_cd(com, env);
+		ft_cd(com, env, err);
 	if (com && !ft_strncmp(input, "pwd", 4))
 		ft_pwd(com);
 	if (!ft_strncmp(input, "env", 5))
