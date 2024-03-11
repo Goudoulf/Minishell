@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/09 14:09:53 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/11 11:57:33 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -333,6 +333,7 @@ static void	child(t_cmd *cmd, char **envp)
 		do_redirection(cmd, NULL, NULL, 0);
 	if (cmd->cmd)
 		do_cmd(cmd, envp);
+	exit (0);
 }
 
 static void	last_child(t_cmd *cmd, int pipe[2], char **envp)
@@ -340,6 +341,7 @@ static void	last_child(t_cmd *cmd, int pipe[2], char **envp)
 	do_redirection(cmd, pipe, NULL, 3);
 	if (cmd->cmd)
 		do_cmd(cmd, envp);
+	exit (0);
 }
 
 static void	first_child(t_cmd *cmd, int pipe[2], char **envp)
@@ -347,6 +349,7 @@ static void	first_child(t_cmd *cmd, int pipe[2], char **envp)
 	do_redirection(cmd, pipe, NULL, 1);
 	if (cmd->cmd)
 		do_cmd(cmd, envp);
+	exit (0);
 }
 
 static void	child_pipe(t_cmd *cmd, int pipe1[2], int pipe2[2], char **envp)
@@ -354,6 +357,7 @@ static void	child_pipe(t_cmd *cmd, int pipe1[2], int pipe2[2], char **envp)
 	do_redirection(cmd, pipe1, pipe2, 2);
 	if (cmd->cmd)
 		do_cmd(cmd, envp);
+	exit (0);
 }
 
 static int	exec_last(t_cmd *cmd, char **envp, int pipe1[2])
