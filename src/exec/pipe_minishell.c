@@ -3,16 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/03/12 13:51:06 by rjacq            ###   ########.fr       */
-=======
-/*   Updated: 2024/03/12 14:02:10 by cassie           ###   ########.fr       */
->>>>>>> bee07d2b78047aece58e26fbff1897956d0110af
+/*   Updated: 2024/03/12 14:51:07 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -109,15 +106,9 @@ static int	isdirectory(char *str)
 static void	closepipe(int pipe[2])
 {
 	if (close(pipe[0]) == -1)
-	{
 		perror(ft_itoa(pipe[0]));
-		//exit
-	}
 	if (close(pipe[1]) == -1)
-	{
 		perror(ft_itoa(pipe[1]));
-		//exit
-	}
 }
 
 bool	is_dechevron(t_cmd *cmd)
@@ -176,18 +167,12 @@ static void	redir_input(int fd, int pipe[2], t_cmd *cmd)
 			exit(1);
 		}
 		if (close(fd) == -1)
-		{
 			perror(ft_itoa(fd));
-			//exit
-		}
 	}
 	if ((pipe && !is_dechevron(cmd) && !has_redir_out(cmd)) || cmd->next)
 	{
 		if (close(pipe[0]) == -1)
-		{
 			perror(ft_itoa(pipe[0]));
-			//exit
-		}
 		if (dup2(pipe[1], 1) == -1)
 		{
 			perror(ft_itoa(fd));
@@ -195,10 +180,7 @@ static void	redir_input(int fd, int pipe[2], t_cmd *cmd)
 			exit(1);
 		}
 		if (close(pipe[1]) == -1)
-		{
 			perror(ft_itoa(pipe[1]));
-			//exit
-		}
 	}
 }
 
@@ -210,19 +192,13 @@ static void	do_input(t_cmd *cmd, int pipe[2], int i)
 	if (ft_strncmp(cmd->redirection[i], "<<", 2) == 0)
 	{
 		if (close(cmd->pipe_dchevron[1]) == -1)
-		{
-			perror(cmd->pipe_dchevron[1]);
-			//exit
-		}
+			perror(ft_itoa(cmd->pipe_dchevron[1]));
 		fd = cmd->pipe_dchevron[0];
 	}
 	else if (cmd->redirection[i][0] == '<')
 		fd = open(&cmd->redirection[i][1], O_RDONLY);
 	if (fd == -1)
-	{
-		//exit
-		exit((perror(&cmd->redirection[i][1]), 1));
-	}
+		exit((perror(ft_itoa(fd)), 1));
 	redir_input(fd, pipe, cmd);
 }
 
@@ -237,18 +213,12 @@ static void	redir_output(int fd, int pipe[2], t_cmd *cmd)
 			exit(1);
 		}
 		if (close(fd) == -1)
-		{
 			perror(ft_itoa(fd));
-			//exit
-		}
 	}
 	if (pipe && !has_redir_in(cmd))
 	{
 		if (close(pipe[1]) == -1)
-		{
 			perror(ft_itoa(pipe[1]));
-			//exit
-		}
 		if (dup2(pipe[0], 0) == -1)
 		{
 			perror(ft_itoa(pipe[0]));
@@ -256,38 +226,24 @@ static void	redir_output(int fd, int pipe[2], t_cmd *cmd)
 			exit(1);
 		}
 		if (close(pipe[0]) == -1)
-		{
 			perror(ft_itoa(pipe[0]));
-			//exit
-		}
 	}
 }
 
 static void	do_output(t_cmd *cmd, int pipe[2], int i)
 {
-	int	j;
 	int	fd;
 
 	fd = 1;
-	j = 0;
 	if (fd != 1)
 		if (close(fd) == -1)
-		{
-			perror(fd);
-			//exit
-		}
+			perror(ft_itoa(fd));
 	if (ft_strncmp(cmd->redirection[i], ">>", 2) == 0)
-	{
-		j += 2;
-		fd = open(&cmd->redirection[i][j], O_CREAT | O_WRONLY | O_APPEND, 00644);
-	}
+		fd = open(&cmd->redirection[i][2], O_CREAT | O_WRONLY | O_APPEND, 00644);
 	else if (cmd->redirection[i][0] == '>')
-		fd = open(&cmd->redirection[i][++j], O_CREAT | O_WRONLY | O_TRUNC, 00644);
+		fd = open(&cmd->redirection[i][1], O_CREAT | O_WRONLY | O_TRUNC, 00644);
 	if (fd == -1)
-	{
-		//exit
-		exit((perror(&cmd->redirection[i][j]), 1));
-	}
+		exit((perror(ft_itoa(fd)), 1));
 	redir_output(fd, pipe, cmd);
 }
 
@@ -334,49 +290,42 @@ bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 	{
 		ft_echo(cmd);
 		close((close(1), 0));
-		//exit
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "pwd", 4))
 	{
 		ft_pwd(cmd);
 		close((close(1), 0));
-		//exit
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "cd", 3))
 	{
 		ft_cd(cmd, list, err);
 		close((close(1), 0));
-		//exit
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "exit", 5))
 	{
 		ft_exit(cmd, err);
 		close((close(1), 0));
-		//exit
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "unset", 6))
 	{
 		ft_unset(list, cmd, err);
 		close((close(1), 0));
-		//exit
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "export", 7))
 	{
 		ft_export(list, cmd, err);
 		close((close(1), 0));
-		//exit
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "env", 4))
 	{
 		ft_lst_print(list);
 		close((close(1), 0));
-		//exit
 		exit(err->code);
 	}
 	return (false);
@@ -407,7 +356,6 @@ static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 	}
 	else
 		print_error("Command not found", cmd->cmd[0]);
-	//exit
 	if (cmd->path && isdirectory(cmd->path) && cmd->cmd[0] && cmd->cmd[0][0])
 		exit((close(0), close(1), 126));
 	exit((close(0), close(1), 127));
@@ -611,6 +559,7 @@ static int	exec_pipe(t_cmd *cmd, t_list **lst, t_error *err)
 int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 {
 	int		status;
+	int		fd[2];
 
 	status = 0;
 	if (!cmd->next)
@@ -618,9 +567,13 @@ int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 		for_each_dchevron(cmd);
 		if (is_builtin(cmd))
 		{
+			fd[0] = dup(0);
+			fd[1] = dup(1);
 			if (cmd->redirection)
 				do_redirection(cmd, NULL, NULL, 0);
 			exec_builtin2(cmd->cmd, lst, err);
+			dup2(fd[0], 0);
+			dup2(fd[1], 1);
 			return (err->code);
 		}
 		cmd->pid = fork();
