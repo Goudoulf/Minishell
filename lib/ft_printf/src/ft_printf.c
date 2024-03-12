@@ -12,28 +12,28 @@
 
 #include "ft_printf.h"
 
-static int	ft_print_arg(const char *s, va_list args, int i)
+static int	ft_print_arg(const char *s, va_list args, int i, int fd)
 {
 	if (s[i + 1] == 'c')
-		return (ft_printf_putchar(va_arg(args, int)));
+		return (ft_printf_putchar(va_arg(args, int), fd));
 	if (s[i + 1] == 's')
-		return (ft_printf_putstr(va_arg(args, char *)));
+		return (ft_printf_putstr(va_arg(args, char *), fd));
 	if (s[i + 1] == '%')
-		return (ft_printf_putchar('%'));
+		return (ft_printf_putchar('%', fd));
 	if (s[i + 1] == 'p')
-		return (ft_printf_hexa_ptr((long unsigned int)va_arg(args, void *)));
+		return (ft_printf_hexa_ptr((long unsigned int)va_arg(args, void *), fd));
 	if (s[i + 1] == 'd' || s[i + 1] == 'i')
-		return (ft_printf_putnbr(va_arg(args, int)));
+		return (ft_printf_putnbr(va_arg(args, int), fd));
 	if (s[i + 1] == 'u')
-		return (ft_unsigned_putnbr(va_arg(args, unsigned int)));
+		return (ft_unsigned_putnbr(va_arg(args, unsigned int), fd));
 	if (s[i + 1] == 'x')
-		return (ft_printf_hexa((unsigned int)va_arg(args, int), 'x'));
+		return (ft_printf_hexa((unsigned int)va_arg(args, int), 'x', fd));
 	if (s[i + 1] == 'X')
-		return (ft_printf_hexa((unsigned int)va_arg(args, int), 'X'));
+		return (ft_printf_hexa((unsigned int)va_arg(args, int), 'X', fd));
 	return (0);
 }
 
-static int	ft_check_arg(const char *s, va_list args, size_t i)
+static int	ft_check_arg(int fd, const char *s, va_list args, size_t i)
 {
 	int	j;
 	int	size;
@@ -43,14 +43,14 @@ static int	ft_check_arg(const char *s, va_list args, size_t i)
 	{
 		if (s[i] != '%')
 		{
-			size = ft_printf_putchar(s[i]);
+			size = ft_printf_putchar(s[i], fd);
 			if (size == -1)
 				return (-1);
 			j = j + size;
 		}
 		else
 		{
-			size = ft_print_arg(s, args, i);
+			size = ft_print_arg(s, args, i, fd);
 			if (size == -1)
 				return (-1);
 			j = j + size;
@@ -61,7 +61,7 @@ static int	ft_check_arg(const char *s, va_list args, size_t i)
 	return (j);
 }
 
-int	ft_printf(const char *s, ...)
+int	ft_printf(int fd, const char *s, ...)
 {
 	size_t			i;
 	unsigned int	j;
@@ -72,7 +72,7 @@ int	ft_printf(const char *s, ...)
 	if (!s[i])
 		return (0);
 	va_start(args, s);
-	j = ft_check_arg(s, args, i);
+	j = ft_check_arg(fd, s, args, i);
 	va_end(args);
 	return (j);
 }

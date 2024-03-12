@@ -25,20 +25,20 @@ static int	ft_int_len3(unsigned int nb)
 	return (y);
 }
 
-int	ft_unsigned_putnbr(unsigned int n)
+int	ft_unsigned_putnbr(unsigned int n, int fd)
 {
 	size_t	y;
 	size_t	i;
 
 	i = 0;
 	if (n < 10)
-		i = i + ft_printf_putchar((n + 48));
+		i = i + ft_printf_putchar((n + 48), fd);
 	y = ft_int_len3(n);
 	if (n >= 10)
 	{
 		while (y != 0)
 		{
-			i = i + ft_printf_putchar((n / y + 48));
+			i = i + ft_printf_putchar((n / y + 48), fd);
 			n = n % y;
 			y = y / 10;
 		}

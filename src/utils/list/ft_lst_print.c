@@ -12,14 +12,14 @@
 
 #include "minishell.h"
 
-void	ft_lst_print(t_list **list)
+void	ft_lst_print(t_list **list, int fd)
 {
 	t_list	*temp;
 
 	temp = *list;
 	while (temp != NULL)
 	{
-		ft_printf("%s=%s\n", temp->var, temp->var_content);
+		ft_printf(fd, "%s=%s\n", temp->var, temp->var_content);
 		//printf("var = %s\n", temp->var);
 		//printf("var_content = %s\n", temp->var_content);
 		temp = temp->next;

@@ -12,16 +12,16 @@
 
 #include "ft_printf.h"
 
-static int	ft_print_str(char *s)
+static int	ft_print_str(char *s, int fd)
 {
 	char	*front;
 	int		size;
 
 	front = "0x";
-	size = ft_printf_putstr(front);
+	size = ft_printf_putstr(front, fd);
 	if (size == -1)
 		return (-1);
-	size = ft_printf_putstr(s);
+	size = ft_printf_putstr(s, fd);
 	if (size == -1)
 		return (-1);
 	return (2 + ft_printf_strlen(s));
@@ -48,13 +48,13 @@ static int	ft_int_len3(unsigned long int nb)
 	return (y);
 }
 
-int	ft_printf_hexa_ptr(long unsigned int n)
+int	ft_printf_hexa_ptr(long unsigned int n, int fd)
 {
 	unsigned long int		i;
 	char					*str1;
 
 	if (n == 0)
-		return (ft_printf_putstr("(nil)"));
+		return (ft_printf_putstr("(nil)", fd));
 	i = ft_int_len3(n);
 	str1 = malloc(sizeof(char) * (i + 1));
 	if (!str1)
@@ -67,7 +67,7 @@ int	ft_printf_hexa_ptr(long unsigned int n)
 		n = n / 16;
 		i--;
 	}
-	i = ft_print_str(str1);
+	i = ft_print_str(str1, fd);
 	free(str1);
 	return (i);
 }

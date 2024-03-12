@@ -184,6 +184,23 @@ static void	redir_input(int fd, int pipe[2], t_cmd *cmd)
 	}
 }
 
+static void	do_input2(t_cmd *cmd, int i)
+{
+	int		fd;
+
+	fd = 0;
+	if (ft_strncmp(cmd->redirection[i], "<<", 2) == 0)
+	{
+		if (close(cmd->pipe_dchevron[1]) == -1)
+			perror(ft_itoa(cmd->pipe_dchevron[1]));
+		fd = cmd->pipe_dchevron[0];
+	}
+	else if (cmd->redirection[i][0] == '<')
+		fd = open(&cmd->redirection[i][1], O_RDONLY);
+	if (fd == -1)
+		exit((perror(ft_itoa(fd)), 1));
+}
+
 static void	do_input(t_cmd *cmd, int pipe[2], int i)
 {
 	int		fd;
@@ -230,6 +247,19 @@ static void	redir_output(int fd, int pipe[2], t_cmd *cmd)
 	}
 }
 
+static void	do_output2(t_cmd *cmd, int i, int *fd)
+{
+	if (*fd != 1)
+		if (close(*fd) == -1)
+			perror(ft_itoa(*fd));
+	if (ft_strncmp(cmd->redirection[i], ">>", 2) == 0)
+		*fd = open(&cmd->redirection[i][2], O_CREAT | O_WRONLY | O_APPEND, 00644);
+	else if (cmd->redirection[i][0] == '>')
+		*fd = open(&cmd->redirection[i][1], O_CREAT | O_WRONLY | O_TRUNC, 00644);
+	if (*fd == -1)
+		exit((perror(ft_itoa(*fd)), 1));
+}
+
 static void	do_output(t_cmd *cmd, int pipe[2], int i)
 {
 	int	fd;
@@ -245,6 +275,20 @@ static void	do_output(t_cmd *cmd, int pipe[2], int i)
 	if (fd == -1)
 		exit((perror(ft_itoa(fd)), 1));
 	redir_output(fd, pipe, cmd);
+}
+
+static void	do_redirection2(t_cmd *cmd, int *fd)
+{
+	size_t	i;
+
+	i = -1;
+	while (cmd->redirection && cmd->redirection[++i])
+	{
+		if (cmd->redirection[i][0] == '<')
+			do_input2(cmd, i);
+		if (cmd->redirection[i][0] == '>')
+			do_output2(cmd, i, fd);
+	}
 }
 
 bool	is_builtin(t_cmd *cmd)
@@ -266,12 +310,12 @@ bool	is_builtin(t_cmd *cmd)
 	return (false);
 }
 
-void	exec_builtin2(char	**cmd, t_list **list, t_error *err)
+void	exec_builtin2(char	**cmd, t_list **list, t_error *err, int fd)
 {
 	if (!ft_strncmp(cmd[0], "echo", 5))
-		ft_echo(cmd);
+		ft_echo(cmd, fd);
 	if (!ft_strncmp(cmd[0], "pwd", 4))
-		ft_pwd(cmd);
+		ft_pwd(cmd, fd);
 	if (!ft_strncmp(cmd[0], "cd", 3))
 		ft_cd(cmd, list, err);
 	if (!ft_strncmp(cmd[0], "exit", 5))
@@ -279,22 +323,22 @@ void	exec_builtin2(char	**cmd, t_list **list, t_error *err)
 	if (!ft_strncmp(cmd[0], "unset", 6))
 		ft_unset(list, cmd, err);
 	if (!ft_strncmp(cmd[0], "export", 7))
-		ft_export(list, cmd, err);
+		ft_export(list, cmd, err, fd);
 	if (!ft_strncmp(cmd[0], "env", 4))
-		ft_lst_print(list);
+		ft_lst_print(list, fd);
 }
 
 bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 {
 	if (!ft_strncmp(cmd[0], "echo", 5))
 	{
-		ft_echo(cmd);
+		ft_echo(cmd, -1);
 		close((close(1), 0));
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "pwd", 4))
 	{
-		ft_pwd(cmd);
+		ft_pwd(cmd, -1);
 		close((close(1), 0));
 		exit(err->code);
 	}
@@ -318,20 +362,18 @@ bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 	}
 	if (!ft_strncmp(cmd[0], "export", 7))
 	{
-		ft_export(list, cmd, err);
+		ft_export(list, cmd, err, -1);
 		close((close(1), 0));
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "env", 4))
 	{
-		ft_lst_print(list);
+		ft_lst_print(list, -1);
 		close((close(1), 0));
 		exit(err->code);
 	}
 	return (false);
 }
-
-
 
 static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 {
@@ -559,7 +601,7 @@ static int	exec_pipe(t_cmd *cmd, t_list **lst, t_error *err)
 int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 {
 	int		status;
-	int		fd[2];
+	int		fd;
 
 	status = 0;
 	if (!cmd->next)
@@ -567,13 +609,12 @@ int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 		for_each_dchevron(cmd);
 		if (cmd->cmd && is_builtin(cmd))
 		{
-			fd[0] = dup(0);
-			fd[1] = dup(1);
+			fd = 1;
 			if (cmd->redirection)
-				do_redirection(cmd, NULL, NULL, 0);
-			exec_builtin2(cmd->cmd, lst, err);
-			dup2(fd[0], 0);
-			dup2(fd[1], 1);
+				do_redirection2(cmd, &fd);
+			exec_builtin2(cmd->cmd, lst, err, fd);
+			if (fd != 1)
+			close(fd);
 			return (err->code);
 		}
 		cmd->pid = fork();

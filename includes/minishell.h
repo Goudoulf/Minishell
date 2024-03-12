@@ -58,9 +58,9 @@ typedef struct s_error
 void	check_cmd(char *input, t_list **env, t_cmd **cmd, t_error *err);
 
 // builtins
-int	ft_echo(char **cmd);
-int	ft_pwd(char **cmd);
-int	ft_export(t_list **env, char **cmd, t_error *err);
+int	ft_echo(char **cmd, int fd);
+int	ft_pwd(char **cmd, int fd);
+int	ft_export(t_list **env, char **cmd, t_error *err, int fd);
 int	ft_unset(t_list **env, char **cmd, t_error *err);
 void	ft_exit(char **cmd, t_error *err);
 int	ft_cd(char **cmd, t_list **env, t_error *err);
@@ -92,7 +92,7 @@ void signal_handling();
 
 t_list	*ft_lst_new(char *content);
 void	ft_lstadd_back(t_list **lst, t_list *new);
-void	ft_lst_print(t_list **list);
+void	ft_lst_print(t_list **list, int fd);
 void	ft_lstclear(t_list **lst);
 t_list	*get_next_min(t_list **stack);
 void	ft_lst_set_isprint(t_list **lst);
