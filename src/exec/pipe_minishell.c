@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/11 21:13:15 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/12 12:28:20 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,13 +253,13 @@ bool	is_builtin(t_cmd *cmd)
 		return (true);
 	if (!ft_strncmp(cmd->cmd[0], "cd", 3))
 		return (true);
-	if (!ft_strncmp(cmd->cmd[0], "exit", 4))
+	if (!ft_strncmp(cmd->cmd[0], "exit", 5))
 		return (true);
-	if (!ft_strncmp(cmd->cmd[0], "unset", 5))
+	if (!ft_strncmp(cmd->cmd[0], "unset", 6))
 		return (true);
-	if (!ft_strncmp(cmd->cmd[0], "export", 6))
+	if (!ft_strncmp(cmd->cmd[0], "export", 7))
 		return (true);
-	if (!ft_strncmp(cmd->cmd[0], "env", 3))
+	if (!ft_strncmp(cmd->cmd[0], "env", 4))
 		return (true);
 	return (false);
 }
@@ -272,13 +272,13 @@ void	exec_builtin2(char	**cmd, t_list **list, t_error *err)
 		ft_pwd(cmd);
 	if (!ft_strncmp(cmd[0], "cd", 3))
 		ft_cd(cmd, list, err);
-	if (!ft_strncmp(cmd[0], "exit", 4))
+	if (!ft_strncmp(cmd[0], "exit", 5))
 		ft_exit(cmd, err);
-	if (!ft_strncmp(cmd[0], "unset", 5))
+	if (!ft_strncmp(cmd[0], "unset", 6))
 		ft_unset(list, cmd);
-	if (!ft_strncmp(cmd[0], "export", 6))
+	if (!ft_strncmp(cmd[0], "export", 7))
 		ft_export(list, cmd, err);
-	if (!ft_strncmp(cmd[0], "env", 3))
+	if (!ft_strncmp(cmd[0], "env", 4))
 		ft_lst_print(list);
 }
 
@@ -299,22 +299,22 @@ bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 		ft_cd(cmd, list, err);
 		exit(err->code);
 	}
-	if (!ft_strncmp(cmd[0], "exit", 4))
+	if (!ft_strncmp(cmd[0], "exit", 5))
 	{
 		ft_exit(cmd, err);
 		exit(err->code);
 	}
-	if (!ft_strncmp(cmd[0], "unset", 5))
+	if (!ft_strncmp(cmd[0], "unset", 6))
 	{
 		ft_unset(list, cmd);
 		exit(err->code);
 	}
-	if (!ft_strncmp(cmd[0], "export", 6))
+	if (!ft_strncmp(cmd[0], "export", 7))
 	{
 		ft_export(list, cmd, err);
 		exit(err->code);
 	}
-	if (!ft_strncmp(cmd[0], "env", 3))
+	if (!ft_strncmp(cmd[0], "env", 4))
 	{
 		ft_lst_print(list);
 		exit(err->code);
@@ -328,35 +328,24 @@ static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 {
 	char	**envp;
 
-	//is_builtin(cmd, lst, err);
-	// if (cmd->cmd && !ft_strncmp(cmd->cmd[0], "echo", 5))
-	// 	ft_echo(cmd->cmd);
-	// else if (cmd->cmd && !ft_strncmp(cmd->cmd[0], "pwd", 4))
-	// 	ft_pwd(cmd->cmd);
 	if (!exec_builtin(cmd->cmd, lst, err))
 	{
 		envp = ft_lst_to_tab(lst);
-		//envp = lst_to_tab(lst);
 		execve(cmd->path, cmd->cmd, envp);
 		free_tab(envp);
 	}
-	if (cmd->path && isdirectory(cmd->path))
+	if (cmd->path && isdirectory(cmd->path) && cmd->cmd[0][0])
 	{
 		write(2, "minishell: ", 11);
 		print_error("Is a directory", cmd->cmd[0]);
 	}
-	else if (cmd->path && isdirectory(cmd->path) && \
-		access(cmd->path, F_OK) == -1)
-		perror(cmd->cmd[0]);
 	else if (cmd->cmd[0] && isdirectory(cmd->cmd[0]))
 	{
 		write(2, "minishell: ", 11);
 		print_error("No such file or directory", cmd->cmd[0]);
 	}
-	else if (errno == 2 || !cmd->path || (cmd->cmd[0] && cmd->cmd[0][0] == 0))
-		print_error("Command not found", cmd->cmd[0]);
 	else
-		perror(cmd->cmd[0]);
+		print_error("Command not found", cmd->cmd[0]);
 	if (cmd->cmd[0] && cmd->cmd[0][0] == '/' && cmd->path)
 		exit((close(0), close(1), 126));
 	exit((close(0), close(1), 127));
