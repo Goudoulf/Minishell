@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 08:18:25 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/09 08:19:53 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/12 16:57:16 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_list	*check_cmd_env(char *arg, t_list **env)
 	temp = *env;
 	while (temp)
 	{
-		if (!ft_strncmp(temp->var, arg, ft_strlen(arg)))
+		if (!ft_strncmp(temp->var, arg, ft_strlen(temp->var)))
 			return (temp);
 		temp = temp->next;
 	}

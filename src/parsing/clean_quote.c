@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 13:17:32 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/09 10:57:03 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/12 17:05:21 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,18 @@ void clean_quote(t_cmd **cmd)
 		while (temp->cmd && temp->cmd[i])
 		{
 			temp->cmd[i] = delete_quote(temp->cmd[i], 0, 0, 0);
+			i++;
+		}
+		i = 0;
+		while (temp->redirection && temp->redirection[i])
+		{
+			temp->redirection[i] = delete_quote(temp->redirection[i], 0, 0, 0);
+			i++;
+		}
+		i = 0;
+		while (temp->here_doc && temp->here_doc[i])
+		{
+			temp->here_doc[i] = delete_quote(temp->here_doc[i], 0, 0, 0);
 			i++;
 		}
 		temp = temp->next;

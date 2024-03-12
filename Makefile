@@ -23,7 +23,9 @@ SRCS_FILE = main.c check_cmd.c signal.c ./utils/ft_echo.c ./utils/ft_pwd.c ./uti
 			./utils/get_next_min.c ./utils/list/ft_lst_set_isprint.c ./utils/ft_exit.c init/inc_shell_lvl.c \
 			./parsing/clean_quote.c ./utils/ft_cd.c ./error/check_line_error.c ./exec/pipe_minishell.c ./utils/ft_is_any.c \
 			./parsing/clean_redirection.c ./utils/cmd/cmd_utils.c ./utils/cmd/cmd_core.c ./utils/quote_mode.c ./utils/tab_utils.c \
-			./utils/list/ft_lst_to_tab.c ./parsing/dollars/check_tilde.c ./parsing/dollars/replace_tilde.c
+			./utils/list/ft_lst_to_tab.c ./parsing/dollars/check_tilde.c ./parsing/dollars/replace_tilde.c ../lib/gnl/get_next_line.c \
+			../lib/gnl/get_next_line_utils.c
+
 
 INC = includes
 

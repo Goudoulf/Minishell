@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/12 13:16:08 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/12 14:54:11 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include "../lib/libft/includes/libft.h"
+# include "../lib/gnl/get_next_line.h"
 # include "../lib/ft_printf/includes/ft_printf.h"
 
 # include <stdio.h>
@@ -26,6 +27,7 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <errno.h>
+# include <stddef.h>
 
 typedef struct s_list
 {
@@ -132,5 +134,10 @@ void	cmd_add_path(t_cmd **cmd, t_list **env);
 int	exec_line(t_cmd *cmd, t_list **list, t_error *err);
 char	*ft_join(const char *s1, const char *s2);
 char	*find_path(char *cmd, char *path);
+
+// gnl
+
+
+char	*get_next_line(int fd);
 
 #endif

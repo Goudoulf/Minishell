@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
+/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 15:26:37 by rjacq             #+#    #+#             */
-/*   Updated: 2023/12/22 14:42:52 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/12 14:50:51 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static char	*ft_append(char *buf, char *str, size_t *len)
 		str = ft_realloc(str, buf, (*len));
 	if (str == NULL)
 		return (NULL);
-	ft_substr(buf, ++i);
+	ft_substr2(buf, ++i);
 	return (str);
 }
 
@@ -54,6 +54,6 @@ char	*get_next_line(int fd)
 		rvalue = read(fd, buf, BUFFER_SIZE);
 	}
 	if (rvalue < 0)
-		return (ft_substr(buf, BUFFER_SIZE), free(str), NULL);
+		return (ft_substr2(buf, BUFFER_SIZE), free(str), NULL);
 	return (str);
 }

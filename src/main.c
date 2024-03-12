@@ -70,7 +70,16 @@ int main(int argc, char **argv, char **envp)
 	}
 	while(1)
 	{
-		input = readline(CYELLOW "[Minishell]: " RESET);
+		if (isatty(fileno(stdin)))
+			input = readline(CYELLOW "[Minishell]: " RESET);
+		else
+		{
+			char *line;
+			line = get_next_line(fileno(stdin));
+			input = ft_strtrim(line, "\n");
+			free(line);
+		}
+		//input = readline(CYELLOW "[Minishell]: " RESET);
 		if (!input)
 			quit_eof(&env, &cmd, &err);
 		if (input && *input)

@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 16:14:00 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/03 10:01:47 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/12 15:48:11 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static char	ft_strcpy(char *destination, const char *source)
 	int	i;
 
 	i = 0;
-	while (source[i] && source[i] != ' ')
+	while (source[i])
 	{
 		destination[i] = source[i];
 		i++;

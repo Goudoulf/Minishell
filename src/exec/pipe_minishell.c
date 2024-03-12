@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
+/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/12 14:51:07 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/12 17:10:50 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -565,7 +565,7 @@ int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 	if (!cmd->next)
 	{
 		for_each_dchevron(cmd);
-		if (is_builtin(cmd))
+		if (cmd->cmd && is_builtin(cmd))
 		{
 			fd[0] = dup(0);
 			fd[1] = dup(1);

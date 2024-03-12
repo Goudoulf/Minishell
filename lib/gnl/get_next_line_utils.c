@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjacq <rjacq@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 15:35:04 by rjacq             #+#    #+#             */
-/*   Updated: 2023/11/24 15:35:08 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/12 14:45:37 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*ft_realloc(char *p1, char *p2, size_t msize)
 	return (dst);
 }
 
-void	ft_substr(char *dst, size_t len)
+void	ft_substr2(char *dst, size_t len)
 {
 	size_t	i;
 
