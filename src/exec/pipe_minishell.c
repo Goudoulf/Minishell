@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/12 13:23:33 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/12 13:51:06 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,9 +105,15 @@ static int	isdirectory(char *str)
 static void	closepipe(int pipe[2])
 {
 	if (close(pipe[0]) == -1)
+	{
 		perror(ft_itoa(pipe[0]));
+		//exit
+	}
 	if (close(pipe[1]) == -1)
+	{
 		perror(ft_itoa(pipe[1]));
+		//exit
+	}
 }
 
 bool	is_dechevron(t_cmd *cmd)
@@ -166,18 +172,29 @@ static void	redir_input(int fd, int pipe[2], t_cmd *cmd)
 			exit(1);
 		}
 		if (close(fd) == -1)
+		{
 			perror(ft_itoa(fd));
+			//exit
+		}
 	}
 	if ((pipe && !is_dechevron(cmd) && !has_redir_out(cmd)) || cmd->next)
 	{
-		close(pipe[0]);
+		if (close(pipe[0]) == -1)
+		{
+			perror(ft_itoa(pipe[0]));
+			//exit
+		}
 		if (dup2(pipe[1], 1) == -1)
 		{
 			perror(ft_itoa(fd));
 			closepipe(pipe);
 			exit(1);
 		}
-		close(pipe[1]);
+		if (close(pipe[1]) == -1)
+		{
+			perror(ft_itoa(pipe[1]));
+			//exit
+		}
 	}
 }
 
@@ -188,13 +205,20 @@ static void	do_input(t_cmd *cmd, int pipe[2], int i)
 	fd = 0;
 	if (ft_strncmp(cmd->redirection[i], "<<", 2) == 0)
 	{
-		close(cmd->pipe_dchevron[1]);
+		if (close(cmd->pipe_dchevron[1]) == -1)
+		{
+			perror(cmd->pipe_dchevron[1]);
+			//exit
+		}
 		fd = cmd->pipe_dchevron[0];
 	}
 	else if (cmd->redirection[i][0] == '<')
 		fd = open(&cmd->redirection[i][1], O_RDONLY);
 	if (fd == -1)
+	{
+		//exit
 		exit((perror(&cmd->redirection[i][1]), 1));
+	}
 	redir_input(fd, pipe, cmd);
 }
 
@@ -209,18 +233,29 @@ static void	redir_output(int fd, int pipe[2], t_cmd *cmd)
 			exit(1);
 		}
 		if (close(fd) == -1)
+		{
 			perror(ft_itoa(fd));
+			//exit
+		}
 	}
 	if (pipe && !has_redir_in(cmd))
 	{
-		close(pipe[1]);
+		if (close(pipe[1]) == -1)
+		{
+			perror(ft_itoa(pipe[1]));
+			//exit
+		}
 		if (dup2(pipe[0], 0) == -1)
 		{
 			perror(ft_itoa(pipe[0]));
 			closepipe(pipe);
 			exit(1);
 		}
-		close(pipe[0]);
+		if (close(pipe[0]) == -1)
+		{
+			perror(ft_itoa(pipe[0]));
+			//exit
+		}
 	}
 }
 
@@ -232,7 +267,11 @@ static void	do_output(t_cmd *cmd, int pipe[2], int i)
 	fd = 1;
 	j = 0;
 	if (fd != 1)
-		close(fd);
+		if (close(fd) == -1)
+		{
+			perror(fd);
+			//exit
+		}
 	if (ft_strncmp(cmd->redirection[i], ">>", 2) == 0)
 	{
 		j += 2;
@@ -241,7 +280,10 @@ static void	do_output(t_cmd *cmd, int pipe[2], int i)
 	else if (cmd->redirection[i][0] == '>')
 		fd = open(&cmd->redirection[i][++j], O_CREAT | O_WRONLY | O_TRUNC, 00644);
 	if (fd == -1)
+	{
+		//exit
 		exit((perror(&cmd->redirection[i][j]), 1));
+	}
 	redir_output(fd, pipe, cmd);
 }
 
@@ -288,42 +330,49 @@ bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 	{
 		ft_echo(cmd);
 		close((close(1), 0));
+		//exit
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "pwd", 4))
 	{
 		ft_pwd(cmd);
 		close((close(1), 0));
+		//exit
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "cd", 3))
 	{
 		ft_cd(cmd, list, err);
 		close((close(1), 0));
+		//exit
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "exit", 5))
 	{
 		ft_exit(cmd, err);
 		close((close(1), 0));
+		//exit
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "unset", 6))
 	{
 		ft_unset(list, cmd);
 		close((close(1), 0));
+		//exit
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "export", 7))
 	{
 		ft_export(list, cmd, err);
 		close((close(1), 0));
+		//exit
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "env", 4))
 	{
 		ft_lst_print(list);
 		close((close(1), 0));
+		//exit
 		exit(err->code);
 	}
 	return (false);
@@ -354,6 +403,7 @@ static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 	}
 	else
 		print_error("Command not found", cmd->cmd[0]);
+	//exit
 	if (cmd->path && isdirectory(cmd->path) && cmd->cmd[0] && cmd->cmd[0][0])
 		exit((close(0), close(1), 126));
 	exit((close(0), close(1), 127));
