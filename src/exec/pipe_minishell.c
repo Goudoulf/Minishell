@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
+/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/03/12 13:51:06 by rjacq            ###   ########.fr       */
+=======
+/*   Updated: 2024/03/12 14:02:10 by cassie           ###   ########.fr       */
+>>>>>>> bee07d2b78047aece58e26fbff1897956d0110af
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -317,7 +321,7 @@ void	exec_builtin2(char	**cmd, t_list **list, t_error *err)
 	if (!ft_strncmp(cmd[0], "exit", 5))
 		ft_exit(cmd, err);
 	if (!ft_strncmp(cmd[0], "unset", 6))
-		ft_unset(list, cmd);
+		ft_unset(list, cmd, err);
 	if (!ft_strncmp(cmd[0], "export", 7))
 		ft_export(list, cmd, err);
 	if (!ft_strncmp(cmd[0], "env", 4))
@@ -356,7 +360,7 @@ bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 	}
 	if (!ft_strncmp(cmd[0], "unset", 6))
 	{
-		ft_unset(list, cmd);
+		ft_unset(list, cmd, err);
 		close((close(1), 0));
 		//exit
 		exit(err->code);

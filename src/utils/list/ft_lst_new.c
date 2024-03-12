@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 14:48:16 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/07 08:45:49 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/12 13:15:50 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ t_list	*ft_lst_new(char *content)
 	new = malloc(sizeof(t_list));
 	if (!new)
 		return (NULL);
-	new->string = ft_strdup(content);
 	new->var = str_to_char(content);
 	new->var_content = str_from_char(content);
 	new->isprint = -1;
