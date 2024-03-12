@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/12 12:28:20 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/12 13:23:33 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -287,36 +287,43 @@ bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 	if (!ft_strncmp(cmd[0], "echo", 5))
 	{
 		ft_echo(cmd);
+		close((close(1), 0));
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "pwd", 4))
 	{
 		ft_pwd(cmd);
+		close((close(1), 0));
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "cd", 3))
 	{
 		ft_cd(cmd, list, err);
+		close((close(1), 0));
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "exit", 5))
 	{
 		ft_exit(cmd, err);
+		close((close(1), 0));
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "unset", 6))
 	{
 		ft_unset(list, cmd);
+		close((close(1), 0));
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "export", 7))
 	{
 		ft_export(list, cmd, err);
+		close((close(1), 0));
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "env", 4))
 	{
 		ft_lst_print(list);
+		close((close(1), 0));
 		exit(err->code);
 	}
 	return (false);
@@ -331,7 +338,8 @@ static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 	if (!exec_builtin(cmd->cmd, lst, err))
 	{
 		envp = ft_lst_to_tab(lst);
-		execve(cmd->path, cmd->cmd, envp);
+		if (cmd->path)
+			execve(cmd->path, cmd->cmd, envp);
 		free_tab(envp);
 	}
 	if (cmd->path && isdirectory(cmd->path) && cmd->cmd[0][0])
@@ -346,7 +354,7 @@ static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 	}
 	else
 		print_error("Command not found", cmd->cmd[0]);
-	if (cmd->cmd[0] && cmd->cmd[0][0] == '/' && cmd->path)
+	if (cmd->path && isdirectory(cmd->path) && cmd->cmd[0] && cmd->cmd[0][0])
 		exit((close(0), close(1), 126));
 	exit((close(0), close(1), 127));
 }
@@ -512,7 +520,6 @@ void	for_each_dchevron(t_cmd *cmd)
 
 	while (cmd)
 	{
-		//pipe(cmd->pipe_dchevron);
 		first = true;
 		i = -1;
 		while (cmd->here_doc && cmd->here_doc[++i])
