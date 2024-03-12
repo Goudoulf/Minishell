@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 12:48:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/11 17:09:06 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/12 11:18:26 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,5 +68,6 @@ int	ft_cd(char **cmd, t_list **env, t_error *err)
 	if (temp_old_pwd->var_content) 
 		free(temp_old_pwd->var_content);
 	temp_old_pwd->var_content = ft_strdup(current_pwd);
+	free (current_pwd);
 	return (0);
 }

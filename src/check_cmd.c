@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 15:06:40 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/11 17:45:36 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/12 10:54:32 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	check_cmd(char *input, t_list **env, t_cmd **command, t_error *err)
 	if (com && !ft_strncmp(com[0], "export", 7))
 		ft_export(env, com, err);
 	if (com && !ft_strncmp(com[0], "unset", 7))
-		ft_unset(env, com);
+		ft_unset(env, com, err);
 	if (com && !ft_strncmp(com[0], "exit", 5))
 		ft_exit(com, err);
 	if (com && !ft_strncmp(com[0], "echo", 5))

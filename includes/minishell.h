@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/11 17:44:43 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/12 13:16:08 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@
 
 typedef struct s_list
 {
-	char			*string;
 	char			*var;
 	char			*var_content;
 	int				isprint;
@@ -60,7 +59,7 @@ void	check_cmd(char *input, t_list **env, t_cmd **cmd, t_error *err);
 int	ft_echo(char **cmd);
 int	ft_pwd(char **cmd);
 int	ft_export(t_list **env, char **cmd, t_error *err);
-int	ft_unset(t_list **env, char **cmd);
+int	ft_unset(t_list **env, char **cmd, t_error *err);
 void	ft_exit(char **cmd, t_error *err);
 int	ft_cd(char **cmd, t_list **env, t_error *err);
 

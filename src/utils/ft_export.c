@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 08:31:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/11 17:44:24 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/12 13:17:20 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,6 @@ static void	env_print(t_list **env)
 
 static void	env_update(t_list *env, char *content)
 {
-	if (env->string)
-		free(env->string);
-	env->string = ft_strdup(content);
 	if (env->var)
 		free(env->var);
 	env->var = str_to_char(content);
@@ -112,14 +109,25 @@ static int	cmd_is_valid(char *cmd)
 	int i;
 
 	i = 0;
-	if (cmd && ft_isalpha(cmd[i]))
-		return (0);
-	while (cmd[i])
+	if (cmd && (ft_isdigit(cmd[i]) || cmd[i] == '='))
 	{
-		if (ft_isalnum(cmd[i]) || cmd[i] == '_')
+		ft_putstr_fd("minishell: line 0: export: `", 2);
+		write(2, &cmd[i], 1);
+		ft_putstr_fd("\': not a valid identifier\n", 2);
+		return (0);
+	}
+	while (cmd[i] && cmd[i] != '=')
+	{
+		if (ft_isalnum(cmd[i]) || cmd[i] == '_' || (cmd[i] == '+' && cmd[i + 1] == '='))
 			i++;
 		else
+		{
+			ft_putstr_fd("minishell: line 0: export: `", 2);
+			ft_putstr_fd(cmd, 2);
+			//write(2, &cmd[i], 1);
+			ft_putstr_fd("\': not a valid identifier\n", 2);
 			return (0);
+		}
 	}
 	return (1);
 }
