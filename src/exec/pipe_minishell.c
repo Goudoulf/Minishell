@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/12 17:10:50 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/13 10:34:23 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,7 +271,7 @@ void	exec_builtin2(char	**cmd, t_list **list, t_error *err)
 	if (!ft_strncmp(cmd[0], "echo", 5))
 		ft_echo(cmd);
 	if (!ft_strncmp(cmd[0], "pwd", 4))
-		ft_pwd(cmd);
+		err->code = ft_pwd(cmd);
 	if (!ft_strncmp(cmd[0], "cd", 3))
 		ft_cd(cmd, list, err);
 	if (!ft_strncmp(cmd[0], "exit", 5))
@@ -294,7 +294,7 @@ bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 	}
 	if (!ft_strncmp(cmd[0], "pwd", 4))
 	{
-		ft_pwd(cmd);
+		err->code = ft_pwd(cmd);
 		close((close(1), 0));
 		exit(err->code);
 	}

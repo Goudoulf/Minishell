@@ -21,7 +21,7 @@ static void	quit_eof(t_list **env, t_cmd **cmd, t_error *err)
 	rl_clear_history();
 	ft_lstclear(env);
 	ft_cmdclear(cmd);
-	ft_putstr_fd("exit\n", 1);
+	//ft_putstr_fd("exit\n", 1);
 	exit(err->code);
 }
 

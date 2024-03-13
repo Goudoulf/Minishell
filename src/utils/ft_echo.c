@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/16 20:21:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/11 17:15:36 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/13 10:46:44 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ int	ft_echo(char **cmd)
 		if (cmd[i + 1] && cmd[i][j])
 			write(1, " ", 1);
 		i++;
+		if (new_line == true)
+			break ;
 	}
 	while (cmd[i])
 	{

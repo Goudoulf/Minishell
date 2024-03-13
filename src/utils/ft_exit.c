@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 09:20:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/11 16:53:27 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/13 13:03:15 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	ft_exit(char **cmd, t_error *err)
 	if (tab_size(cmd) < 2)
 	{
 		err->do_exit = true;
-		ft_putstr_fd("exit\n", 2);
+		//ft_putstr_fd("exit\n", 2);
 		return ;
 	}
 	if (tab_size(cmd) > 2)
@@ -98,7 +98,7 @@ void	ft_exit(char **cmd, t_error *err)
 		{
 			err->do_exit = true;
 			err->code = 2;
-			ft_putstr_fd("exit\n", 2);
+			//ft_putstr_fd("exit\n", 2);
 			ft_putstr_fd("minishell: exit: ", 2);
 			ft_putstr_fd(cmd[1], 2);
 			ft_putstr_fd(": numeric argument required\n", 2);
@@ -123,7 +123,7 @@ void	ft_exit(char **cmd, t_error *err)
 		}
 		err->do_exit = true;
 		err->code = 2;
-		ft_putstr_fd("exit\n", 2);
+		//ft_putstr_fd("exit\n", 2);
 		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putstr_fd(cmd[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);

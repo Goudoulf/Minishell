@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 13:40:57 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/12 16:28:50 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/13 10:26:54 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ size_t	cmd_count(char *s)
 
 	count = 0;
 	str = ft_strdup(s);
-	token = ft_strtok_quote(str, " ");
+	token = ft_strtok_quote(str, "\t ");
 	while (token)
 	{
 		count++;
-		token = ft_strtok_quote(NULL, " ");
+		token = ft_strtok_quote(NULL, "\t ");
 	}
 	free(str);
 	return (count);

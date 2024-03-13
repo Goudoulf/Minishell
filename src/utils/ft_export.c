@@ -6,13 +6,13 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 08:31:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/12 16:55:22 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/13 13:49:47 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static size_t	ft_strlen_equal(const char *s)
+/*static size_t	ft_strlen_equal(const char *s)
 {
 	size_t	i;
 
@@ -20,7 +20,7 @@ static size_t	ft_strlen_equal(const char *s)
 	while (s[i] && s[i] != '=')
 		i++;
 	return (i);
-}
+}*/
 
 static char	*str_from_char(char *str)
 {
@@ -93,14 +93,21 @@ static void	env_update(t_list *env, char *content)
 static t_list	*check_cmd_env_equal(char *arg, t_list **env)
 {
 	t_list	*temp;
+	char	**temp2;
 
 	temp = *env;
+	temp2 = ft_split(arg, '=');
 	while (temp)
 	{
-		if (!ft_strncmp(temp->var, arg, ft_strlen_equal(temp->var)))
+		if (!ft_strncmp(temp->var, temp2[0], ft_strlen(temp->var)))
+		{
+			free(temp2);
 			return (temp);
+		}
 		temp = temp->next;
 	}
+	free_tab(temp2);
+	free(temp2);
 	return (NULL);
 }
 

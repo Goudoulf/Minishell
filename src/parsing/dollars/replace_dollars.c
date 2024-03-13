@@ -6,11 +6,25 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 08:11:15 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/11 13:09:41 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/13 14:16:32 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	set_quote(bool *quote, char *c_quote, char char_line)
+{
+	if (*quote == false)
+	{
+		*quote = true;
+		*c_quote = char_line;
+	}
+	else
+	{
+		*quote = false;
+		*c_quote = 0;
+	}
+}
 
 static void	free_temp(char *s2, char *s3, char *s4)
 {
@@ -40,7 +54,7 @@ static int	end_dollar(char *line, int start)
 
 static char *env_replace(char *temp, t_list *env_m, t_error *err)
 {
-	if (!env_m && !ft_strncmp("?", temp, ft_strlen(temp)))
+	if (!env_m && !ft_strncmp("?", temp, 2))
 	{
 		free(temp);
 		temp = ft_itoa(err->code);
@@ -60,6 +74,28 @@ static char *env_replace(char *temp, t_list *env_m, t_error *err)
 	}
 }
 
+static int	not_in_quote(char *s, int j)
+{
+	char	c_quote;
+	bool	quote;
+	int	i;
+
+	i = 0;
+	c_quote = 0;
+	quote = false;
+	while (s[i])
+	{
+		if (quote == false && (s[i] == '\"' || s[i] == '\''))
+			set_quote(&quote, &c_quote, s[i]);
+		else if (quote == true && s[i] == c_quote)
+			set_quote(&quote, &c_quote, s[i]);
+		if (i == j && quote == false)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 char *replace_dollar(char *line, t_list **env, int start, t_error *err)
 {
 	t_list *env_match;
@@ -69,7 +105,7 @@ char *replace_dollar(char *line, t_list **env, int start, t_error *err)
 	int	end;
 
 	start = start_dollar(line, start);
-	if (ft_is_end(line[start + 1]))
+	if ((ft_is_end(line[start + 1]) && !not_in_quote(line, start)) || line[start + 1] == '\0')
 		return (line);
 	end = end_dollar(line, start);
 	temp1 = ft_substr(line, 0, start);
