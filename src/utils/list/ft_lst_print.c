@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lst_print.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 15:14:44 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/29 10:24:16 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/13 13:34:15 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_lst_print(t_list **list)
+void	ft_lst_print(t_list **list, t_error *err)
 {
 	t_list	*temp;
 
@@ -24,4 +24,5 @@ void	ft_lst_print(t_list **list)
 		//printf("var_content = %s\n", temp->var_content);
 		temp = temp->next;
 	}
+	err->code = 0;
 }

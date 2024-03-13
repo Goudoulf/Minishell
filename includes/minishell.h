@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/12 14:54:11 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/13 14:36:21 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ typedef struct s_error
 void	check_cmd(char *input, t_list **env, t_cmd **cmd, t_error *err);
 
 // builtins
-int	ft_echo(char **cmd);
-int	ft_pwd(char **cmd);
+int	ft_echo(char **cmd, t_error *err);
+int	ft_pwd(char **cmd, t_error *err);
 int	ft_export(t_list **env, char **cmd, t_error *err);
 int	ft_unset(t_list **env, char **cmd, t_error *err);
 void	ft_exit(char **cmd, t_error *err);
@@ -92,7 +92,7 @@ void signal_handling();
 
 t_list	*ft_lst_new(char *content);
 void	ft_lstadd_back(t_list **lst, t_list *new);
-void	ft_lst_print(t_list **list);
+void	ft_lst_print(t_list **list, t_error *err);
 void	ft_lstclear(t_list **lst);
 t_list	*get_next_min(t_list **stack);
 void	ft_lst_set_isprint(t_list **lst);
@@ -133,7 +133,7 @@ void	cmd_add_path(t_cmd **cmd, t_list **env);
 
 int	exec_line(t_cmd *cmd, t_list **list, t_error *err);
 char	*ft_join(const char *s1, const char *s2);
-char	*find_path(char *cmd, char *path);
+char	*find_path(char *cmd, char *path, char *pwd);
 
 // gnl
 

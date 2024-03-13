@@ -3,13 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:12:26 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/18 17:48:52 by cassie           ###   ########.fr       */
-/*   Updated: 2024/02/16 15:33:35 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/13 13:12:27 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -21,7 +21,7 @@ static void	quit_eof(t_list **env, t_cmd **cmd, t_error *err)
 	rl_clear_history();
 	ft_lstclear(env);
 	ft_cmdclear(cmd);
-	ft_putstr_fd("exit\n", 1);
+	//ft_putstr_fd("exit\n", 1);
 	exit(err->code);
 }
 
@@ -93,7 +93,7 @@ int main(int argc, char **argv, char **envp)
 			}
 			else
 			{
-				err.code = 1;
+				err.code = 2;
 				ft_putstr_fd("error\n", 2);
 			}
 			ft_cmdclear(&cmd);

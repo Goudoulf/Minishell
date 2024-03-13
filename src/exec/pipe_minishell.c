@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/12 17:10:50 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/13 15:15:36 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,9 +269,9 @@ bool	is_builtin(t_cmd *cmd)
 void	exec_builtin2(char	**cmd, t_list **list, t_error *err)
 {
 	if (!ft_strncmp(cmd[0], "echo", 5))
-		ft_echo(cmd);
+		ft_echo(cmd, err);
 	if (!ft_strncmp(cmd[0], "pwd", 4))
-		ft_pwd(cmd);
+		ft_pwd(cmd, err);
 	if (!ft_strncmp(cmd[0], "cd", 3))
 		ft_cd(cmd, list, err);
 	if (!ft_strncmp(cmd[0], "exit", 5))
@@ -281,20 +281,20 @@ void	exec_builtin2(char	**cmd, t_list **list, t_error *err)
 	if (!ft_strncmp(cmd[0], "export", 7))
 		ft_export(list, cmd, err);
 	if (!ft_strncmp(cmd[0], "env", 4))
-		ft_lst_print(list);
+		ft_lst_print(list, err);
 }
 
 bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 {
 	if (!ft_strncmp(cmd[0], "echo", 5))
 	{
-		ft_echo(cmd);
+		ft_echo(cmd, err);
 		close((close(1), 0));
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "pwd", 4))
 	{
-		ft_pwd(cmd);
+		ft_pwd(cmd, err);
 		close((close(1), 0));
 		exit(err->code);
 	}
@@ -324,7 +324,7 @@ bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 	}
 	if (!ft_strncmp(cmd[0], "env", 4))
 	{
-		ft_lst_print(list);
+		ft_lst_print(list, err);
 		close((close(1), 0));
 		exit(err->code);
 	}
@@ -344,7 +344,17 @@ static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 			execve(cmd->path, cmd->cmd, envp);
 		free_tab(envp);
 	}
-	if (cmd->path && isdirectory(cmd->path) && cmd->cmd[0][0])
+	if (get_value(lst, "PATH") == NULL /*|| (cmd->path[0] == '.' && cmd->path[1] == '/')*/)
+	{
+		write(2, "minishell: ", 11);
+		perror(cmd->cmd[0]);
+	}
+	else if (/*cmd->path && */cmd->cmd[0][0] == '.' && cmd->cmd[0][1] == '/')
+	{
+		write(2, "minishell: ", 11);
+		print_error("Permission denied", cmd->cmd[0]);
+	}
+	else if (cmd->path && isdirectory(cmd->path) && cmd->cmd[0][0])
 	{
 		write(2, "minishell: ", 11);
 		print_error("Is a directory", cmd->cmd[0]);
@@ -356,7 +366,7 @@ static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 	}
 	else
 		print_error("Command not found", cmd->cmd[0]);
-	if (cmd->path && isdirectory(cmd->path) && cmd->cmd[0] && cmd->cmd[0][0])
+	if ((cmd->path && isdirectory(cmd->path) && cmd->cmd[0] && cmd->cmd[0][0]) || get_value(lst, "PATH") == NULL || (cmd->cmd[0][0] == '.' && cmd->cmd[0][1] == '/'))
 		exit((close(0), close(1), 126));
 	exit((close(0), close(1), 127));
 }
@@ -559,7 +569,6 @@ static int	exec_pipe(t_cmd *cmd, t_list **lst, t_error *err)
 int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 {
 	int		status;
-	int		fd[2];
 
 	status = 0;
 	if (!cmd->next)
@@ -567,13 +576,9 @@ int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 		for_each_dchevron(cmd);
 		if (cmd->cmd && is_builtin(cmd))
 		{
-			fd[0] = dup(0);
-			fd[1] = dup(1);
 			if (cmd->redirection)
 				do_redirection(cmd, NULL, NULL, 0);
 			exec_builtin2(cmd->cmd, lst, err);
-			dup2(fd[0], 0);
-			dup2(fd[1], 1);
 			return (err->code);
 		}
 		cmd->pid = fork();

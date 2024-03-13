@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/16 20:21:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/11 17:15:36 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/13 13:31:37 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_echo(char **cmd)
+int	ft_echo(char **cmd, t_error *err)
 {
 	int	i;
 	int	j;
@@ -52,5 +52,6 @@ int	ft_echo(char **cmd)
 	}
 	if (new_line == true)
 		write(1, "\n", 1);
+	err->code = 0;
 	return (0);
 }
