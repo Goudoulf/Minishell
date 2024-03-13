@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 09:28:16 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/11 17:11:22 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/13 20:46:51 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,12 @@ static int	check_chevron_content(char *line)
 			while (ft_is_space(line[i]))
 				i++;
 			if (ft_is_chevron(line[i]) || line[i] == '|' || line[i] == '\0')
+			{
+				ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+				write(2, &line[i], 1);
+				ft_putstr_fd("\'", 2);
 				return (0);
+			}
 		}
 		else
 			i++;
@@ -137,12 +142,12 @@ int	check_line_error(char *line, t_error *err)
 	}
 	if (!check_chevron_content(line))
 	{
-		err->code = 1;
+		err->code = 2;
 		return (0);
 	}
 	if (!check_pipe(line))
 	{
-		err->code = 1;
+		err->code = 2;
 		return (0);
 	}
 	return (1);

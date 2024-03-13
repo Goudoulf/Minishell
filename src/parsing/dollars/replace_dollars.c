@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 08:11:15 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/13 14:16:32 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/13 20:27:24 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ char *replace_dollar(char *line, t_list **env, int start, t_error *err)
 	int	end;
 
 	start = start_dollar(line, start);
-	if ((ft_is_end(line[start + 1]) && !not_in_quote(line, start)) || line[start + 1] == '\0')
+	if ((ft_is_end(line[start + 1]) && !not_in_quote(line, start)) || line[start + 1] == '\0' || line[start + 1] == 47)
 		return (line);
 	end = end_dollar(line, start);
 	temp1 = ft_substr(line, 0, start);

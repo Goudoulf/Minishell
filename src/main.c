@@ -59,11 +59,6 @@ int main(int argc, char **argv, char **envp)
 				err.code = exec_line(cmd, &env, &err);
 			//	check_cmd(input, &env, &cmd, &err);
 			}
-			else
-			{
-				err.code = 1;
-				ft_putstr_fd("error\n", 2);
-			}
 			ft_cmdclear(&cmd);
 		}
 		exit(err.code);
@@ -90,11 +85,6 @@ int main(int argc, char **argv, char **envp)
 				line_parsing(&cmd, input, &env, &err);
 				err.code = exec_line(cmd, &env, &err);
 			//	check_cmd(input, &env, &cmd, &err);
-			}
-			else
-			{
-				err.code = 1;
-				ft_putstr_fd("error\n", 2);
 			}
 			ft_cmdclear(&cmd);
 		}
