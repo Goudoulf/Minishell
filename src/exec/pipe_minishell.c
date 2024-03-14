@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/14 16:44:06 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/14 17:48:12 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -592,6 +592,8 @@ static void	dchevron(char *limiter, int pipefd[2])
 	size_t	size;
 
 	buf = readline("> ");
+	if (buf == NULL)
+		return ((void)write(1, "\n", 1));
 	size = ft_strlen(buf);
 	if (ft_strlen(limiter) > ft_strlen(buf))
 		size = ft_strlen(limiter);
@@ -601,6 +603,10 @@ static void	dchevron(char *limiter, int pipefd[2])
 		write(pipefd[1], "\n", 1);
 		free(buf);
 		buf = readline("> ");
+		if (buf == NULL)
+			return ((void)write(1, "\n", 1));
+		if (ft_strlen(limiter) > ft_strlen(buf))
+			size = ft_strlen(limiter);
 	}
 	free(buf);
 }
