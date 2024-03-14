@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 09:20:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/13 12:48:47 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/13 16:18:37 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void	ft_exit(char **cmd, t_error *err)
 	}
 	if (tab_size(cmd) == 2)
 	{
-		if (!arg_is_valid(cmd[1]))
+		if (cmd[1][0] && !arg_is_valid(cmd[1]))
 		{
 			err->do_exit = true;
 			code = ft_char_to_num(cmd[1]);

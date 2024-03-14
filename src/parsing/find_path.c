@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 16:12:35 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/13 14:39:15 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/13 16:47:09 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static char	*check_path(char **paths, char *arg)
 	cmd = NULL;
 	if (!arg)
 		return (NULL);
-	if (access(arg, X_OK) == 0)
+	if (access(arg, X_OK) == 0 || isdirectory(arg))
 		return (ft_strdup(arg));
 	if (!paths)
 		return (NULL);

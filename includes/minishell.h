@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/13 14:36:21 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/13 16:46:50 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ size_t in_count(char *line);
 size_t out_count(char *line);
 char	*get_value(t_list **env, char *s);
 void	cmd_add_path(t_cmd **cmd, t_list **env);
+int		isdirectory(char *str);
 
 // exec
 

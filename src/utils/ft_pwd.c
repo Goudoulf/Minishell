@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 08:03:34 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/13 13:34:47 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/13 17:37:33 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int	ft_pwd(char **cmd, t_error *err)
 		{
 			ft_printf("%s\n", temp);
 			free(str);
+			err->code = 0;
 			return (0);
 		}
 	}
