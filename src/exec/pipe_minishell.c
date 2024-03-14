@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/14 17:48:12 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/14 18:23:35 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -586,7 +586,7 @@ static int	for_eachpipe(t_cmd *cmd, t_list **lst, int pipe1[2], t_error *err)
 	return (0);
 }
 
-static void	dchevron(char *limiter, int pipefd[2])
+static void	dchevron(char *limiter, int pipefd[2], t_list **env, t_error *err)
 {
 	char	*buf;
 	size_t	size;
@@ -594,24 +594,21 @@ static void	dchevron(char *limiter, int pipefd[2])
 	buf = readline("> ");
 	if (buf == NULL)
 		return ((void)write(1, "\n", 1));
-	size = ft_strlen(buf);
-	if (ft_strlen(limiter) > ft_strlen(buf))
-		size = ft_strlen(limiter);
+	size = ft_strlen(limiter) + 1;
 	while (ft_strncmp(buf, limiter, size))
 	{
+		buf = check_dollars(buf, env, err);
 		write(pipefd[1], buf, ft_strlen(buf));
 		write(pipefd[1], "\n", 1);
 		free(buf);
 		buf = readline("> ");
 		if (buf == NULL)
 			return ((void)write(1, "\n", 1));
-		if (ft_strlen(limiter) > ft_strlen(buf))
-			size = ft_strlen(limiter);
 	}
 	free(buf);
 }
 
-void	for_each_dchevron(t_cmd *cmd)
+void	for_each_dchevron(t_cmd *cmd, t_list **env, t_error *err)
 {
 	size_t	i;
 	bool	first;
@@ -626,7 +623,7 @@ void	for_each_dchevron(t_cmd *cmd)
 				closepipe(cmd->pipe_dchevron);
 			first = false;
 			pipe(cmd->pipe_dchevron);
-			dchevron(&cmd->here_doc[i][2], cmd->pipe_dchevron);
+			dchevron(&cmd->here_doc[i][2], cmd->pipe_dchevron, env, err);
 		}
 		cmd = cmd->next;
 	}
@@ -636,7 +633,7 @@ static int	exec_pipe(t_cmd *cmd, t_list **lst, t_error *err)
 {
 	int	pipefd[2];
 
-	for_each_dchevron(cmd);
+	for_each_dchevron(cmd, lst, err);
 	if (pipe(pipefd) == -1)
 		return (1);
 	cmd->pid = fork();
@@ -660,7 +657,7 @@ int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 	status = 0;
 	if (!cmd->next)
 	{
-		for_each_dchevron(cmd);
+		for_each_dchevron(cmd, lst, err);
 		if (cmd->cmd && is_builtin(cmd))
 		{
 			fd = 1;
