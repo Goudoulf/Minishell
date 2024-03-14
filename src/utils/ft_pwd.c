@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 08:03:34 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/14 10:07:05 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/14 15:12:22 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ int	ft_pwd(char **cmd, t_error *err)
 		else 
 		{
 			ft_printf("%s\n", temp);
-			err->code = 0;
 			free(str);
+			err->code = 0;
 			return (0);
 		}
 	}

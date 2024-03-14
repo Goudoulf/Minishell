@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
+/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/14 14:22:29 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/14 15:15:15 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ size_t	count_child(t_cmd *cmd)
 	return (i);
 }
 
-static int	isdirectory(char *str)
+int	isdirectory(char *str)
 {
 	size_t	i;
 
@@ -343,30 +343,32 @@ static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 			execve(cmd->path, cmd->cmd, envp);
 		free_tab(envp);
 	}
-	if (get_value(lst, "PATH") == NULL /*|| (cmd->path[0] == '.' && cmd->path[1] == '/')*/)
+	if (get_value(lst, "PATH") == NULL)
 	{
 		write(2, "minishell: ", 11);
 		perror(cmd->cmd[0]);
+		exit(127);
 	}
-	else if (/*cmd->path && */cmd->cmd[0][0] == '.' && cmd->cmd[0][1] == '/')
+	else if (cmd->cmd[0][0] == '.' && cmd->cmd[0][1] == '/' && access(cmd->cmd[0], F_OK) == 0)
 	{
 		write(2, "minishell: ", 11);
 		print_error("Permission denied", cmd->cmd[0]);
+		exit(126);
+	}
+	else if (cmd->cmd[0] && isdirectory(cmd->cmd[0]) && access(cmd->path, F_OK) == -1)
+	{
+		write(2, "minishell: ", 11);
+		print_error("No such file or directory", cmd->cmd[0]);
+		exit(127);
 	}
 	else if (cmd->path && isdirectory(cmd->path) && cmd->cmd[0][0])
 	{
 		write(2, "minishell: ", 11);
 		print_error("Is a directory", cmd->cmd[0]);
-	}
-	else if (cmd->cmd[0] && isdirectory(cmd->cmd[0]))
-	{
-		write(2, "minishell: ", 11);
-		print_error("No such file or directory", cmd->cmd[0]);
+		exit(126);
 	}
 	else
 		print_error("Command not found", cmd->cmd[0]);
-	if ((cmd->path && isdirectory(cmd->path) && cmd->cmd[0] && cmd->cmd[0][0]) || get_value(lst, "PATH") == NULL || (cmd->cmd[0][0] == '.' && cmd->cmd[0][1] == '/'))
-		exit((close(0), close(1), 126));
 	exit((close(0), close(1), 127));
 }
 

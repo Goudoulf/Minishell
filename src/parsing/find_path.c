@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 16:12:35 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/14 14:03:22 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/14 15:13:25 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static char	*check_path(char **paths, char *arg)
 	cmd = NULL;
 	if (!arg)
 		return (NULL);
-	if (access(arg, X_OK) == 0)
+	if (access(arg, X_OK) == 0 || isdirectory(arg))
 		return (ft_strdup(arg));
 	if (!paths)
 		return (NULL);
