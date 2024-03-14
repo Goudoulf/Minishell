@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/14 15:46:20 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/14 16:24:48 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,38 @@
 	free(buf);
 	return (new_str);
 }*/
+
+size_t	last_redir_in(t_cmd *cmd)
+{
+	size_t	i;
+	size_t	index_last;
+
+	i = 0;
+	index_last = 0;
+	while (cmd->redirection[i])
+	{
+		if (cmd->redirection[i][0] == '<')
+			index_last = i;
+		i++;
+	}
+	return (index_last);
+}
+
+size_t	last_redir_out(t_cmd *cmd)
+{
+	size_t	i;
+	size_t	index_last;
+
+	i = 0;
+	index_last = 0;
+	while (cmd->redirection[i])
+	{
+		if (cmd->redirection[i][0] == '>')
+			index_last = i;
+		i++;
+	}
+	return (index_last);
+}
 
 size_t	count_child(t_cmd *cmd)
 {
@@ -201,7 +233,7 @@ static void	do_input2(t_cmd *cmd, int i)
 		exit((perror(ft_itoa(fd)), 1));
 }
 
-static void	do_input(t_cmd *cmd, int pipe[2], int i, int fd[2])
+static void	do_input(t_cmd *cmd, int pipe[2], size_t i, int fd[2])
 {
 	if (fd[0] != 0)
 		if (close(fd[0]) == -1)
@@ -216,7 +248,7 @@ static void	do_input(t_cmd *cmd, int pipe[2], int i, int fd[2])
 		fd[0] = open(&cmd->redirection[i][1], O_RDONLY);
 	if (fd[0] == -1)
 		exit((perror(ft_itoa(fd[0])), 1));
-	if (cmd->redirection[i + 1] == NULL)
+	if (i == last_redir_in(cmd))
 		redir_input(fd[0], pipe, cmd);
 }
 
@@ -261,7 +293,7 @@ static void	do_output2(t_cmd *cmd, int i, int *fd)
 		exit((perror(ft_itoa(*fd)), 1));
 }
 
-static void	do_output(t_cmd *cmd, int pipe[2], int i, int fd[2])
+static void	do_output(t_cmd *cmd, int pipe[2], size_t i, int fd[2])
 {
 	if (fd[1] != 1)
 		if (close(fd[1]) == -1)
@@ -272,7 +304,7 @@ static void	do_output(t_cmd *cmd, int pipe[2], int i, int fd[2])
 		fd[1] = open(&cmd->redirection[i][1], O_CREAT | O_WRONLY | O_TRUNC, 00644);
 	if (fd[1] == -1)
 		exit((perror(ft_itoa(fd[1])), 1));
-	if (cmd->redirection[i + 1] == NULL)
+	if (i == last_redir_out(cmd))
 		redir_output(fd[1], pipe, cmd);
 }
 
@@ -389,7 +421,7 @@ static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 	{
 		write(2, "minishell: ", 11);
 		perror(cmd->cmd[0]);
-		exit(127);
+		exit(126);
 	}
 	else if (cmd->cmd[0][0] == '.' && cmd->cmd[0][1] == '/' && access(cmd->cmd[0], F_OK) == 0)
 	{
