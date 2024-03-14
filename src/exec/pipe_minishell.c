@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/14 09:10:34 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/14 14:22:29 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,22 +184,23 @@ static void	redir_input(int fd, int pipe[2], t_cmd *cmd)
 	}
 }
 
-static void	do_input(t_cmd *cmd, int pipe[2], int i)
+static void	do_input(t_cmd *cmd, int pipe[2], int i, int fd[2])
 {
-	int		fd;
-
-	fd = 0;
+	if (fd[0] != 0)
+		if (close(fd[0]) == -1)
+			perror(ft_itoa(fd[0]));
 	if (ft_strncmp(cmd->redirection[i], "<<", 2) == 0)
 	{
 		if (close(cmd->pipe_dchevron[1]) == -1)
 			perror(ft_itoa(cmd->pipe_dchevron[1]));
-		fd = cmd->pipe_dchevron[0];
+		fd[0] = cmd->pipe_dchevron[0];
 	}
 	else if (cmd->redirection[i][0] == '<')
-		fd = open(&cmd->redirection[i][1], O_RDONLY);
-	if (fd == -1)
-		exit((perror(ft_itoa(fd)), 1));
-	redir_input(fd, pipe, cmd);
+		fd[0] = open(&cmd->redirection[i][1], O_RDONLY);
+	if (fd[0] == -1)
+		exit((perror(ft_itoa(fd[0])), 1));
+	if (cmd->redirection[i + 1] == NULL)
+		redir_input(fd[0], pipe, cmd);
 }
 
 static void	redir_output(int fd, int pipe[2], t_cmd *cmd)
@@ -230,21 +231,19 @@ static void	redir_output(int fd, int pipe[2], t_cmd *cmd)
 	}
 }
 
-static void	do_output(t_cmd *cmd, int pipe[2], int i)
+static void	do_output(t_cmd *cmd, int pipe[2], int i, int fd[2])
 {
-	int	fd;
-
-	fd = 1;
-	if (fd != 1)
-		if (close(fd) == -1)
-			perror(ft_itoa(fd));
+	if (fd[1] != 1)
+		if (close(fd[1]) == -1)
+			perror(ft_itoa(fd[1]));
 	if (ft_strncmp(cmd->redirection[i], ">>", 2) == 0)
-		fd = open(&cmd->redirection[i][2], O_CREAT | O_WRONLY | O_APPEND, 00644);
+		fd[1] = open(&cmd->redirection[i][2], O_CREAT | O_WRONLY | O_APPEND, 00644);
 	else if (cmd->redirection[i][0] == '>')
-		fd = open(&cmd->redirection[i][1], O_CREAT | O_WRONLY | O_TRUNC, 00644);
-	if (fd == -1)
-		exit((perror(ft_itoa(fd)), 1));
-	redir_output(fd, pipe, cmd);
+		fd[1] = open(&cmd->redirection[i][1], O_CREAT | O_WRONLY | O_TRUNC, 00644);
+	if (fd[1] == -1)
+		exit((perror(ft_itoa(fd[1])), 1));
+	if (cmd->redirection[i + 1] == NULL)
+		redir_output(fd[1], pipe, cmd);
 }
 
 bool	is_builtin(t_cmd *cmd)
@@ -374,37 +373,40 @@ static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 static void	do_redirection(t_cmd *cmd, int pipe1[2], int pipe2[2], int child)
 {
 	size_t	i;
+	int		fd[2];
 
 	i = -1;
+	fd[0] = 0;
+	fd[1] = 1;
 	while (cmd->redirection && cmd->redirection[++i])
 	{
 		if (child == 0)
 		{
 			if (cmd->redirection[i][0] == '<')
-				do_input(cmd, pipe1, i);
+				do_input(cmd, pipe1, i, fd);
 			if (cmd->redirection[i][0] == '>')
-				do_output(cmd, pipe1, i);
+				do_output(cmd, pipe1, i, fd);
 		}
 		else if (child == 1)
 		{
 			if (cmd->redirection[i][0] == '<')
-				do_input(cmd, pipe1, i);
+				do_input(cmd, pipe1, i, fd);
 			if (cmd->redirection[i][0] == '>')
-				do_output(cmd, pipe1, i);
+				do_output(cmd, pipe1, i, fd);
 		}
 		else if (child == 2)
 		{
 			if (cmd->redirection[i][0] == '<')
-				do_input(cmd, pipe2, i);
+				do_input(cmd, pipe2, i, fd);
 			if (cmd->redirection[i][0] == '>')
-				do_output(cmd, pipe1, i);
+				do_output(cmd, pipe1, i, fd);
 		}
 		else if (child == 3)
 		{
 			if (cmd->redirection[i][0] == '<')
-				do_input(cmd, pipe2, i);
+				do_input(cmd, pipe2, i, fd);
 			if (cmd->redirection[i][0] == '>')
-				do_output(cmd, pipe1, i);
+				do_output(cmd, pipe1, i, fd);
 		}
 	}
 	if (child == 1 && !has_redir_in(cmd))
