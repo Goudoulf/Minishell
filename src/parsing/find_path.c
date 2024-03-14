@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   find_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 16:12:35 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/12 11:27:36 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/13 14:39:15 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,12 @@ static char	*check_path(char **paths, char *arg)
 
 	i = 0;
 	cmd = NULL;
-	if (!paths || !arg)
+	if (!arg)
 		return (NULL);
 	if (access(arg, X_OK) == 0)
 		return (ft_strdup(arg));
+	if (!paths)
+		return (NULL);
 	while (paths[i])
 	{
 		cmd = ft_join(paths[i], arg);
@@ -34,12 +36,19 @@ static char	*check_path(char **paths, char *arg)
 	return (NULL);
 }
 
-char	*find_path(char *cmd, char *path)
+char	*find_path(char *cmd, char *path, char *pwd)
 {
 	char	**paths;
 	char	*new_path;
 
-	paths = ft_split(path, ':');
+	if (!path)
+	{
+		paths = malloc(sizeof (char *) * 2);
+		paths[0] = ft_strdup(pwd);
+		paths[1] = NULL;
+	}
+	else
+		paths = ft_split(path, ':');
 	new_path = check_path(paths, cmd);
 	if (paths)
 	{

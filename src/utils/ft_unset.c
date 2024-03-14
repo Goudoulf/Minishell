@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 10:26:14 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/12 10:54:46 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/13 13:35:48 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,5 +110,6 @@ int	ft_unset(t_list **env, char **cmd, t_error *err)
 		ft_lstdel(env, cmd[i]);
 		i++;
 	}
+	err->code = 0;
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_core.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 08:30:06 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/09 11:09:32 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/13 14:36:00 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,15 @@ void	cmd_add_path(t_cmd **cmd, t_list **env)
 {
 	t_cmd	*temp;
 	char	*path;
+	char	*pwd;
 
 	temp = *cmd;
 	path = get_value(env, "PATH");
+	pwd = get_value(env, "PWD");
 	while (temp)
 	{
 		if (temp->cmd)
-			temp->path = find_path(temp->cmd[0], path);
+			temp->path = find_path(temp->cmd[0], path, pwd);
 		else
 			temp->path = NULL;
 		temp = temp->next;

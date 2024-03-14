@@ -1,0 +1,11 @@
+CompileFlags:
+  Add:
+    - "-I../lib/libft/includes"
+    - "-I../lib/ft_printf/includes"
+    - "-I../includes"
+    - "-I../../lib/libft/includes"
+    - "-I../../lib/ft_printf/includes"
+    - "-I../../includes"
+    - "-I../../../lib/libft/includes"
+    - "-I../../../lib/ft_printf/includes"
+    - "-I../../../includes"

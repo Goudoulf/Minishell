@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 15:06:40 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/12 10:54:32 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/13 13:33:50 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@ void	check_cmd(char *input, t_list **env, t_cmd **command, t_error *err)
 	if (com && !ft_strncmp(com[0], "exit", 5))
 		ft_exit(com, err);
 	if (com && !ft_strncmp(com[0], "echo", 5))
-		ft_echo(com);
+		ft_echo(com, err);
 	if (com && !ft_strncmp(com[0], "cd", 5))
 		ft_cd(com, env, err);
 	if (com && !ft_strncmp(input, "pwd", 4))
-		ft_pwd(com);
+		ft_pwd(com, err);
 	if (!ft_strncmp(input, "env", 5))
-		ft_lst_print(env);
+		ft_lst_print(env, err);
 	if (err->do_exit == true)
 	{	
 		free(input);

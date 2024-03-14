@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 08:31:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/13 13:49:47 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/14 09:08:03 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,5 +164,6 @@ int	ft_export(t_list **env, char **cmd, t_error *err)
 			env_update(temp, cmd[i]);
 		i++;
 	}
+	err->code = 0;
 	return (0);	
 }

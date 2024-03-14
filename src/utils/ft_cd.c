@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 12:48:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/12 11:18:26 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/13 13:37:21 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ int	ft_cd(char **cmd, t_list **env, t_error *err)
 
 	temp_current_pwd = check_cmd_env("PWD", env);
 	temp_old_pwd = check_cmd_env("OLDPWD", env);
-	current_pwd = ft_strdup(temp_current_pwd->var_content); 
+	current_pwd = ft_strdup(temp_current_pwd->var_content);
+	err->code = 0;
 	if (tab_size(cmd) > 2)
 	{
 		err->code = 1;

@@ -6,13 +6,13 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/16 20:21:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/13 10:46:44 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/14 09:08:28 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_echo(char **cmd)
+int	ft_echo(char **cmd, t_error *err)
 {
 	int	i;
 	int	j;
@@ -54,5 +54,6 @@ int	ft_echo(char **cmd)
 	}
 	if (new_line == true)
 		write(1, "\n", 1);
+	err->code = 0;
 	return (0);
 }
