@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/14 15:33:59 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/14 15:46:20 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -331,13 +331,13 @@ bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 {
 	if (!ft_strncmp(cmd[0], "echo", 5))
 	{
-		ft_echo(cmd, err, -1);
+		ft_echo(cmd, err, 1);
 		close((close(1), 0));
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "pwd", 4))
 	{
-		ft_pwd(cmd, err, -1);
+		ft_pwd(cmd, err, 1);
 		close((close(1), 0));
 		exit(err->code);
 	}
@@ -361,13 +361,13 @@ bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 	}
 	if (!ft_strncmp(cmd[0], "export", 7))
 	{
-		ft_export(list, cmd, err, -1);
+		ft_export(list, cmd, err, 1);
 		close((close(1), 0));
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "env", 4))
 	{
-		ft_lst_print(list, err, -1);
+		ft_lst_print(list, err, 1);
 		close((close(1), 0));
 		exit(err->code);
 	}
