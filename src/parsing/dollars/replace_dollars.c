@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 08:11:15 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/13 20:27:24 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/14 16:45:47 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,10 @@ static void	free_temp(char *s2, char *s3, char *s4)
 static int	end_dollar(char *line, int start)
 {
 	int	end;
+	int	old_start;
 
 	end = 0;
+	old_start = start;
 	start++;
 	if (ft_isdigit(line[start]))
 		return (end + 1);
@@ -48,6 +50,8 @@ static int	end_dollar(char *line, int start)
 	{
 		start++;
 		end++;
+		if (start > old_start && line[start] == '?')
+			break ;
 	}
 	return (end);
 }
