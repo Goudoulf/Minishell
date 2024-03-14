@@ -25,7 +25,7 @@ static int	ft_int_len(int nb)
 	return (y);
 }
 
-static int	ft_printnbr(int nb, int y)
+static int	ft_printnbr(int nb, int y, int fd)
 {
 	int	size;
 	int	i;
@@ -33,7 +33,7 @@ static int	ft_printnbr(int nb, int y)
 	i = 0;
 	while (y != 0)
 	{
-		size = ft_printf_putchar((nb / y + 48));
+		size = ft_printf_putchar((nb / y + 48), fd);
 		if (size == -1)
 			return (-1);
 		i = i + size;
@@ -43,7 +43,7 @@ static int	ft_printnbr(int nb, int y)
 	return (i);
 }
 
-int	ft_printf_putnbr(int n)
+int	ft_printf_putnbr(int n, int fd)
 {
 	int	y;
 	int	i;
@@ -51,17 +51,17 @@ int	ft_printf_putnbr(int n)
 
 	i = 0;
 	if (n == -2147483648)
-		return (ft_printf_putstr("-2147483648"));
+		return (ft_printf_putstr("-2147483648", fd));
 	if (n < 0)
 	{
-		size = write(1, "-", 1);
+		size = write(fd, "-", 1);
 		if (size == -1)
 			return (-1);
 		n = n * -1;
 		i++;
 	}
 	y = ft_int_len(n);
-	size = ft_printnbr(n, y);
+	size = ft_printnbr(n, y, fd);
 	if (size == -1)
 		return (-1);
 	i = i + size;

@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/14 15:15:15 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/14 15:33:59 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,23 @@ static void	redir_input(int fd, int pipe[2], t_cmd *cmd)
 	}
 }
 
+static void	do_input2(t_cmd *cmd, int i)
+{
+	int		fd;
+
+	fd = 0;
+	if (ft_strncmp(cmd->redirection[i], "<<", 2) == 0)
+	{
+		if (close(cmd->pipe_dchevron[1]) == -1)
+			perror(ft_itoa(cmd->pipe_dchevron[1]));
+		fd = cmd->pipe_dchevron[0];
+	}
+	else if (cmd->redirection[i][0] == '<')
+		fd = open(&cmd->redirection[i][1], O_RDONLY);
+	if (fd == -1)
+		exit((perror(ft_itoa(fd)), 1));
+}
+
 static void	do_input(t_cmd *cmd, int pipe[2], int i, int fd[2])
 {
 	if (fd[0] != 0)
@@ -231,6 +248,19 @@ static void	redir_output(int fd, int pipe[2], t_cmd *cmd)
 	}
 }
 
+static void	do_output2(t_cmd *cmd, int i, int *fd)
+{
+	if (*fd != 1)
+		if (close(*fd) == -1)
+			perror(ft_itoa(*fd));
+	if (ft_strncmp(cmd->redirection[i], ">>", 2) == 0)
+		*fd = open(&cmd->redirection[i][2], O_CREAT | O_WRONLY | O_APPEND, 00644);
+	else if (cmd->redirection[i][0] == '>')
+		*fd = open(&cmd->redirection[i][1], O_CREAT | O_WRONLY | O_TRUNC, 00644);
+	if (*fd == -1)
+		exit((perror(ft_itoa(*fd)), 1));
+}
+
 static void	do_output(t_cmd *cmd, int pipe[2], int i, int fd[2])
 {
 	if (fd[1] != 1)
@@ -244,6 +274,20 @@ static void	do_output(t_cmd *cmd, int pipe[2], int i, int fd[2])
 		exit((perror(ft_itoa(fd[1])), 1));
 	if (cmd->redirection[i + 1] == NULL)
 		redir_output(fd[1], pipe, cmd);
+}
+
+static void	do_redirection2(t_cmd *cmd, int *fd)
+{
+	size_t	i;
+
+	i = -1;
+	while (cmd->redirection && cmd->redirection[++i])
+	{
+		if (cmd->redirection[i][0] == '<')
+			do_input2(cmd, i);
+		if (cmd->redirection[i][0] == '>')
+			do_output2(cmd, i, fd);
+	}
 }
 
 bool	is_builtin(t_cmd *cmd)
@@ -265,12 +309,12 @@ bool	is_builtin(t_cmd *cmd)
 	return (false);
 }
 
-void	exec_builtin2(char	**cmd, t_list **list, t_error *err)
+void	exec_builtin2(char	**cmd, t_list **list, t_error *err, int fd)
 {
 	if (!ft_strncmp(cmd[0], "echo", 5))
-		ft_echo(cmd, err);
+		ft_echo(cmd, err, fd);
 	if (!ft_strncmp(cmd[0], "pwd", 4))
-		ft_pwd(cmd, err);
+		ft_pwd(cmd, err, fd);
 	if (!ft_strncmp(cmd[0], "cd", 3))
 		ft_cd(cmd, list, err);
 	if (!ft_strncmp(cmd[0], "exit", 5))
@@ -278,22 +322,22 @@ void	exec_builtin2(char	**cmd, t_list **list, t_error *err)
 	if (!ft_strncmp(cmd[0], "unset", 6))
 		ft_unset(list, cmd, err);
 	if (!ft_strncmp(cmd[0], "export", 7))
-		ft_export(list, cmd, err);
+		ft_export(list, cmd, err, fd);
 	if (!ft_strncmp(cmd[0], "env", 4))
-		ft_lst_print(list, err);
+		ft_lst_print(list, err, fd);
 }
 
 bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 {
 	if (!ft_strncmp(cmd[0], "echo", 5))
 	{
-		ft_echo(cmd, err);
+		ft_echo(cmd, err, -1);
 		close((close(1), 0));
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "pwd", 4))
 	{
-		ft_pwd(cmd, err);
+		ft_pwd(cmd, err, -1);
 		close((close(1), 0));
 		exit(err->code);
 	}
@@ -317,20 +361,18 @@ bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 	}
 	if (!ft_strncmp(cmd[0], "export", 7))
 	{
-		ft_export(list, cmd, err);
+		ft_export(list, cmd, err, -1);
 		close((close(1), 0));
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "env", 4))
 	{
-		ft_lst_print(list, err);
+		ft_lst_print(list, err, -1);
 		close((close(1), 0));
 		exit(err->code);
 	}
 	return (false);
 }
-
-
 
 static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 {
@@ -573,6 +615,7 @@ static int	exec_pipe(t_cmd *cmd, t_list **lst, t_error *err)
 int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 {
 	int		status;
+	int		fd;
 
 	status = 0;
 	if (!cmd->next)
@@ -580,10 +623,13 @@ int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 		for_each_dchevron(cmd);
 		if (cmd->cmd && is_builtin(cmd))
 		{
+			fd = 1;
 			if (cmd->redirection)
-				do_redirection(cmd, NULL, NULL, 0);
-			exec_builtin2(cmd->cmd, lst, err);
-			return (err->code);
+				do_redirection2(cmd, &fd);
+			exec_builtin2(cmd->cmd, lst, err, fd);
+			if (fd != 1)
+				close(fd);
+			return(err->code);
 		}
 		cmd->pid = fork();
 		if (cmd->pid == -1)

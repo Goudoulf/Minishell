@@ -6,13 +6,13 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/16 20:21:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/14 14:16:58 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/14 15:27:23 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_echo(char **cmd, t_error *err)
+int	ft_echo(char **cmd, t_error *err, int fd)
 {
 	int	i;
 	int	j;
@@ -39,22 +39,22 @@ int	ft_echo(char **cmd, t_error *err)
 		if (cmd[i][j] == '\0')
 			new_line = false;
 		else
-			ft_putstr_fd(cmd[i], 1);
+			ft_putstr_fd(cmd[i], fd);
 		if (cmd[i + 1] && cmd[i][j])
-			write(1, " ", 1);
+			write(fd, " ", 1);
 		i++;
 		if (new_line == true)
 			break ;
 	}
 	while (cmd[i])
 	{
-		ft_putstr_fd(cmd[i], 1);
+		ft_putstr_fd(cmd[i], fd);
 		if (cmd[i + 1])
-			write(1, " ", 1);
+			write(fd, " ", 1);
 		i++;
 	}
 	if (new_line == true)
-		write(1, "\n", 1);
+		write(fd, "\n", 1);
 	err->code = 0;
 	return (0);
 }

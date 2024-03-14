@@ -17,13 +17,13 @@
 # include <stddef.h>
 # include <stdlib.h>
 
-int		ft_printf(const char *s, ...);
-int		ft_unsigned_putnbr(unsigned int n);
-int		ft_printf_hexa(unsigned int n, char c);
-int		ft_printf_hexa_ptr(long unsigned int n);
-int		ft_printf_putchar(char c);
-int		ft_printf_putnbr(int n);
-int		ft_printf_putstr(char *s);
+int		ft_printf(int fd, const char *s, ...);
+int		ft_unsigned_putnbr(unsigned int n, int fd);
+int		ft_printf_hexa(unsigned int n, char c, int fd);
+int		ft_printf_hexa_ptr(long unsigned int n, int fd);
+int		ft_printf_putchar(char c, int fd);
+int		ft_printf_putnbr(int n, int fd);
+int		ft_printf_putstr(char *s, int fd);
 size_t	ft_printf_strlen(const char *s);
 
 #endif

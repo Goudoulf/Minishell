@@ -58,23 +58,23 @@ static char	*str_to_char(char *str)
 	return (i);
 }*/
 
-static void	env_print(t_list **env)
+static void	env_print(t_list **env, int fd)
 {
 	t_list *temp;
 
 	temp = get_next_min(env);
 	while (temp)
 	{
-		ft_putstr_fd("declare -x ", 1);
-		ft_putstr_fd(temp->var, 1);
+		ft_putstr_fd("declare -x ", fd);
+		ft_putstr_fd(temp->var, fd);
 		if (temp->var_content)
 		{
-			ft_putstr_fd("=", 1);
-			ft_putstr_fd("\"", 1);
-			ft_putstr_fd(temp->var_content, 1);
-			ft_putstr_fd("\"", 1);
+			ft_putstr_fd("=", fd);
+			ft_putstr_fd("\"", fd);
+			ft_putstr_fd(temp->var_content, fd);
+			ft_putstr_fd("\"", fd);
 		}
-		ft_putstr_fd("\n", 1);
+		ft_putstr_fd("\n", fd);
 		temp = get_next_min(env);
 	}
 	ft_lst_set_isprint(env);
@@ -139,7 +139,7 @@ static int	cmd_is_valid(char *cmd)
 	return (1);
 }
 
-int	ft_export(t_list **env, char **cmd, t_error *err)
+int	ft_export(t_list **env, char **cmd, t_error *err, int fd)
 {
 	int	i;
 	t_list *temp;
@@ -147,7 +147,7 @@ int	ft_export(t_list **env, char **cmd, t_error *err)
 	i = 1;
 	if (tab_size(cmd) < 2)
 	{	
-		env_print(env);
+		env_print(env, fd);
 		return (0);
 	}
 	while (cmd[i])

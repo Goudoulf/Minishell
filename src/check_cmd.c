@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
+/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 15:06:40 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/13 13:33:50 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/14 15:35:02 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,19 @@ void	check_cmd(char *input, t_list **env, t_cmd **command, t_error *err)
 	if (temp)
 		com = temp->cmd;
 	if (com && !ft_strncmp(com[0], "export", 7))
-		ft_export(env, com, err);
+		ft_export(env, com, err, 1);
 	if (com && !ft_strncmp(com[0], "unset", 7))
 		ft_unset(env, com, err);
 	if (com && !ft_strncmp(com[0], "exit", 5))
 		ft_exit(com, err);
 	if (com && !ft_strncmp(com[0], "echo", 5))
-		ft_echo(com, err);
+		ft_echo(com,err, 1);
 	if (com && !ft_strncmp(com[0], "cd", 5))
 		ft_cd(com, env, err);
 	if (com && !ft_strncmp(input, "pwd", 4))
-		ft_pwd(com, err);
+		ft_pwd(com, err, 1);
 	if (!ft_strncmp(input, "env", 5))
-		ft_lst_print(env, err);
+		ft_lst_print(env, err, 1);
 	if (err->do_exit == true)
 	{	
 		free(input);

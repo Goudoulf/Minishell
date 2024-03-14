@@ -73,13 +73,13 @@ static int	ft_int_len(unsigned int nb)
 	return (i);
 }
 
-int	ft_printf_hexa(unsigned int n, char c)
+int	ft_printf_hexa(unsigned int n, char c, int fd)
 {
 	int		i;
 	char	*str1;
 
 	if (n == 0)
-		return (ft_printf_putchar('0'));
+		return (ft_printf_putchar('0', fd));
 	i = ft_int_len(n);
 	str1 = malloc(sizeof(char) * (i + 1));
 	if (!str1)
@@ -95,7 +95,7 @@ int	ft_printf_hexa(unsigned int n, char c)
 		n = n / 16;
 		i--;
 	}
-	i = ft_printf_putstr(str1);
+	i = ft_printf_putstr(str1, fd);
 	free(str1);
 	return (i);
 }

@@ -12,11 +12,11 @@
 
 #include "ft_printf.h"
 
-int	ft_printf_putchar(char c)
+int	ft_printf_putchar(char c, int fd)
 {
 	int	size;
 
-	size = write(1, &c, 1);
+	size = write(fd, &c, 1);
 	if (size == -1)
 		return (-1);
 	return (1);
