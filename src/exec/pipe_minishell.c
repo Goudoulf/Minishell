@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/14 16:24:48 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/14 16:44:06 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -421,6 +421,8 @@ static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 	{
 		write(2, "minishell: ", 11);
 		perror(cmd->cmd[0]);
+		if (access(cmd->cmd[0], F_OK) == -1)
+			exit(127);
 		exit(126);
 	}
 	else if (cmd->cmd[0][0] == '.' && cmd->cmd[0][1] == '/' && access(cmd->cmd[0], F_OK) == 0)
