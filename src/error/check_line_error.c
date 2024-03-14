@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 09:28:16 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/14 17:34:56 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/14 18:03:11 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,12 @@ static int	check_chevron_max(char *line)
 			i++;
 			count++;
 			if (count > 2)
+			{
+				ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+				write(2, &line[i], 1);
+				ft_putstr_fd("\'\n", 2);
 				return (0);
+			}
 		}
 		if (line[i])
 			i++;
@@ -56,7 +61,12 @@ static int	check_double_chevron(char *line)
 		if (ft_is_chevron(line[i]) && ft_is_chevron(line[i + 1]) && !c_quote)
 		{
 			if (line[i] != line[i + 1])
+			{
+				ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+				write(2, &line[i + 1], 1);
+				ft_putstr_fd("\'\n", 2);
 				return (0);
+			}
 		}
 		i++;
 	}
@@ -142,12 +152,12 @@ int	check_line_error(char *line, t_error *err)
 {
 	if (!check_chevron_max(line))
 	{
-		err->code = 1;
+		err->code = 2;
 		return (0);
 	}
 	if (!check_double_chevron(line))
 	{
-		err->code = 1;
+		err->code = 2;
 		return (0);
 	}
 	if (!check_chevron_content(line))

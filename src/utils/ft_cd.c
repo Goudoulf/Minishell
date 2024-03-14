@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 12:48:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/14 09:58:43 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/14 19:13:06 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,18 @@ static char	*ft_pwd2(void)
 
 int	ft_cd(char **cmd, t_list **env, t_error *err)
 {
+	t_list *test;
 	t_list *temp;
 	t_list *temp_current_pwd;
 	t_list *temp_old_pwd;
 	char	*current_pwd;
 
+	test = *env;
+	if (!test)
+	{
+		err->code = 0;
+		return (0);
+	}
 	temp_current_pwd = check_cmd_env("PWD", env);
 	temp_old_pwd = check_cmd_env("OLDPWD", env);
 	current_pwd = ft_strdup(temp_current_pwd->var_content);
