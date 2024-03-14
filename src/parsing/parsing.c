@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 19:08:44 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/13 15:54:11 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/14 14:11:02 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,11 @@ static void cmd_dollars(t_cmd **cmd, t_list **env, t_error *err)
 		i = 0;
 		while (temp->redirection && temp->redirection[i])
 		{
-			temp->redirection[i] = check_dollars(temp->redirection[i], env, err);
+			if (ft_strncmp(temp->redirection[i], "<<", 2))
+				temp->redirection[i] = check_dollars(temp->redirection[i], env, err);
 			i++;
 		}
-		i = 0;
+		i = 0;		
 		while (temp->here_doc && temp->here_doc[i])
 		{
 			temp->here_doc[i] = check_dollars(temp->here_doc[i], env, err);
@@ -56,7 +57,12 @@ void	line_parsing(t_cmd **cmd, char *line, t_list **env, t_error *err)
 	line_tab = split_pipe(line_temp);
 	while (line_tab[i])
 	{
-		line_to_cmd(cmd, line_tab[i]);
+		line_temp = line_to_cmd(cmd, line_tab[i]);
+		if (line_temp)
+		{
+			line_temp = check_dollars(line_temp, env, err);
+			line_to_cmd2(cmd, line_temp);
+		}
 		i++;
 	}
 	cmd_dollars(cmd, env, err);

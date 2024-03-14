@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
+/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 10:26:14 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/13 13:35:48 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/14 10:16:14 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,12 @@ int	ft_unset(t_list **env, char **cmd, t_error *err)
 	i = 1;
 	if (tab_size(cmd) < 2)
 		return (0);
+	if (tab_size(cmd) == 2 && cmd[1][0] == '\0')
+	{
+		ft_putstr_fd("minishell: unset: `': not a valid identifier\n", 2);
+		err->code = 1;
+		return (1);
+	}
 	while (cmd[i])
 	{
 		if (!cmd_is_valid(cmd[i]))

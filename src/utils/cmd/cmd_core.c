@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_core.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
+/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 08:30:06 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/13 14:36:00 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/14 13:05:08 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_cmd	*ft_cmd_new(char **command, char **redirection)
+t_cmd	*ft_cmd_new(char **redirection)
 {
 	t_cmd	*new;
 
 	new = malloc(sizeof(t_cmd));
 	if (!new)
 		return (NULL);
-	new->cmd = command;
+	new->cmd = NULL;
 	new->path = NULL;
 	new->redirection = redirection;
 	new->here_doc = NULL;

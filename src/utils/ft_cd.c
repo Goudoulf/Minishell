@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
+/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 12:48:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/13 13:37:21 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/14 09:58:43 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,37 @@
 	}
 	return (NULL);
 }*/
+static char	*ft_pwd2(void)
+{
+	char	*str;
+	char	*temp;
+	int		size;
+	int		i;
+
+	str = NULL;
+	size = 10;
+	i = 1;
+	str = malloc(sizeof(char) * size + 1);
+	if (!str)
+		return (NULL);
+	str[size] = '\0';
+	while (i * 10  < 4096)
+	{
+		temp = getcwd(str, size * i);
+		if (!temp)
+		{
+			free(str);
+			i++;
+			str = malloc(sizeof(char) * size * i + 1);
+			if (!str)
+				return (NULL);
+			str[size * i] = '\0';
+		}
+		else 
+			return (temp);
+	}
+	return (0);
+}
 
 int	ft_cd(char **cmd, t_list **env, t_error *err)
 {
@@ -42,7 +73,7 @@ int	ft_cd(char **cmd, t_list **env, t_error *err)
 		err->code = 1;
 		ft_putstr_fd("cd : too many arguments\n", 2);
 	}
-	if (tab_size(cmd) == 1)
+	else if (tab_size(cmd) == 1)
 	{
 		temp = check_cmd_env("HOME", env);
 		if (!temp || chdir(temp->var_content) != 0)
@@ -53,7 +84,35 @@ int	ft_cd(char **cmd, t_list **env, t_error *err)
 			temp_current_pwd->var_content = ft_strdup(temp->var_content);
 		}
 	}
-	if (tab_size(cmd) == 2)
+	else if (tab_size(cmd) == 2 && !ft_strncmp(cmd[1], "-", 2))
+	{
+		if (chdir(temp_old_pwd->var_content) != 0)
+		{
+			perror("cd :");
+			err->code = 1;
+		}
+		else
+		{
+			free(temp_current_pwd->var_content);
+			ft_putstr_fd(temp_old_pwd->var_content, 1);
+			write(1, "\n", 1);
+			temp_current_pwd->var_content = ft_pwd2();
+		}
+
+	}
+	else if (tab_size(cmd) == 2 && !ft_strncmp(cmd[1], "--", 3))
+	{
+		temp = check_cmd_env("HOME", env);
+		if (!temp || chdir(temp->var_content) != 0)
+			perror("cd");
+		else
+		{
+			free(temp_current_pwd->var_content);
+			temp_current_pwd->var_content = ft_pwd2();
+		}
+
+	}
+	else if (tab_size(cmd) == 2)
 	{
 		if (chdir(cmd[1]) != 0)
 		{
@@ -63,7 +122,7 @@ int	ft_cd(char **cmd, t_list **env, t_error *err)
 		else
 		{
 			free(temp_current_pwd->var_content);
-			temp_current_pwd->var_content = ft_strdup(cmd[1]);
+			temp_current_pwd->var_content = ft_pwd2();
 		}
 	}
 	if (temp_old_pwd->var_content) 

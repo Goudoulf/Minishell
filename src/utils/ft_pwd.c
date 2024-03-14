@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
+/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 08:03:34 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/13 13:34:47 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/14 10:07:05 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,12 @@ int	ft_pwd(char **cmd, t_error *err)
 	str = NULL;
 	size = 10;
 	i = 1;
-	if (tab_size(cmd) > 2)
+	(void)cmd;
+/*	if (tab_size(cmd) > 2)
 	{
 		ft_putstr_fd("pwd : too many arguments\n", 2);
 		return (1);
-	}
+	}*/
 	str = malloc(sizeof(char) * size + 1);
 	if (!str)
 		return (1);
@@ -46,6 +47,7 @@ int	ft_pwd(char **cmd, t_error *err)
 		else 
 		{
 			ft_printf("%s\n", temp);
+			err->code = 0;
 			free(str);
 			return (0);
 		}

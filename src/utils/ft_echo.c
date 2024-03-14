@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/16 20:21:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/14 09:08:28 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/14 14:16:58 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int	ft_echo(char **cmd, t_error *err)
 	if (tab_size(cmd) < 2)
 	{
 		write(1, "\n", 1);
+		err->code = 0;
 		return (0);
 	}
 	while (cmd[i] && cmd[i][0] == '-')

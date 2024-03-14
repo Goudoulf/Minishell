@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 09:28:16 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/13 20:46:51 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/14 10:55:04 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static int	check_chevron_content(char *line)
 			{
 				ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
 				write(2, &line[i], 1);
-				ft_putstr_fd("\'", 2);
+				ft_putstr_fd("\'\n", 2);
 				return (0);
 			}
 		}
@@ -105,7 +105,12 @@ static int	check_pipe(char *line)
 	while (ft_is_space(line[i]))
 		i++;
 	if (line[i] == '|')
+	{
+		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+		write(2, &line[i], 1);
+		ft_putstr_fd("\'\n", 2);
 		return (0);
+	}
 	while (line[i])
 	{
 		if ((line[i] == '\'' || line[i] == '\"') && !c_quote)
@@ -120,7 +125,12 @@ static int	check_pipe(char *line)
 			while (ft_is_space(line[i]))
 				i++;
 			if (line[i] == '|' || line[i] == '\0')
+			{
+				ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+				write(2, &line[i], 1);
+				ft_putstr_fd("\'\n", 2);
 				return (0);
+			}
 		}
 		else
 			i++;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
+/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/13 14:36:21 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/14 13:18:36 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ char	**ft_lst_to_tab(t_list **list);
 
 // cmd
 
-t_cmd	*ft_cmd_new(char **command, char **redirection);
+t_cmd	*ft_cmd_new(char **redirection);
 void	ft_cmdadd_back(t_cmd **cmd, t_cmd *new);
 t_list	*check_cmd_env(char *arg, t_list **env);
 void	ft_cmdclear(t_cmd **cmd);
@@ -116,7 +116,8 @@ char	*check_dollars(char *line, t_list **env, t_error *err);
 char *replace_dollar(char *line, t_list **env, int start, t_error *err);
 int	start_dollar(char *line, int dollar_num);
 char	**split_pipe(char *line);
-void	line_to_cmd(t_cmd **cmd, char *line);
+char	*line_to_cmd(t_cmd **cmd, char *line);
+void	line_to_cmd2(t_cmd **cmd, char *line);
 void clean_quote(t_cmd **cmd);
 void	clean_redirection(t_cmd **cmd);
 int	start_tilde(char *line, int tilde_num);
