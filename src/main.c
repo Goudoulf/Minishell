@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:12:26 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/15 14:53:25 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/15 15:00:33 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,10 @@ void	check_here_doc(char *input)
 				limiter[j++] = input[i++];
 			limiter[j] = '\0';
 			if (limiter && limiter[0])
-			do_here_doc(limiter);
-			free(limiter);
+			{
+				do_here_doc(limiter);
+				free(limiter);
+			}
 		}
 	}
 }
@@ -140,7 +142,8 @@ int main(int argc, char **argv, char **envp)
 				err.code = exec_line(cmd, &env, &err);
 			//	check_cmd(input, &env, &cmd, &err);
 			}
-			check_here_doc(input);
+			else
+				check_here_doc(input);
 			ft_cmdclear(&cmd);
 		}
 		free(input);
