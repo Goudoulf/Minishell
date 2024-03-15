@@ -6,75 +6,11 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/15 14:26:00 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/15 16:52:27 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "minishell.h"
-
-// static int	ft_lstsize(t_list **lst)
-// {
-// 	int	lsize;
-
-// 	lsize = 0;
-// 	while (lst != NULL && *lst != NULL)
-// 	{
-// 		(*lst) = (*lst)->next;
-// 		lsize++;
-// 	}
-// 	return (lsize);
-// }
-
-// static char	**lst_to_tab(t_list **lst)
-// {
-// 	int		i;
-// 	int		j;
-// 	int		lstsize;
-// 	int		strsize;
-// 	char	**tab;
-
-// 	i = -1;
-// 	lstsize = ft_lstsize(lst);
-// 	tab = malloc(sizeof (char *) * lstsize + 1);
-// 	if (!tab)
-// 		return NULL;
-// 	tab[lstsize] = NULL;
-// 	while (i++ < lstsize)
-// 	{
-// 		j = -1;
-// 		strsize = ft_strlen((*lst)->string);
-// 		tab[i] = malloc (sizeof (char) * strsize + 1);
-// 		tab[i][strsize] = 0;
-// 		while (j++ < strsize)
-// 			tab[i][j] = (*lst)->string[j];
-// 		(*lst) = (*lst)->next;
-// 	}
-// 	return (tab);
-// }
-
-/*char	*ft_realloc(char *str, char *buf)
-{
-	char	*new_str;
-	size_t	i;
-	size_t	j;
-	size_t	strlen;
-	size_t	buflen;
-
-	i = -1;
-	strlen = ft_strlen(str);
-	buflen = ft_strlen(buf);
-	new_str = malloc(sizeof(char) * strlen + buflen + 1);
-	new_str[strlen + buflen] = 0;
-	while (++i < strlen)
-		new_str[i] = str[i];
-	free(str);
-	j = -1;
-	while (++j < buflen)
-		new_str[i + j] = buf[j];
-	free(buf);
-	return (new_str);
-}*/
 
 size_t	last_redir_in(t_cmd *cmd)
 {
@@ -286,9 +222,11 @@ static void	do_output2(t_cmd *cmd, int i, int *fd)
 		if (close(*fd) == -1)
 			perror(ft_itoa(*fd));
 	if (ft_strncmp(cmd->redirection[i], ">>", 2) == 0)
-		*fd = open(&cmd->redirection[i][2], O_CREAT | O_WRONLY | O_APPEND, 00644);
+		*fd = open(&cmd->redirection[i][2], O_CREAT | O_WRONLY | \
+			O_APPEND, 00644);
 	else if (cmd->redirection[i][0] == '>')
-		*fd = open(&cmd->redirection[i][1], O_CREAT | O_WRONLY | O_TRUNC, 00644);
+		*fd = open(&cmd->redirection[i][1], O_CREAT | O_WRONLY | \
+			O_TRUNC, 00644);
 	if (*fd == -1)
 		exit((perror(ft_itoa(*fd)), 1));
 }
@@ -299,9 +237,11 @@ static void	do_output(t_cmd *cmd, int pipe[2], size_t i, int fd[2])
 		if (close(fd[1]) == -1)
 			perror(ft_itoa(fd[1]));
 	if (ft_strncmp(cmd->redirection[i], ">>", 2) == 0)
-		fd[1] = open(&cmd->redirection[i][2], O_CREAT | O_WRONLY | O_APPEND, 00644);
+		fd[1] = open(&cmd->redirection[i][2], O_CREAT | O_WRONLY | \
+			O_APPEND, 00644);
 	else if (cmd->redirection[i][0] == '>')
-		fd[1] = open(&cmd->redirection[i][1], O_CREAT | O_WRONLY | O_TRUNC, 00644);
+		fd[1] = open(&cmd->redirection[i][1], O_CREAT | O_WRONLY | \
+			O_TRUNC, 00644);
 	if (fd[1] == -1)
 		exit((perror(ft_itoa(fd[1])), 1));
 	if (i == last_redir_out(cmd))
@@ -543,9 +483,9 @@ static void	first_child(t_cmd *cmd, int pipe[2], t_list **lst, t_error *err)
 	exit (0);
 }
 
-static void	child_pipe(t_cmd *cmd, int pipe1[2], int pipe2[2], t_list **lst, t_error *err)
+static void	child_pipe(t_cmd *cmd, int pipe_tab[2][2], t_list **lst, t_error *err)
 {
-	do_redirection(cmd, pipe1, pipe2, 2);
+	do_redirection(cmd, pipe_tab[0], pipe_tab[1], 2);
 	if (cmd->cmd)
 		do_cmd(cmd, lst, err);
 	exit (0);
@@ -563,28 +503,31 @@ static int	exec_last(t_cmd *cmd, t_list **lst, int pipe1[2], t_error *err)
 
 static int	for_eachpipe(t_cmd *cmd, t_list **lst, int pipe1[2], t_error *err)
 {
-	int	pipe2[2];
+	//int	pipe2[2];
+	int	pipe_tab[2][2];
 	size_t	i;
 
 	i = 1;
+	pipe_tab[0][0] = pipe1[0];
+	pipe_tab[0][1] = pipe1[1];
 	while (cmd)
 	{
 		if (!cmd->next)
-			exec_last(cmd, lst, pipe1, err);
+			exec_last(cmd, lst, pipe_tab[0], err);
 		else
 		{
-			if (pipe(pipe2) == -1)
+			if (pipe(pipe_tab[1]) == -1)
 				return (1);
 			cmd->pid = fork();
 			if (cmd->pid == -1)
 				return (1);
 			if (cmd->pid == 0)
-				child_pipe(cmd, pipe1, pipe2, lst, err);
+				child_pipe(cmd, pipe_tab, lst, err);
 			else
 			{
 				closepipe(pipe1);
-				pipe1[0] = pipe2[0];
-				pipe1[1] = pipe2[1];
+				pipe_tab[0][0] = pipe_tab[1][0];
+				pipe_tab[0][1] = pipe_tab[1][1];
 			}
 		}
 		if (is_dechevron(cmd))
@@ -593,7 +536,7 @@ static int	for_eachpipe(t_cmd *cmd, t_list **lst, int pipe1[2], t_error *err)
 		i++;
 	}
 	if (count_child(cmd) > 2)
-		closepipe(pipe2);
+		closepipe(pipe_tab[1]);
 	return (0);
 }
 
@@ -604,7 +547,7 @@ static void	dchevron(char *limiter, int pipefd[2], t_list **env, t_error *err)
 
 	buf = readline("> ");
 	if (buf == NULL)
-		return ((void)write(1, "\n", 1));
+		return ((void)write(2, "minishell: warning: here-document delimited by end-of-file (wanted `stop')\n", 75));
 	size = ft_strlen(limiter) + 1;
 	while (ft_strncmp(buf, limiter, size))
 	{
@@ -614,7 +557,7 @@ static void	dchevron(char *limiter, int pipefd[2], t_list **env, t_error *err)
 		free(buf);
 		buf = readline("> ");
 		if (buf == NULL)
-			return ((void)write(1, "\n", 1));
+			return ((void)write(2, "minishell: warning: here-document delimited by end-of-file (wanted `stop')\n", 75));
 	}
 	free(buf);
 }

@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:12:26 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/15 15:25:37 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/15 16:17:21 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ void	do_here_doc(char *limiter)
 
 	buf = readline("> ");
 	if (buf == NULL)
-		return ;
+		return ((void)write(2, "minishell: warning: here-document delimited by end-of-file (wanted `stop')\n", 75));
 	size = ft_strlen(limiter) + 1;
 	while (ft_strncmp(buf, limiter, size))
 	{
 		free(buf);
 		buf = readline("> ");
 		if (buf == NULL)
-			return ;
+			return ((void)write(2, "minishell: warning: here-document delimited by end-of-file (wanted `stop')\n", 75));
 	}
 	free(buf);
 }
