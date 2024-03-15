@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 10:26:14 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/14 10:16:14 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 09:18:12 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,11 @@ int	ft_unset(t_list **env, char **cmd, t_error *err)
 	int		i;
 
 	i = 1;
+	if (!*env)
+	{
+		err->code = 0;
+		return (0);
+	}
 	if (tab_size(cmd) < 2)
 		return (0);
 	if (tab_size(cmd) == 2 && cmd[1][0] == '\0')

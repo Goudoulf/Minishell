@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 12:48:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/14 19:13:06 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 10:36:02 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,32 +59,28 @@ static char	*ft_pwd2(void)
 
 int	ft_cd(char **cmd, t_list **env, t_error *err)
 {
-	t_list *test;
 	t_list *temp;
 	t_list *temp_current_pwd;
 	t_list *temp_old_pwd;
 	char	*current_pwd;
 
-	test = *env;
-	if (!test)
-	{
-		err->code = 0;
-		return (0);
-	}
 	temp_current_pwd = check_cmd_env("PWD", env);
 	temp_old_pwd = check_cmd_env("OLDPWD", env);
-	current_pwd = ft_strdup(temp_current_pwd->var_content);
+	current_pwd = ft_pwd2();
 	err->code = 0;
 	if (tab_size(cmd) > 2)
 	{
 		err->code = 1;
 		ft_putstr_fd("cd : too many arguments\n", 2);
 	}
-	else if (tab_size(cmd) == 1)
+	else if (tab_size(cmd) == 1 || (tab_size(cmd) == 2 && !ft_strncmp(cmd[1], "--", 3)))
 	{
 		temp = check_cmd_env("HOME", env);
 		if (!temp || chdir(temp->var_content) != 0)
-			perror("cd");
+		{
+			ft_putstr_fd("bash: cd: HOME not set\n", 2);
+			err->code = 1;
+		}
 		else
 		{
 			free(temp_current_pwd->var_content);
@@ -93,7 +89,12 @@ int	ft_cd(char **cmd, t_list **env, t_error *err)
 	}
 	else if (tab_size(cmd) == 2 && !ft_strncmp(cmd[1], "-", 2))
 	{
-		if (chdir(temp_old_pwd->var_content) != 0)
+		if (!temp_old_pwd)
+		{
+			ft_putstr_fd("bash: cd: OLDPWD not set\n", 2);
+			err->code = 1;
+		}
+		else if (chdir(temp_old_pwd->var_content) != 0)
 		{
 			perror("cd :");
 			err->code = 1;
@@ -107,18 +108,6 @@ int	ft_cd(char **cmd, t_list **env, t_error *err)
 		}
 
 	}
-	else if (tab_size(cmd) == 2 && !ft_strncmp(cmd[1], "--", 3))
-	{
-		temp = check_cmd_env("HOME", env);
-		if (!temp || chdir(temp->var_content) != 0)
-			perror("cd");
-		else
-		{
-			free(temp_current_pwd->var_content);
-			temp_current_pwd->var_content = ft_pwd2();
-		}
-
-	}
 	else if (tab_size(cmd) == 2)
 	{
 		if (chdir(cmd[1]) != 0)
@@ -126,15 +115,23 @@ int	ft_cd(char **cmd, t_list **env, t_error *err)
 			perror("cd :");
 			err->code = 1;
 		}
+		else if (!temp_current_pwd)
+		{
+			ft_lstadd_back(env, ft_lst_new(ft_strjoin("PWD=", ft_pwd2())));
+		}
 		else
 		{
 			free(temp_current_pwd->var_content);
 			temp_current_pwd->var_content = ft_pwd2();
 		}
 	}
-	if (temp_old_pwd->var_content) 
+	if (temp_old_pwd && temp_old_pwd->var_content)
+	{
 		free(temp_old_pwd->var_content);
-	temp_old_pwd->var_content = ft_strdup(current_pwd);
+		temp_old_pwd->var_content = ft_strdup(current_pwd);
+	}
+	else
+		ft_lstadd_back(env, ft_lst_new(ft_strjoin("OLDPWD=", current_pwd)));
 	free (current_pwd);
 	return (0);
 }
