@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 11:48:48 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/15 10:37:07 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 11:03:38 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ static t_list	**init_env_list(t_list **env, char **envp)
 	if (!*envp)
 	{
 		ft_lstadd_back(env, ft_lst_new(ft_strjoin("PWD=", ft_pwd2())));
+		ft_lstadd_back(env, ft_lst_new("OLDPWD"));
 		ft_lstadd_back(env, ft_lst_new("SHLVL=1"));
 		ft_lstadd_back(env, ft_lst_new("_=/usr/bin/env"));
 		return (env);

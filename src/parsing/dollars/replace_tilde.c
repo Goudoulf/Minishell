@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 13:17:27 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/10 13:54:13 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 11:40:29 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static char *env_replace(char *temp, t_list *env_m)
 		temp = ft_strdup(env_m->var_content);
 		return (temp);
 	}
-	return (NULL);
+	return (ft_strdup("\0"));
 }
 
 char *replace_tilde(char *line, t_list **env, int start)

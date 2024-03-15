@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 08:31:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/14 18:51:43 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 10:57:55 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ static void	env_print(t_list **env, int fd)
 		}
 		ft_putstr_fd("\n", fd);
 		temp = get_next_min(env);
+		if (temp && !ft_strncmp("_", temp->var, 2))
+			temp = get_next_min(env);
 	}
 	ft_lst_set_isprint(env);
 }
