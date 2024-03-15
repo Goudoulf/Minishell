@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:12:26 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/15 15:00:33 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/15 15:25:37 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,32 @@ void	check_here_doc(char *input)
 	i = -1;
 	while (input && input[++i])
 	{
-		if (input[i] == '<' && input[i + 1] == '<')
+		if (input[i] == '>')
+		{
+			i++;
+			if (input[i] == '>')
+				i++;
+			while(input[i] == ' ')
+				i++;
+			if (input[i] == '>' || input[i] == '<' || input[i] == '|' || input[i] == '\0')
+				return;
+		}
+		else if (input[i] == '<' && input[i + 1] != '<')
+		{
+			i++;
+			while(input[i] == ' ')
+				i++;
+			if (input[i] == '>' || input[i] == '<' || input[i] == '|' || input[i] == '\0')
+				return;
+		}
+		else if (input[i] == '<' && input[i + 1] == '<')
 		{
 			count = 0;
 			i += 2;
 			while (input[i] == ' ')
 				i++;
+			if (input[i] == '>' || input[i] == '<' || input[i] == '|')
+				return;
 			while (input[i] != ' ' && input[i] != '>' && input[i] != '<' && input[i] != '|')
 			{
 				count++;
