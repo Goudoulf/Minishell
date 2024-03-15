@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 08:31:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/15 10:57:55 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 13:33:43 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ static t_list	*check_cmd_env_equal(char *arg, t_list **env)
 	{
 		if (!ft_strncmp(temp->var, temp2[0], ft_strlen(temp->var)))
 		{
+			free_tab(temp2);
 			free(temp2);
 			return (temp);
 		}

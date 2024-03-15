@@ -6,33 +6,16 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 09:04:47 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/09 11:21:11 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 16:40:59 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*static char	**create_tab(char **tab, size_t nelem)
-{
-	size_t	i;
-
-	i = 0;
-	tab = malloc(sizeof(char *) * (nelem + 1));
-	if (!tab)
-		return (NULL);
-	while (i < nelem)
-	{
-		tab[i] = NULL;
-		i++;
-	}
-	tab[i] = NULL;
-	return (tab);
-}*/
-
 static size_t	pipe_count(char *line)
 {
-	size_t pipe_count;
-	int	i;
+	size_t	pipe_count;
+	int		i;
 
 	i = 0;
 	pipe_count = 0;
@@ -59,7 +42,7 @@ char	**split_pipe(char *line)
 		return (NULL);
 	n_pipe = pipe_count(line);
 	delim = "|";
-	temp_tab = create_tab(n_pipe); 
+	temp_tab = create_tab(n_pipe);
 	token = ft_strtok_quote(line, delim);
 	while (token)
 	{

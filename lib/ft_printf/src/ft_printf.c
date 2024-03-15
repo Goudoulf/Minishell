@@ -6,30 +6,30 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:15:55 by cassie            #+#    #+#             */
-/*   Updated: 2023/12/10 09:48:12 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 14:36:57 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static int	ft_print_arg(const char *s, va_list args, int i, int fd)
+static int	ft_print_arg(const char *s, va_list ar, int i, int fd)
 {
 	if (s[i + 1] == 'c')
-		return (ft_printf_putchar(va_arg(args, int), fd));
+		return (ft_printf_putchar(va_arg(ar, int), fd));
 	if (s[i + 1] == 's')
-		return (ft_printf_putstr(va_arg(args, char *), fd));
+		return (ft_printf_putstr(va_arg(ar, char *), fd));
 	if (s[i + 1] == '%')
 		return (ft_printf_putchar('%', fd));
 	if (s[i + 1] == 'p')
-		return (ft_printf_hexa_ptr((long unsigned int)va_arg(args, void *), fd));
+		return (ft_printf_hexa_ptr((long unsigned int)va_arg(ar, void *), fd));
 	if (s[i + 1] == 'd' || s[i + 1] == 'i')
-		return (ft_printf_putnbr(va_arg(args, int), fd));
+		return (ft_printf_putnbr(va_arg(ar, int), fd));
 	if (s[i + 1] == 'u')
-		return (ft_unsigned_putnbr(va_arg(args, unsigned int), fd));
+		return (ft_unsigned_putnbr(va_arg(ar, unsigned int), fd));
 	if (s[i + 1] == 'x')
-		return (ft_printf_hexa((unsigned int)va_arg(args, int), 'x', fd));
+		return (ft_printf_hexa((unsigned int)va_arg(ar, int), 'x', fd));
 	if (s[i + 1] == 'X')
-		return (ft_printf_hexa((unsigned int)va_arg(args, int), 'X', fd));
+		return (ft_printf_hexa((unsigned int)va_arg(ar, int), 'X', fd));
 	return (0);
 }
 

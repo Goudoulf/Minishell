@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 13:17:27 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/15 11:40:29 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 16:46:45 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	free_temp(char *s2, char *s3, char *s4)
 		free(s4);
 }
 
-static char *env_replace(char *temp, t_list *env_m)
+static char	*env_replace(char *temp, t_list *env_m)
 {
 	if (env_m)
 	{
@@ -32,13 +32,13 @@ static char *env_replace(char *temp, t_list *env_m)
 	return (ft_strdup("\0"));
 }
 
-char *replace_tilde(char *line, t_list **env, int start)
+char	*replace_tilde(char *line, t_list **env, int start)
 {
-	t_list *env_match;
-	char *temp1;
-	char *temp2;
-	char *temp3;
-	
+	t_list	*env_match;
+	char	*temp1;
+	char	*temp2;
+	char	*temp3;
+
 	temp3 = NULL;
 	start = start_tilde(line, start);
 	temp1 = ft_substr(line, 0, start);
