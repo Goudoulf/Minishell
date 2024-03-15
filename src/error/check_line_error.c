@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_line_error.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 09:28:16 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/14 18:03:11 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 11:47:58 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,10 @@ static int	check_chevron_content(char *line)
 			if (ft_is_chevron(line[i]) || line[i] == '|' || line[i] == '\0')
 			{
 				ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
-				write(2, &line[i], 1);
+				if (line[i] == '\0')
+					write(2, "newline", 7);
+				else
+					write(2, &line[i], 1);
 				ft_putstr_fd("\'\n", 2);
 				return (0);
 			}
