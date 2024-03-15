@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:12:26 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/15 13:11:02 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 14:53:25 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,60 @@ static void	quit_exit(t_list **env, t_cmd **cmd, t_error *err)
 	exit(err->code);
 }
 
+void	do_here_doc(char *limiter)
+{
+	char	*buf;
+	size_t	size;
+
+	buf = readline("> ");
+	if (buf == NULL)
+		return ;
+	size = ft_strlen(limiter) + 1;
+	while (ft_strncmp(buf, limiter, size))
+	{
+		free(buf);
+		buf = readline("> ");
+		if (buf == NULL)
+			return ;
+	}
+	free(buf);
+}
+
+void	check_here_doc(char *input)
+{
+	size_t	i;
+	size_t	j;
+	size_t	count;
+	char	*limiter;
+	
+	i = -1;
+	while (input && input[++i])
+	{
+		if (input[i] == '<' && input[i + 1] == '<')
+		{
+			count = 0;
+			i += 2;
+			while (input[i] == ' ')
+				i++;
+			while (input[i] != ' ' && input[i] != '>' && input[i] != '<' && input[i] != '|')
+			{
+				count++;
+				i++;
+			}
+			limiter = malloc(sizeof (char) * count + 1);
+			if (!limiter)
+				return;
+			i -= count;
+			j = 0;
+			while (input[i] != ' ' && input[i] != '>' && input[i] != '<' && input[i] != '|')
+				limiter[j++] = input[i++];
+			limiter[j] = '\0';
+			if (limiter && limiter[0])
+			do_here_doc(limiter);
+			free(limiter);
+		}
+	}
+}
 
 int main(int argc, char **argv, char **envp)
 {
@@ -86,6 +140,7 @@ int main(int argc, char **argv, char **envp)
 				err.code = exec_line(cmd, &env, &err);
 			//	check_cmd(input, &env, &cmd, &err);
 			}
+			check_here_doc(input);
 			ft_cmdclear(&cmd);
 		}
 		free(input);

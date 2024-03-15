@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/15 14:12:47 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/15 14:26:00 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -436,7 +436,7 @@ static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 		print_error("Command not found", cmd->cmd[0]);
 		exit(127);
 	}
-	if (ft_strncmp("./", cmd->cmd[0], 1) == 0 && ft_strncmp("./", cmd->cmd[0], 2) && access(cmd->cmd[0], F_OK) == 0)
+	else if (ft_strncmp("./", cmd->cmd[0], 1) == 0 && ft_strncmp("./", cmd->cmd[0], 3) && access(cmd->cmd[0], F_OK) == 0)
 	{
 		write(2, "minishell: ", 11);
 		print_error("Permission denied", cmd->cmd[0]);
