@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/15 16:52:27 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/15 18:26:11 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static void	closepipe(int pipe[2])
 		perror(ft_itoa(pipe[1]));
 }
 
-bool	is_dechevron(t_cmd *cmd)
+bool	is_here_doc(t_cmd *cmd)
 {
 	size_t	i;
 
@@ -137,7 +137,7 @@ static void	redir_input(int fd, int pipe[2], t_cmd *cmd)
 		if (close(fd) == -1)
 			perror(ft_itoa(fd));
 	}
-	if ((pipe && !is_dechevron(cmd) && !has_redir_out(cmd)) || cmd->next)
+	if ((pipe && !is_here_doc(cmd) && !has_redir_out(cmd)) || cmd->next)
 	{
 		if (close(pipe[0]) == -1)
 			perror(ft_itoa(pipe[0]));
@@ -248,7 +248,7 @@ static void	do_output(t_cmd *cmd, int pipe[2], size_t i, int fd[2])
 		redir_output(fd[1], pipe, cmd);
 }
 
-static void	do_redirection2(t_cmd *cmd, int *fd)
+static void	do_redirection_one(t_cmd *cmd, int *fd)
 {
 	size_t	i;
 
@@ -281,7 +281,7 @@ bool	is_builtin(t_cmd *cmd)
 	return (false);
 }
 
-void	exec_builtin2(char	**cmd, t_list **list, t_error *err, int fd)
+void	exec_builtin_one(char	**cmd, t_list **list, t_error *err, int fd)
 {
 	if (!ft_strncmp(cmd[0], "echo", 5))
 		ft_echo(cmd, err, fd);
@@ -359,7 +359,8 @@ static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 	}
 	if (get_value(lst, "PATH") == NULL)
 	{
-		if (ft_strncmp(".", cmd->cmd[0], 2) == 0 || ft_strncmp("..", cmd->cmd[0], 3) == 0)
+		if (ft_strncmp(".", cmd->cmd[0], 2) == 0 || \
+			ft_strncmp("..", cmd->cmd[0], 3) == 0)
 		{
 			print_error("Command not found", cmd->cmd[0]);
 			exit(127);
@@ -371,18 +372,21 @@ static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 			perror(cmd->cmd[0]);
 		exit(126);
 	}
-	else if (ft_strncmp(".", cmd->cmd[0], 2) == 0 || ft_strncmp("..", cmd->cmd[0], 3) == 0)
+	else if (ft_strncmp(".", cmd->cmd[0], 2) == 0 || \
+		ft_strncmp("..", cmd->cmd[0], 3) == 0)
 	{
 		print_error("Command not found", cmd->cmd[0]);
 		exit(127);
 	}
-	else if (ft_strncmp("./", cmd->cmd[0], 1) == 0 && ft_strncmp("./", cmd->cmd[0], 3) && access(cmd->cmd[0], F_OK) == 0)
+	else if (ft_strncmp("./", cmd->cmd[0], 1) == 0 && \
+		ft_strncmp("./", cmd->cmd[0], 3) && access(cmd->cmd[0], F_OK) == 0)
 	{
 		write(2, "minishell: ", 11);
 		print_error("Permission denied", cmd->cmd[0]);
 		exit(126);
 	}
-	else if (cmd->cmd[0] && isdirectory(cmd->cmd[0]) && access(cmd->path, F_OK) == -1)
+	else if (cmd->cmd[0] && isdirectory(cmd->cmd[0]) && \
+		access(cmd->path, F_OK) == -1)
 	{
 		write(2, "minishell: ", 11);
 		print_error("No such file or directory", cmd->cmd[0]);
@@ -483,9 +487,9 @@ static void	first_child(t_cmd *cmd, int pipe[2], t_list **lst, t_error *err)
 	exit (0);
 }
 
-static void	child_pipe(t_cmd *cmd, int pipe_tab[2][2], t_list **lst, t_error *err)
+static void	child_pipe(t_cmd *cmd, int pipefd[2][2], t_list **lst, t_error *err)
 {
-	do_redirection(cmd, pipe_tab[0], pipe_tab[1], 2);
+	do_redirection(cmd, pipefd[0], pipefd[1], 2);
 	if (cmd->cmd)
 		do_cmd(cmd, lst, err);
 	exit (0);
@@ -501,15 +505,11 @@ static int	exec_last(t_cmd *cmd, t_list **lst, int pipe1[2], t_error *err)
 	return (0);
 }
 
-static int	for_eachpipe(t_cmd *cmd, t_list **lst, int pipe1[2], t_error *err)
+static int	for_pipe(t_cmd *cmd, t_list **lst, int pipe_tab[2][2], t_error *err)
 {
-	//int	pipe2[2];
-	int	pipe_tab[2][2];
 	size_t	i;
 
 	i = 1;
-	pipe_tab[0][0] = pipe1[0];
-	pipe_tab[0][1] = pipe1[1];
 	while (cmd)
 	{
 		if (!cmd->next)
@@ -525,12 +525,12 @@ static int	for_eachpipe(t_cmd *cmd, t_list **lst, int pipe1[2], t_error *err)
 				child_pipe(cmd, pipe_tab, lst, err);
 			else
 			{
-				closepipe(pipe1);
+				closepipe(pipe_tab[0]);
 				pipe_tab[0][0] = pipe_tab[1][0];
 				pipe_tab[0][1] = pipe_tab[1][1];
 			}
 		}
-		if (is_dechevron(cmd))
+		if (is_here_doc(cmd))
 			closepipe(cmd->pipe_dchevron);
 		cmd = cmd->next;
 		i++;
@@ -540,14 +540,15 @@ static int	for_eachpipe(t_cmd *cmd, t_list **lst, int pipe1[2], t_error *err)
 	return (0);
 }
 
-static void	dchevron(char *limiter, int pipefd[2], t_list **env, t_error *err)
+static void	do_here_doc(char *limiter, int pipefd[2], t_list **env, t_error *err)
 {
 	char	*buf;
 	size_t	size;
 
 	buf = readline("> ");
 	if (buf == NULL)
-		return ((void)write(2, "minishell: warning: here-document delimited by end-of-file (wanted `stop')\n", 75));
+		return ((void)write(2, "minishell: warning: here-document delimited by \
+			end-of-file (wanted `stop')\n", 75));
 	size = ft_strlen(limiter) + 1;
 	while (ft_strncmp(buf, limiter, size))
 	{
@@ -557,12 +558,13 @@ static void	dchevron(char *limiter, int pipefd[2], t_list **env, t_error *err)
 		free(buf);
 		buf = readline("> ");
 		if (buf == NULL)
-			return ((void)write(2, "minishell: warning: here-document delimited by end-of-file (wanted `stop')\n", 75));
+			return ((void)write(2, "minishell: warning: here-document \
+				delimited by end-of-file (wanted `stop')\n", 75));
 	}
 	free(buf);
 }
 
-void	for_each_dchevron(t_cmd *cmd, t_list **env, t_error *err)
+void	for_each_here_doc(t_cmd *cmd, t_list **env, t_error *err)
 {
 	size_t	i;
 	bool	first;
@@ -577,7 +579,7 @@ void	for_each_dchevron(t_cmd *cmd, t_list **env, t_error *err)
 				closepipe(cmd->pipe_dchevron);
 			first = false;
 			pipe(cmd->pipe_dchevron);
-			dchevron(&cmd->here_doc[i][2], cmd->pipe_dchevron, env, err);
+			do_here_doc(&cmd->here_doc[i][2], cmd->pipe_dchevron, env, err);
 		}
 		cmd = cmd->next;
 	}
@@ -585,50 +587,58 @@ void	for_each_dchevron(t_cmd *cmd, t_list **env, t_error *err)
 
 static int	exec_pipe(t_cmd *cmd, t_list **lst, t_error *err)
 {
-	int	pipefd[2];
+	int	pipe_tab[2][2];
 
-	for_each_dchevron(cmd, lst, err);
-	if (pipe(pipefd) == -1)
+	for_each_here_doc(cmd, lst, err);
+	if (pipe(pipe_tab[0]) == -1)
 		return (1);
 	cmd->pid = fork();
 	if (cmd->pid == -1)
 		return (1);
 	if (cmd->pid == 0)
-		first_child(cmd, pipefd, lst, err);
-	if (is_dechevron(cmd))
+		first_child(cmd, pipe_tab[0], lst, err);
+	if (is_here_doc(cmd))
 		closepipe(cmd->pipe_dchevron);
 	cmd = cmd->next;
-	for_eachpipe(cmd, lst, pipefd, err);
-	closepipe(pipefd);
+	for_pipe(cmd, lst, pipe_tab, err);
+	closepipe(pipe_tab[0]);
+	return (0);
+}
+
+int	exec_one(t_cmd *cmd, t_list **lst, t_error *err)
+{
+	int fd;
+	
+	for_each_here_doc(cmd, lst, err);
+	if (cmd->cmd && is_builtin(cmd))
+	{
+		fd = 1;
+		if (cmd->redirection)
+			do_redirection_one(cmd, &fd);
+		exec_builtin_one(cmd->cmd, lst, err, fd);
+		if (fd != 1)
+			close(fd);
+		return(err->code);
+	}
+	cmd->pid = fork();
+	if (cmd->pid == -1)
+		return (1);
+	if (cmd->pid == 0)
+		child(cmd, lst, err);
+	if (is_here_doc(cmd))
+		closepipe(cmd->pipe_dchevron);
 	return (0);
 }
 
 int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 {
 	int		status;
-	int		fd;
 
 	status = 0;
 	if (!cmd->next)
 	{
-		for_each_dchevron(cmd, lst, err);
-		if (cmd->cmd && is_builtin(cmd))
-		{
-			fd = 1;
-			if (cmd->redirection)
-				do_redirection2(cmd, &fd);
-			exec_builtin2(cmd->cmd, lst, err, fd);
-			if (fd != 1)
-				close(fd);
-			return(err->code);
-		}
-		cmd->pid = fork();
-		if (cmd->pid == -1)
-			return (1);
-		if (cmd->pid == 0)
-			child(cmd, lst, err);
-		if (is_dechevron(cmd))
-			closepipe(cmd->pipe_dchevron);
+		if (exec_one(cmd, lst, err) != 0)
+			return (err->code);
 	}
 	else
 		exec_pipe(cmd, lst, err);
