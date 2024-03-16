@@ -15,7 +15,7 @@ NAME = minishell
 SRCS_FILE = main.c check_cmd.c signal.c ./utils/ft_echo.c ./utils/ft_pwd.c ./utils/list/ft_lst_add_back.c \
 			./utils/list/ft_lst_clear.c ./utils/list/ft_lst_print.c ./utils/list/ft_lst_new.c\
 			init/init.c ./parsing/parsing.c ./parsing/clean_line/clean_line.c \
-			./parsing/split_pipe/split_pipe.c ./utils/ft_strtok.c ./parsing/line_to_cmd.c \
+			./parsing/split_pipe/split_pipe.c ./parsing/line_to_cmd.c \
 			./utils/count_out_in/count_out_in.c ./utils/ft_strtok_quote.c ./utils/list/ft_cmd_clear.c \
 			./utils/list/ft_cmd_print.c ./parsing/find_path.c ./utils/ft_join.c \
 			./utils/get_value.c ./utils/ft_export.c ./utils/ft_unset.c \
@@ -24,8 +24,8 @@ SRCS_FILE = main.c check_cmd.c signal.c ./utils/ft_echo.c ./utils/ft_pwd.c ./uti
 			./parsing/clean_quote.c ./utils/ft_cd.c ./error/check_line_error.c ./exec/pipe_minishell.c ./utils/ft_is_any.c \
 			./parsing/clean_redirection.c ./utils/cmd/cmd_utils.c ./utils/cmd/cmd_core.c ./utils/quote_mode.c ./utils/tab_utils.c \
 			./utils/list/ft_lst_to_tab.c ./parsing/dollars/check_tilde.c ./parsing/dollars/replace_tilde.c ../lib/gnl/get_next_line.c \
-			../lib/gnl/get_next_line_utils.c ./utils/error_message.c ./error/check_pipe.c
-
+			../lib/gnl/get_next_line_utils.c ./utils/error_message.c ./error/check_pipe.c ./parsing/dollars/dollars_utils.c \
+			./utils/cd_utils.c ./error/check_heredoc.c
 
 INC = includes
 

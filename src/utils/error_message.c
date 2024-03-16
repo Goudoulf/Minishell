@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:34:15 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/15 15:35:00 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/16 10:58:28 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,3 +25,30 @@ int	stderr_c(const char *str1, const char c, const char *str3, int ret)
 	return (ret);
 }
 
+void	stderr_exit_f(const char *str1, const char *str2, int r, t_error *err)
+{
+	write(2, "minishell: exit: ", 17);
+	write(2, str1, ft_strlen(str1));
+	write(2, str2, ft_strlen(str2));
+	write(2, "\n", 1);
+	err->code = r;
+}
+
+void	stderr_exit_t(const char *str1, const char *str2, int r, t_error *err)
+{
+	//ft_putstr_fd("exit\n", 2);
+	write(2, "minishell: exit: ", 17);
+	write(2, str1, ft_strlen(str1));
+	write(2, str2, ft_strlen(str2));
+	write(2, "\n", 1);
+	err->code = r;
+	err->do_exit = true;
+}
+
+void	stderr_cd(const char *str1, int r, t_error *err)
+{
+	write(2, "minishell: cd: ", 16);
+	write(2, str1, ft_strlen(str1));
+	write(2, "\n", 1);
+	err->code = r;
+}

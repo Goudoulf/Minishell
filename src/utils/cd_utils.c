@@ -1,38 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   inc_shell_lvl.c                                    :+:      :+:    :+:   */
+/*   cd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/04 15:07:50 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/15 21:34:38 by cassie           ###   ########.fr       */
+/*   Created: 2024/03/16 09:21:36 by cassie            #+#    #+#             */
+/*   Updated: 2024/03/16 11:42:11 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	inc_shell_lvl(t_list **env)
+char	*ft_pwd2(int size, int i)
 {
-	t_list	*temp;
-	char	*old;
-	int		new_int;
+	char	*str;
+	char	*temp;
 
-	temp = *env;
-	if (!env)
-		return ;
-	while (temp)
+	str = malloc(sizeof(char) * size + 1);
+	if (!str)
+		return (NULL);
+	str[size] = '\0';
+	while (i * 10 < 4096)
 	{
-		if (!ft_strncmp(temp->var, "SHLVL", ft_strlen(temp->var)))
+		temp = getcwd(str, size * i);
+		if (!temp)
 		{
-			old = temp->var_content;
-			if (!old)
-				return ;
-			new_int = ft_atoi(old) + 1;
-			free(temp->var_content);
-			temp->var_content = ft_itoa(new_int);
-			return ;
+			free(str);
+			i++;
+			str = malloc(sizeof(char) * size * i + 1);
+			if (!str)
+				return (NULL);
+			str[size * i] = '\0';
 		}
-		temp = temp->next;
+		else
+			return (temp);
 	}
+	return (0);
 }

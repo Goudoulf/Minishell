@@ -6,12 +6,11 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 11:58:30 by cassie            #+#    #+#             */
-/*   Updated: 2024/02/23 13:50:54 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 19:08:21 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 void	ft_lstclear(t_list **lst)
 {
@@ -33,7 +32,7 @@ void	ft_lstclear(t_list **lst)
 
 int	ft_lstsize(t_list *lst)
 {
-	int	i;
+	int		i;
 	t_list	*tmp;
 
 	tmp = lst;

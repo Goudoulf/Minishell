@@ -6,61 +6,15 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 08:31:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/15 13:33:43 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 20:52:54 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*static size_t	ft_strlen_equal(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i] && s[i] != '=')
-		i++;
-	return (i);
-}*/
-
-static char	*str_from_char(char *str)
-{
-	int	i;
-
-	i = 0;
-	while(str[i] && str[i] != '=')
-		i++;
-	if (!str[i])
-		return (ft_strdup("\0"));
-	if (str[i] == '=' && !str[i + 1])
-		return (ft_strdup("\0"));
-	return(ft_substr(str, i + 1, ft_strlen(str)));
-}
-
-static char	*str_to_char(char *str)
-{
-	int	i;
-
-	i = 0;
-	while(str[i] && str[i] != '=')
-		i++;
-	if (!str[i])
-		return (ft_strdup(str));
-	return (ft_substr(str, 0, i));
-}
-
-/*static size_t env_size(char **env)
-{
-	size_t	i;
-
-	i = 0;
-	while (env[i])
-		i++;
-	return (i);
-}*/
-
 static void	env_print(t_list **env, int fd)
 {
-	t_list *temp;
+	t_list	*temp;
 
 	temp = get_next_min(env);
 	while (temp)
@@ -116,7 +70,7 @@ static t_list	*check_cmd_env_equal(char *arg, t_list **env)
 
 static int	cmd_is_valid(char *cmd)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (cmd && (ft_isdigit(cmd[i]) || cmd[i] == '='))
@@ -128,13 +82,13 @@ static int	cmd_is_valid(char *cmd)
 	}
 	while (cmd[i] && cmd[i] != '=')
 	{
-		if (ft_isalnum(cmd[i]) || cmd[i] == '_' || (cmd[i] == '+' && cmd[i + 1] == '='))
+		if (ft_isalnum(cmd[i]) || cmd[i] == '_'
+			|| (cmd[i] == '+' && cmd[i + 1] == '='))
 			i++;
 		else
 		{
 			ft_putstr_fd("minishell: line 0: export: `", 2);
 			ft_putstr_fd(cmd, 2);
-			//write(2, &cmd[i], 1);
 			ft_putstr_fd("\': not a valid identifier\n", 2);
 			return (0);
 		}
@@ -144,16 +98,16 @@ static int	cmd_is_valid(char *cmd)
 
 int	ft_export(t_list **env, char **cmd, t_error *err, int fd)
 {
-	int	i;
-	t_list *temp;
+	int		i;
+	t_list	*temp;
 
-	i = 1;
+	i = -1;
 	if (tab_size(cmd) < 2)
-	{	
+	{
 		env_print(env, fd);
 		return (0);
 	}
-	while (cmd[i])
+	while (cmd[++i])
 	{
 		if (!cmd_is_valid(cmd[i]))
 		{
@@ -165,8 +119,7 @@ int	ft_export(t_list **env, char **cmd, t_error *err, int fd)
 			ft_lstadd_back(env, ft_lst_new(cmd[i]));
 		else
 			env_update(temp, cmd[i]);
-		i++;
 	}
 	err->code = 0;
-	return (0);	
+	return (0);
 }

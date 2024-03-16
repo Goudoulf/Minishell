@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 11:16:20 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/09 11:16:56 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 20:53:46 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	free_tab(char **tab)
 char	**create_tab(size_t nelem)
 {
 	size_t	i;
-	char **tab;
+	char	**tab;
 
 	i = 0;
 	tab = NULL;
@@ -50,6 +50,6 @@ char	**create_tab(size_t nelem)
 		tab[i] = NULL;
 		i++;
 	}
-	tab[i] = 0; 
+	tab[i] = 0;
 	return (tab);
 }

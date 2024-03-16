@@ -1,38 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   inc_shell_lvl.c                                    :+:      :+:    :+:   */
+/*   dollars_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/04 15:07:50 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/15 21:34:38 by cassie           ###   ########.fr       */
+/*   Created: 2024/03/15 22:03:27 by cassie            #+#    #+#             */
+/*   Updated: 2024/03/16 09:32:53 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	inc_shell_lvl(t_list **env)
+void	set_quote(bool *quote, char *c_quote, char char_line)
 {
-	t_list	*temp;
-	char	*old;
-	int		new_int;
-
-	temp = *env;
-	if (!env)
-		return ;
-	while (temp)
+	if (*quote == false)
 	{
-		if (!ft_strncmp(temp->var, "SHLVL", ft_strlen(temp->var)))
-		{
-			old = temp->var_content;
-			if (!old)
-				return ;
-			new_int = ft_atoi(old) + 1;
-			free(temp->var_content);
-			temp->var_content = ft_itoa(new_int);
-			return ;
-		}
-		temp = temp->next;
+		*quote = true;
+		*c_quote = char_line;
+	}
+	else
+	{
+		*quote = false;
+		*c_quote = 0;
 	}
 }

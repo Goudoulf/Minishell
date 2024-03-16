@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 10:26:14 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/15 09:18:12 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 21:30:49 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,8 @@ static void	free_link(t_list *env_link)
 	free(env_link);
 }
 
-static void	ft_lstdel(t_list **lst, char *cmd)
+static void	ft_lstdel(t_list **lst, char *cmd, t_list *current, t_list *temp)
 {
-	t_list	*temp;
-	t_list	*current;
 	t_list	*next_current;
 
 	if (!lst)
@@ -53,7 +51,7 @@ static void	ft_lstdel(t_list **lst, char *cmd)
 
 static int	cmd_is_valid(char *cmd)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (cmd && (ft_isdigit(cmd[i])))
@@ -71,7 +69,6 @@ static int	cmd_is_valid(char *cmd)
 		{
 			ft_putstr_fd("minishell: line 0: export: `", 2);
 			ft_putstr_fd(cmd, 2);
-			//write(2, &cmd[i], 1);
 			ft_putstr_fd("\': not a valid identifier\n", 2);
 			return (0);
 		}
@@ -79,25 +76,8 @@ static int	cmd_is_valid(char *cmd)
 	return (1);
 }
 
-/*static t_list	*check_cmd_env(char *arg, t_list **env)
+int	ft_unset(t_list **env, char **cmd, t_error *err, int i)
 {
-	t_list	*temp;
-
-	temp = *env;
-	while (temp)
-	{
-		if (!ft_strncmp(temp->var, arg, ft_strlen(arg)))
-			return (temp);
-		temp = temp->next;
-	}
-	return (NULL);
-}*/
-
-int	ft_unset(t_list **env, char **cmd, t_error *err)
-{
-	int		i;
-
-	i = 1;
 	if (!*env)
 	{
 		err->code = 0;
@@ -111,15 +91,14 @@ int	ft_unset(t_list **env, char **cmd, t_error *err)
 		err->code = 1;
 		return (1);
 	}
-	while (cmd[i])
+	while (cmd[++i])
 	{
 		if (!cmd_is_valid(cmd[i]))
 		{
 			err->code = 1;
 			return (0);
 		}
-		ft_lstdel(env, cmd[i]);
-		i++;
+		ft_lstdel(env, cmd[i], NULL, NULL);
 	}
 	err->code = 0;
 	return (0);

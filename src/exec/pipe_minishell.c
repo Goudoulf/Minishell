@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
+/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/15 18:26:11 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/16 13:49:51 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,10 +222,10 @@ static void	do_output2(t_cmd *cmd, int i, int *fd)
 		if (close(*fd) == -1)
 			perror(ft_itoa(*fd));
 	if (ft_strncmp(cmd->redirection[i], ">>", 2) == 0)
-		*fd = open(&cmd->redirection[i][2], O_CREAT | O_WRONLY | \
+		*fd = open(&cmd->redirection[i][2], O_CREAT | O_RDWR | \
 			O_APPEND, 00644);
 	else if (cmd->redirection[i][0] == '>')
-		*fd = open(&cmd->redirection[i][1], O_CREAT | O_WRONLY | \
+		*fd = open(&cmd->redirection[i][1], O_CREAT | O_RDWR | \
 			O_TRUNC, 00644);
 	if (*fd == -1)
 		exit((perror(ft_itoa(*fd)), 1));
@@ -237,10 +237,10 @@ static void	do_output(t_cmd *cmd, int pipe[2], size_t i, int fd[2])
 		if (close(fd[1]) == -1)
 			perror(ft_itoa(fd[1]));
 	if (ft_strncmp(cmd->redirection[i], ">>", 2) == 0)
-		fd[1] = open(&cmd->redirection[i][2], O_CREAT | O_WRONLY | \
+		fd[1] = open(&cmd->redirection[i][2], O_CREAT | O_RDWR | \
 			O_APPEND, 00644);
 	else if (cmd->redirection[i][0] == '>')
-		fd[1] = open(&cmd->redirection[i][1], O_CREAT | O_WRONLY | \
+		fd[1] = open(&cmd->redirection[i][1], O_CREAT | O_RDWR | \
 			O_TRUNC, 00644);
 	if (fd[1] == -1)
 		exit((perror(ft_itoa(fd[1])), 1));
@@ -284,15 +284,15 @@ bool	is_builtin(t_cmd *cmd)
 void	exec_builtin_one(char	**cmd, t_list **list, t_error *err, int fd)
 {
 	if (!ft_strncmp(cmd[0], "echo", 5))
-		ft_echo(cmd, err, fd);
+		ft_echo(cmd, err, fd, true);
 	if (!ft_strncmp(cmd[0], "pwd", 4))
-		ft_pwd(cmd, err, fd);
+		ft_pwd(err, fd, 10, 1);
 	if (!ft_strncmp(cmd[0], "cd", 3))
 		ft_cd(cmd, list, err);
 	if (!ft_strncmp(cmd[0], "exit", 5))
-		ft_exit(cmd, err);
+		ft_exit(cmd, err, 0);
 	if (!ft_strncmp(cmd[0], "unset", 6))
-		ft_unset(list, cmd, err);
+		ft_unset(list, cmd, err, -1);
 	if (!ft_strncmp(cmd[0], "export", 7))
 		ft_export(list, cmd, err, fd);
 	if (!ft_strncmp(cmd[0], "env", 4))
@@ -303,13 +303,13 @@ bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 {
 	if (!ft_strncmp(cmd[0], "echo", 5))
 	{
-		ft_echo(cmd, err, 1);
+		ft_echo(cmd, err, 1, true);
 		close((close(1), 0));
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "pwd", 4))
 	{
-		ft_pwd(cmd, err, 1);
+		ft_pwd(err, 1, 10, 1);
 		close((close(1), 0));
 		exit(err->code);
 	}
@@ -321,13 +321,13 @@ bool	exec_builtin(char	**cmd, t_list **list, t_error *err)
 	}
 	if (!ft_strncmp(cmd[0], "exit", 5))
 	{
-		ft_exit(cmd, err);
+		ft_exit(cmd, err, 0);
 		close((close(1), 0));
 		exit(err->code);
 	}
 	if (!ft_strncmp(cmd[0], "unset", 6))
 	{
-		ft_unset(list, cmd, err);
+		ft_unset(list, cmd, err, -1);
 		close((close(1), 0));
 		exit(err->code);
 	}
@@ -352,7 +352,7 @@ static void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 
 	if (!exec_builtin(cmd->cmd, lst, err))
 	{
-		envp = ft_lst_to_tab(lst);
+		envp = ft_lst_to_tab(lst, 0);
 		if (cmd->path)
 			execve(cmd->path, cmd->cmd, envp);
 		free_tab(envp);

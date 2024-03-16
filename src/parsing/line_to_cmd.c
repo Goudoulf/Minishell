@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 11:31:34 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/15 16:32:28 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/16 09:53:16 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ static char	*ft_strjoin2(char *s1, char *s2)
 	return (temp);
 }
 
-static t_cmd *last_cmd(t_cmd **cmd)
+static t_cmd	*last_cmd(t_cmd **cmd)
 {
-	t_cmd *temp;
+	t_cmd	*temp;
 
 	temp = *cmd;
 	while (temp->next)
@@ -70,7 +70,7 @@ void	line_to_cmd2(t_cmd **cmd, char *line)
 	while (token)
 	{
 		if (!token)
-			break;
+			break ;
 		else if (token)
 			command[k++] = ft_strdup(token);
 		token = ft_strtok_quote(NULL, "\t ");
@@ -93,7 +93,7 @@ char	*line_to_cmd(t_cmd **cmd, char *line)
 	while (token)
 	{
 		if (!token)
-			break;
+			break ;
 		else if (token[0] == '<' || token[0] == '>')
 			redirection[i++] = ft_strdup(token);
 		else if (token && new_line)

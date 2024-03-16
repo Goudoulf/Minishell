@@ -6,27 +6,13 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 11:58:58 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/14 16:35:36 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 22:42:57 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	set_quote(bool *quote, char *c_quote, char char_line)
-{
-	if (*quote == false)
-	{
-		*quote = true;
-		*c_quote = char_line;
-	}
-	else
-	{
-		*quote = false;
-		*c_quote = 0;
-	}
-}
-
-static int count_dollar(char *line)
+static int	count_dollar(char *line)
 {
 	int	i;
 	int	count;
@@ -44,11 +30,11 @@ static int count_dollar(char *line)
 
 int	start_dollar(char *line, int dollar_num)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 	char	c_quote;
 	bool	quote;
-	
+
 	i = 0;
 	j = 0;
 	c_quote = 0;
@@ -80,11 +66,11 @@ char	*check_dollars(char *line, t_list **env, t_error *err)
 	old_count = count_dollar(line);
 	if (i < 0)
 		return (line);
-	while(i >= 0)
+	while (i >= 0)
 	{
 		line = replace_dollar(line, env, j, err);
 		new_count = count_dollar(line);
-		if ( new_count == old_count)
+		if (new_count == old_count)
 			j++;
 		else
 			old_count = new_count;

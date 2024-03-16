@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 10:11:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/14 15:03:01 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 20:59:34 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ t_list	*get_next_min(t_list **stack)
 		return (min);
 	while (head)
 	{
-		if ((head->isprint == -1) && (!new_min || ft_strncmp(min->var, head->var, ft_strlen(head->var)) > 0 ))
+		if ((head->isprint == -1) && (!new_min
+				|| ft_strncmp(min->var, head->var, ft_strlen(head->var)) > 0))
 		{
 			min = head;
 			new_min = 1;

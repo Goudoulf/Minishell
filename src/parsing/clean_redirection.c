@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 11:25:03 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/14 16:18:11 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 22:47:38 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static size_t	size_of_heredoc(char **redirect)
 
 static char	**create_here_doc(char **redirect)
 {
-	size_t size;
+	size_t	size;
 	int		i;
 	int		j;
 	char	**tab;
@@ -57,8 +57,8 @@ static char	**create_here_doc(char **redirect)
 
 static char	**delete_here_doc(char **redirect, int i, int j)
 {
-	size_t size;
-	size_t		count;
+	size_t	size;
+	size_t	count;
 	char	**tab;
 
 	count = 1;

@@ -6,27 +6,37 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/16 20:21:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/14 15:27:23 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/16 11:37:46 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_echo(char **cmd, t_error *err, int fd)
+static void	print_args(char **cmd, int fd, int i)
+{
+	while (cmd[i])
+	{
+		ft_putstr_fd(cmd[i], fd);
+		if (cmd[i + 1])
+			write(fd, " ", 1);
+		i++;
+	}
+}
+
+static int	newline(bool nl, t_error *err, int fd)
+{
+	if (nl == true)
+		write(fd, "\n", 1);
+	err->code = 0;
+	return (0);
+}
+
+int	ft_echo(char **cmd, t_error *err, int fd, bool new_line)
 {
 	int	i;
 	int	j;
-	bool	new_line;
 
 	i = 1;
-	j = 1;
-	new_line = true;
-	if (tab_size(cmd) < 2)
-	{
-		write(1, "\n", 1);
-		err->code = 0;
-		return (0);
-	}
 	while (cmd[i] && cmd[i][0] == '-')
 	{
 		j = 1;
@@ -46,15 +56,6 @@ int	ft_echo(char **cmd, t_error *err, int fd)
 		if (new_line == true)
 			break ;
 	}
-	while (cmd[i])
-	{
-		ft_putstr_fd(cmd[i], fd);
-		if (cmd[i + 1])
-			write(fd, " ", 1);
-		i++;
-	}
-	if (new_line == true)
-		write(fd, "\n", 1);
-	err->code = 0;
-	return (0);
+	print_args(cmd, fd, i);
+	return (newline(new_line, err, fd));
 }

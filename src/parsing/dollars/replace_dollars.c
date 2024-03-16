@@ -6,25 +6,11 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 08:11:15 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/14 16:45:47 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 22:01:37 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	set_quote(bool *quote, char *c_quote, char char_line)
-{
-	if (*quote == false)
-	{
-		*quote = true;
-		*c_quote = char_line;
-	}
-	else
-	{
-		*quote = false;
-		*c_quote = 0;
-	}
-}
 
 static void	free_temp(char *s2, char *s3, char *s4)
 {
@@ -56,7 +42,7 @@ static int	end_dollar(char *line, int start)
 	return (end);
 }
 
-static char *env_replace(char *temp, t_list *env_m, t_error *err)
+static char	*env_replace(char *temp, t_list *env_m, t_error *err)
 {
 	if (!env_m && !ft_strncmp("?", temp, 2))
 	{
@@ -82,7 +68,7 @@ static int	not_in_quote(char *s, int j)
 {
 	char	c_quote;
 	bool	quote;
-	int	i;
+	int		i;
 
 	i = 0;
 	c_quote = 0;
@@ -100,16 +86,17 @@ static int	not_in_quote(char *s, int j)
 	return (0);
 }
 
-char *replace_dollar(char *line, t_list **env, int start, t_error *err)
+char	*replace_dollar(char *line, t_list **env, int start, t_error *err)
 {
-	t_list *env_match;
-	char *temp1;
-	char *temp2;
-	char *temp3;
-	int	end;
+	t_list	*env_match;
+	char	*temp1;
+	char	*temp2;
+	char	*temp3;
+	int		end;
 
 	start = start_dollar(line, start);
-	if ((ft_is_end(line[start + 1]) && !not_in_quote(line, start)) || line[start + 1] == '\0' || line[start + 1] == 47)
+	if ((ft_is_end(line[start + 1]) && !not_in_quote(line, start))
+		|| line[start + 1] == '\0' || line[start + 1] == 47)
 		return (line);
 	end = end_dollar(line, start);
 	temp1 = ft_substr(line, 0, start);

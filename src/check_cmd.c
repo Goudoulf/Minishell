@@ -6,12 +6,12 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 15:06:40 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/14 15:35:02 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/15 19:48:51 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+/*
 void	check_cmd(char *input, t_list **env, t_cmd **command, t_error *err)
 {
 	t_cmd *temp;
@@ -44,4 +44,4 @@ void	check_cmd(char *input, t_list **env, t_cmd **command, t_error *err)
 		ft_putstr_fd("exit\n", 1);
 		exit(err->code);
 	}
-}
+}*/

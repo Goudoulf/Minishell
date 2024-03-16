@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/15 16:12:27 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/16 10:17:16 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,13 @@ typedef struct s_error
 void	check_cmd(char *input, t_list **env, t_cmd **cmd, t_error *err);
 
 // builtins
-int		ft_echo(char **cmd, t_error *err, int fd);
-int		ft_pwd(char **cmd, t_error *err, int fd);
+int		ft_echo(char **cmd, t_error *err, int fd, bool new_line);
+int		ft_pwd(t_error *err, int fd, int size, int i);
 int		ft_export(t_list **env, char **cmd, t_error *err, int fd);
-int		ft_unset(t_list **env, char **cmd, t_error *err);
-void	ft_exit(char **cmd, t_error *err);
+int		ft_unset(t_list **env, char **cmd, t_error *err, int i);
+void	ft_exit(char **cmd, t_error *err, unsigned char code);
 int		ft_cd(char **cmd, t_list **env, t_error *err);
+char	*ft_pwd2(int size, int i);
 
 // init
 
@@ -72,7 +73,6 @@ void	inc_shell_lvl(t_list **env);
 
 // utils
 
-char	*ft_strtok(char *string, char *delim);
 char	*ft_strtok_quote(char *string, char *delim);
 void	quote_mode(char *c_quote, char char_line);
 size_t	infile_count(char *line);
@@ -96,7 +96,9 @@ void	ft_lst_print(t_list **list, t_error *err, int fd);
 void	ft_lstclear(t_list **lst);
 t_list	*get_next_min(t_list **stack);
 void	ft_lst_set_isprint(t_list **lst);
-char	**ft_lst_to_tab(t_list **list);
+char	**ft_lst_to_tab(t_list **list, int i);
+char	*str_to_char(char *str);
+char	*str_from_char(char *str);
 
 // cmd
 
@@ -123,6 +125,7 @@ void	clean_redirection(t_cmd **cmd);
 int		start_tilde(char *line, int tilde_num);
 char	*check_tilde(char *line, t_list **env);
 char	*replace_tilde(char *line, t_list **env, int start);
+void	set_quote(bool *quote, char *c_quote, char char_line);
 
 size_t	cmd_count(char *s);
 size_t	in_count(char *line);
@@ -132,6 +135,10 @@ void	cmd_add_path(t_cmd **cmd, t_list **env);
 int		isdirectory(char *str);
 int		stderr_c(const char *str1, const char c, const char *str3, int ret);
 int		check_pipe(char *line);
+void	stderr_exit_f(const char *str1, const char *str2, int r, t_error *err);
+void	stderr_exit_t(const char *str1, const char *str2, int r, t_error *err);
+void	stderr_cd(const char *str1, int r, t_error *err);
+void	check_here_doc(char *input);
 
 // exec
 
