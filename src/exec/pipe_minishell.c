@@ -6,11 +6,13 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/16 13:49:51 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/17 16:29:51 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	global = 0;
 
 size_t	last_redir_in(t_cmd *cmd)
 {
@@ -544,18 +546,24 @@ static void	do_here_doc(char *limiter, int pipefd[2], t_list **env, t_error *err
 {
 	char	*buf;
 	size_t	size;
-
+	
+	//rl_getc_function = getc;
 	buf = readline("> ");
+	if (global == 1)
+		return ;
 	if (buf == NULL)
 		return ((void)write(2, "minishell: warning: here-document delimited by \
 			end-of-file (wanted `stop')\n", 75));
 	size = ft_strlen(limiter) + 1;
-	while (ft_strncmp(buf, limiter, size))
+	while (ft_strncmp(buf, limiter, size) && !global)
 	{
+		if (global == 1)
+			return ;
 		buf = check_dollars(buf, env, err);
 		write(pipefd[1], buf, ft_strlen(buf));
 		write(pipefd[1], "\n", 1);
 		free(buf);
+		//signal_handling_hd();
 		buf = readline("> ");
 		if (buf == NULL)
 			return ((void)write(2, "minishell: warning: here-document \
@@ -569,6 +577,7 @@ void	for_each_here_doc(t_cmd *cmd, t_list **env, t_error *err)
 	size_t	i;
 	bool	first;
 
+	signal(SIGINT, sigint_handler_hd);
 	while (cmd)
 	{
 		first = true;
@@ -580,6 +589,11 @@ void	for_each_here_doc(t_cmd *cmd, t_list **env, t_error *err)
 			first = false;
 			pipe(cmd->pipe_dchevron);
 			do_here_doc(&cmd->here_doc[i][2], cmd->pipe_dchevron, env, err);
+			if (global == 1)
+			{
+				closepipe(cmd->pipe_dchevron);
+				return ;
+			}
 		}
 		cmd = cmd->next;
 	}
@@ -590,6 +604,12 @@ static int	exec_pipe(t_cmd *cmd, t_list **lst, t_error *err)
 	int	pipe_tab[2][2];
 
 	for_each_here_doc(cmd, lst, err);
+	if (global == 1)
+	{
+		err->code = 130;
+		return (1);
+	}
+	signal_handling_child();
 	if (pipe(pipe_tab[0]) == -1)
 		return (1);
 	cmd->pid = fork();
@@ -610,6 +630,12 @@ int	exec_one(t_cmd *cmd, t_list **lst, t_error *err)
 	int fd;
 	
 	for_each_here_doc(cmd, lst, err);
+	if (global == 1)
+	{
+		err->code = 130;
+		return (1);
+	}
+	signal_handling_child();
 	if (cmd->cmd && is_builtin(cmd))
 	{
 		fd = 1;
@@ -635,13 +661,18 @@ int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 	int		status;
 
 	status = 0;
+	global = 0;
+	signal_handling_child();
 	if (!cmd->next)
 	{
 		if (exec_one(cmd, lst, err) != 0)
 			return (err->code);
 	}
 	else
-		exec_pipe(cmd, lst, err);
+	{
+		if (exec_pipe(cmd, lst, err) != 0)
+			return (err->code);
+	}
 	while (cmd)
 	{
 		waitpid(cmd->pid, &status, 0);
@@ -649,5 +680,7 @@ int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 	}
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
+	else if (WIFSIGNALED(status))
+		return (128 + WTERMSIG(status));
 	return (0);
 }

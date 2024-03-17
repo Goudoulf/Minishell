@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/16 10:17:16 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/17 13:01:25 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,10 @@ size_t	tab_size(char **cmd);
 // signal
 
 void	signal_handling(void);
+void	signal_handling_child(void);
+void	signal_handling_hd(void);
+void	sigint_handler(int sig);
+void	sigint_handler_hd(int sig);
 
 // list
 

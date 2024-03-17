@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:12:26 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/16 13:46:20 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/17 12:04:19 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ int main(int argc, char **argv, char **envp)
 	env = NULL;
 	cmd = NULL;
 	init_all(&cmd, &env, &err, envp);
-	signal_handling();
 	if (argc >= 3 && !ft_strncmp(argv[1], "-c", 3))
 	{
 		input = argv[2];
@@ -64,6 +63,7 @@ int main(int argc, char **argv, char **envp)
 	}
 	while(1)
 	{
+		signal_handling();
 		if (isatty(fileno(stdin)))
 			input = readline(CYELLOW "[Minishell]: " RESET);
 		else
