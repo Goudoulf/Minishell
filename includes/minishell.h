@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/18 16:36:52 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/18 17:14:25 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,28 @@ void	check_here_doc(char *input, size_t i);
 int		exec_line(t_cmd *cmd, t_list **list, t_error *err);
 char	*ft_join(const char *s1, const char *s2);
 char	*find_path(char *cmd, char *path, char *pwd);
+bool	is_here_doc(t_cmd *cmd);
+bool	has_redir_out(t_cmd *cmd);
+bool	has_redir_in(t_cmd *cmd);
+size_t	last_redir_in(t_cmd *cmd);
+size_t	last_redir_out(t_cmd *cmd);
+size_t	count_child(t_cmd *cmd);
+int		isdirectory(char *str);
+void	closepipe(int pipe[2]);
+void	do_input(t_cmd *cmd, int pipe[2], size_t i, int fd[2]);
+void	do_output(t_cmd *cmd, int pipe[2], size_t i, int *fd);
+void	do_redirection_one(t_cmd *cmd, int *fd);
+void	print_error(bool mini, char *error, char *str, int exit_err);
+bool	is_builtin(char **cmd);
+void	exec_builtin(char **cmd, t_list **list, t_error *err, int fd);
+bool	check_builtin(char **cmd, t_list **list, t_error *err);
+void	child(t_cmd *cmd, t_list **lst, t_error *err);
+void	last_child(t_cmd *cmd, int pipe[2], t_list **lst, t_error *err);
+void	first_child(t_cmd *cmd, int pipe[2], t_list **lst, t_error *err);
+void	child_pipe(t_cmd *cmd, int pipefd[2][2], t_list **lst, t_error *err);
+void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err);
+int		for_each_here_doc(t_cmd *cmd, t_list **env, t_error *err);
+int		exec_pipe(t_cmd *cmd, t_list **lst, t_error *err);
 
 // gnl
 

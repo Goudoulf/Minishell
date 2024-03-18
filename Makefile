@@ -21,11 +21,12 @@ SRCS_FILE = main.c check_cmd.c signal.c ./utils/ft_echo.c ./utils/ft_pwd.c ./uti
 			./utils/get_value.c ./utils/ft_export.c ./utils/ft_unset.c \
 			./parsing/clean_line/add_space_chevron.c ./parsing/dollars/check_dollars.c ./parsing/dollars/replace_dollars.c\
 			./utils/get_next_min.c ./utils/list/ft_lst_set_isprint.c ./utils/ft_exit.c init/inc_shell_lvl.c \
-			./parsing/clean_quote.c ./utils/ft_cd.c ./error/check_line_error.c ./exec/pipe_minishell.c ./utils/ft_is_any.c \
+			./parsing/clean_quote.c ./utils/ft_cd.c ./error/check_line_error.c ./exec/exec_cmd.c ./utils/ft_is_any.c \
 			./parsing/clean_redirection.c ./utils/cmd/cmd_utils.c ./utils/cmd/cmd_core.c ./utils/quote_mode.c ./utils/tab_utils.c \
 			./utils/list/ft_lst_to_tab.c ./parsing/dollars/check_tilde.c ./parsing/dollars/replace_tilde.c ../lib/gnl/get_next_line.c \
 			../lib/gnl/get_next_line_utils.c ./utils/error_message.c ./error/check_pipe.c ./parsing/dollars/dollars_utils.c \
-			./utils/cd_utils.c ./error/check_heredoc.c
+			./utils/cd_utils.c ./error/check_heredoc.c ./exec/utils_exec.c ./exec/utils2_exec.c ./exec/redirection.c \
+			./exec/check_cmd_error.c ./exec/child_handle.c ./exec/for_here_doc.c ./exec/exec_child.c
 
 INC = includes
 
