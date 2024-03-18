@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/18 10:28:44 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/18 12:43:01 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -635,8 +635,11 @@ int	exec_one(t_cmd *cmd, t_list **lst, t_error *err)
 int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 {
 	int		status;
+	int		last_status;
+	pid_t	wpid;
 
 	status = 0;
+	wpid = 0;
 	//signal_handling_child();
 	if (!cmd->next)
 	{
@@ -648,13 +651,19 @@ int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 		if (exec_pipe(cmd, lst, err) != 0)
 			return (err->code);
 	}
-	while (cmd)
-	{
-		waitpid(cmd->pid, &status, 0);
+
+	while (cmd->next)
 		cmd = cmd->next;
+	while (wpid != -1 || errno != ECHILD)
+	{
+		wpid = waitpid(-1, &status, 0);
+		if (wpid == cmd->pid)
+			last_status = status;
+		continue ;
 	}
-	//signal_handling();
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
+	if (WIFEXITED(last_status))
+		return (WEXITSTATUS(last_status));
+	else if (WIFSIGNALED(status))
+		return (128 + WTERMSIG(status));
 	return (0);
 }
