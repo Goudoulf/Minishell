@@ -6,13 +6,11 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/18 12:50:51 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/18 13:36:00 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-//int	global = 0;
 
 size_t	last_redir_in(t_cmd *cmd)
 {
@@ -170,7 +168,11 @@ static void	do_input2(t_cmd *cmd, int i)
 	if (fd == -1)
 	{
 		write(2, "minishell: ", 11);
-		exit((perror(&cmd->redirection[i][1]), 1));
+		if (errno == 2)
+			print_error("No such file or directory", &cmd->redirection[i][1]);
+		else	
+			print_error("Permission denied", &cmd->redirection[i][1]);
+		exit(1);
 	}
 }
 
@@ -190,7 +192,11 @@ static void	do_input(t_cmd *cmd, int pipe[2], size_t i, int fd[2])
 	if (fd[0] == -1)
 	{
 		write(2, "minishell: ", 11);
-		exit((perror(&cmd->redirection[i][1]), 1));
+		if (errno == 2)
+			print_error("No such file or directory", &cmd->redirection[i][1]);
+		else	
+			print_error("Permission denied", &cmd->redirection[i][1]);
+		exit(1);
 	}
 	if (i == last_redir_in(cmd))
 		redir_input(fd[0], pipe, cmd);
@@ -226,19 +232,26 @@ static void	redir_output(int fd, int pipe[2], t_cmd *cmd)
 
 static void	do_output2(t_cmd *cmd, int i, int *fd)
 {
+	int	j;
+
+	j = 1;
 	if (*fd != 1)
 		if (close(*fd) == -1)
 			perror(ft_itoa(*fd));
 	if (ft_strncmp(cmd->redirection[i], ">>", 2) == 0)
-		*fd = open(&cmd->redirection[i][2], O_CREAT | O_RDWR | \
+		*fd = open(&cmd->redirection[i][++j], O_CREAT | O_RDWR | \
 			O_APPEND, 00644);
 	else if (cmd->redirection[i][0] == '>')
-		*fd = open(&cmd->redirection[i][1], O_CREAT | O_RDWR | \
+		*fd = open(&cmd->redirection[i][j], O_CREAT | O_RDWR | \
 			O_TRUNC, 00644);
 	if (*fd == -1)
 	{
 		write(2, "minishell: ", 11);
-		exit((perror(&cmd->redirection[i][2]), 1));
+		if (errno == 2)
+			print_error("No such file or directory", &cmd->redirection[i][j]);
+		else	
+			print_error("Permission denied", &cmd->redirection[i][j]);
+		exit(1);
 	}
 }
 
@@ -259,7 +272,11 @@ static void	do_output(t_cmd *cmd, int pipe[2], size_t i, int fd[2])
 	if (fd[1] == -1)
 	{
 		write(2, "minishell: ", 11);
-		exit((perror(&cmd->redirection[i][j]), 1));
+		if (errno == 2)
+			print_error("No such file or directory", &cmd->redirection[i][j]);
+		else	
+			print_error("Permission denied", &cmd->redirection[i][j]);
+		exit(1);
 	}
 	if (i == last_redir_out(cmd))
 		redir_output(fd[1], pipe, cmd);
@@ -655,7 +672,6 @@ int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 
 	status = 0;
 	wpid = 0;
-	//signal_handling_child();
 	if (!cmd->next)
 	{
 		if (exec_one(cmd, lst, err) != 0)
@@ -666,12 +682,11 @@ int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 		if (exec_pipe(cmd, lst, err) != 0)
 			return (err->code);
 	}
-
 	while (cmd->next)
 		cmd = cmd->next;
 	while (wpid != -1 || errno != ECHILD)
 	{
-		wpid = waitpid(-1, &status, 0);
+		wpid = waitpid(0, &status, 0);
 		if (wpid == cmd->pid)
 			last_status = status;
 		continue ;
