@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 13:13:06 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/15 22:44:50 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/18 15:56:45 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	start_tilde(char *line, int tilde_num)
 	j = 0;
 	c_quote = 0;
 	quote = false;
-	while (line[i])
+	while (line && line[i])
 	{
 		if (quote == false && (line[i] == '\"' || line[i] == '\''))
 			set_quote(&quote, &c_quote, line[i]);
@@ -73,6 +73,8 @@ char	*check_tilde(char *line, t_list **env)
 	while (i >= 0)
 	{
 		line = replace_tilde(line, env, j);
+		if (!line)
+			return (NULL);
 		new_count = count_tilde(line);
 		if (new_count == old_count)
 			j++;

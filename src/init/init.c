@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 11:48:48 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/16 09:28:13 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/18 15:10:03 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,29 +18,57 @@ static void	init_err(t_error *err)
 	err->do_exit = false;
 }
 
-static t_list	**init_env_list(t_list **env, char **envp)
+static size_t	ft_lstsize(t_list *lst)
 {
-	int	i;
+	size_t	i;
+	t_list	*tmp;
 
-	i = -1;
+	tmp = lst;
+	i = 0;
+	while (tmp != NULL)
+	{
+		tmp = tmp->next;
+		i++;
+	}
+	return (i);
+}
+
+static t_list	**init_env_list(t_list **env, char **envp, int i)
+{
+	t_list *temp;
+
 	if (!*envp)
 	{
-		ft_lstadd_back(env, ft_lst_new(ft_strjoin("PWD=", ft_pwd2(10, 1))));
-		ft_lstadd_back(env, ft_lst_new("OLDPWD"));
-		ft_lstadd_back(env, ft_lst_new("SHLVL=1"));
-		ft_lstadd_back(env, ft_lst_new("_=/usr/bin/env"));
+		temp = ft_lst_new(ft_strjoin("PWD=", ft_pwd2(10, 1)));
+		ft_lstadd_back(env, temp);
+		temp = ft_lst_new("OLDPWD");
+		ft_lstadd_back(env, temp);
+		temp = ft_lst_new("SHLVL=1");
+		ft_lstadd_back(env, temp);
+		temp = ft_lst_new("_=/usr/bin/env");
+		ft_lstadd_back(env, temp);
+		temp = *env;
+		if (ft_lstsize(temp) < 4)
+			return (NULL);
 		return (env);
 	}
 	while (envp[++i])
 		ft_lstadd_back(env, ft_lst_new(envp[i]));
+	temp = *env;
+	if (ft_lstsize(temp) != tab_size(envp))
+		return (NULL);
 	return (env);
 }
 
-void	init_all(t_cmd **cmd, t_list **env, t_error *err, char **envp)
+int	init_all(t_list **env, t_error *err, char **envp)
 {
-	init_env_list(env, envp);
-	if (*envp)
-		inc_shell_lvl(env);
 	init_err(err);
-	(void)cmd;
+	if (!init_env_list(env, envp, -1))
+		return (0);
+	if (*envp)
+	{
+		if (!inc_shell_lvl(env))
+			return (0);
+	}
+	return (1);
 }

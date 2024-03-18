@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 11:31:34 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/16 09:53:16 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/18 17:12:36 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,16 +79,16 @@ void	line_to_cmd2(t_cmd **cmd, char *line)
 	free(line);
 }
 
-char	*line_to_cmd(t_cmd **cmd, char *line)
+char	*line_to_cmd(t_cmd **cmd, char *line, int i, char *new_line)
 {
 	char	**redirection;
 	char	*token;
-	char	*new_line;
-	int		i;
+	size_t	count;
 
-	i = 0;
-	new_line = NULL;
-	redirection = create_tab(in_count(line) + out_count(line));
+	count = in_count(line) + out_count(line);
+	redirection = create_tab(count);
+	if (!redirection && count > 0)
+		return (free(line), NULL);
 	token = ft_strtok_quote(line, "\t ");
 	while (token)
 	{

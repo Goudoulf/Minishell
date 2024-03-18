@@ -6,11 +6,24 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 09:04:47 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/15 16:40:59 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/18 16:13:48 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static char	**clear_tab(char **tab, int i, char *line)
+{
+	while (i >= 0)
+	{
+		free(tab[i]);
+		i--;
+	}
+	free(tab);
+	if (line)
+		free(line);
+	return (NULL);
+}
 
 static size_t	pipe_count(char *line)
 {
@@ -47,6 +60,8 @@ char	**split_pipe(char *line)
 	while (token)
 	{
 		temp_tab[i] = ft_strdup(token);
+		if (!temp_tab[i])
+			return (clear_tab(temp_tab, i - 1, line));
 		token = ft_strtok_quote(NULL, delim);
 		i++;
 	}

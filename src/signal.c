@@ -6,21 +6,16 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 09:11:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/18 11:50:34 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/18 14:11:19 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern char *test;
-
-void	sigint_handler(int sig)
+static void	sigint_handler(int sig)
 {
 	(void)sig;
 	write(1, "\n", 1);
-//	ft_putstr_fd("SHLVL=" , 1);
-//	ft_putstr_fd(test , 1);
-//	ft_putstr_fd("\n" , 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();

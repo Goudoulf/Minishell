@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/16 20:21:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/16 11:37:46 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/18 13:16:34 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ static void	print_args(char **cmd, int fd, int i)
 {
 	while (cmd[i])
 	{
-		ft_putstr_fd(cmd[i], fd);
+//		ft_putstr_fd(cmd[i], fd);
+		write(fd, cmd[i], ft_strlen(cmd[i]));
 		if (cmd[i + 1])
 			write(fd, " ", 1);
 		i++;

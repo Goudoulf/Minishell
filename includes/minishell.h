@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/17 13:01:25 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/18 16:36:52 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ char	*ft_pwd2(int size, int i);
 
 // init
 
-void	init_all(t_cmd **cmd, t_list **env, t_error *err, char **envp);
-void	inc_shell_lvl(t_list **env);
+int		init_all(t_list **env, t_error *err, char **envp);
+int		inc_shell_lvl(t_list **env);
 
 // utils
 
@@ -88,9 +88,6 @@ size_t	tab_size(char **cmd);
 
 void	signal_handling(void);
 void	signal_handling_child(void);
-void	signal_handling_hd(void);
-void	sigint_handler(int sig);
-void	sigint_handler_hd(int sig);
 
 // list
 
@@ -122,7 +119,7 @@ char	*check_dollars(char *line, t_list **env, t_error *err);
 char	*replace_dollar(char *line, t_list **env, int start, t_error *err);
 int		start_dollar(char *line, int dollar_num);
 char	**split_pipe(char *line);
-char	*line_to_cmd(t_cmd **cmd, char *line);
+char	*line_to_cmd(t_cmd **cmd, char *line, int i, char *new_line);
 void	line_to_cmd2(t_cmd **cmd, char *line);
 void	clean_quote(t_cmd **cmd);
 void	clean_redirection(t_cmd **cmd);
@@ -142,7 +139,7 @@ int		check_pipe(char *line);
 void	stderr_exit_f(const char *str1, const char *str2, int r, t_error *err);
 void	stderr_exit_t(const char *str1, const char *str2, int r, t_error *err);
 void	stderr_cd(const char *str1, int r, t_error *err);
-void	check_here_doc(char *input);
+void	check_here_doc(char *input, size_t i);
 
 // exec
 
