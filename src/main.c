@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:12:26 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/18 10:26:13 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/18 11:52:08 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 
 #define CYELLOW "\001\e[0;31m\002"
 #define RESET   "\001\e[0m\002"
+
+char *test;
 
 static void	quit_eof(t_list **env, t_cmd **cmd, t_error *err)
 {
@@ -40,7 +42,6 @@ int main(int argc, char **argv, char **envp)
 	t_list	*env;
 	t_error	err;
 	char	*input;
-	char *test;
 
 	env = NULL;
 	cmd = NULL;
@@ -68,21 +69,23 @@ int main(int argc, char **argv, char **envp)
 	}*/
 	while(1)
 	{
-//		if (isatty(fileno(stdin)))
-		test = get_value(&env, "SHLVL");
 		signal_handling();
-		input = readline(test);
-		signal_handling_child();
-/*		else
+		if (isatty(fileno(stdin)))
+		{
+//test = get_value(&env, "SHLVL");
+			input = readline(CYELLOW "[Minishell]: " RESET);
+		}
+		else
 		{
 			char *line;
 			line = get_next_line(fileno(stdin));
 			input = ft_strtrim(line, "\n");
 			free(line);
-		}*/
+		}
 		//input = readline(CYELLOW "[Minishell]: " RESET);
 		if (!input)
 			quit_eof(&env, &cmd, &err);
+		signal_handling_child();
 		if (input && *input)
 		{
 			add_history(input);
