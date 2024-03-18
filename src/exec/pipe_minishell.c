@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/18 10:28:44 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/18 12:45:09 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,10 @@ static void	do_input2(t_cmd *cmd, int i)
 	else if (cmd->redirection[i][0] == '<')
 		fd = open(&cmd->redirection[i][1], O_RDONLY);
 	if (fd == -1)
-		exit((perror(ft_itoa(fd)), 1));
+	{
+		write(2, "minishell: ", 11);
+		exit((perror(&cmd->redirection[i][1]), 1));
+	}
 }
 
 static void	do_input(t_cmd *cmd, int pipe[2], size_t i, int fd[2])
@@ -185,7 +188,10 @@ static void	do_input(t_cmd *cmd, int pipe[2], size_t i, int fd[2])
 	else if (cmd->redirection[i][0] == '<')
 		fd[0] = open(&cmd->redirection[i][1], O_RDONLY);
 	if (fd[0] == -1)
-		exit((perror(ft_itoa(fd[0])), 1));
+	{
+		write(2, "minishell: ", 11);
+		exit((perror(&cmd->redirection[i][1]), 1));
+	}
 	if (i == last_redir_in(cmd))
 		redir_input(fd[0], pipe, cmd);
 }
@@ -230,22 +236,31 @@ static void	do_output2(t_cmd *cmd, int i, int *fd)
 		*fd = open(&cmd->redirection[i][1], O_CREAT | O_RDWR | \
 			O_TRUNC, 00644);
 	if (*fd == -1)
-		exit((perror(ft_itoa(*fd)), 1));
+	{
+		write(2, "minishell: ", 11);
+		exit((perror(&cmd->redirection[i][2]), 1));
+	}
 }
 
 static void	do_output(t_cmd *cmd, int pipe[2], size_t i, int fd[2])
 {
+	int	j;
+
+	j = 1;
 	if (fd[1] != 1)
 		if (close(fd[1]) == -1)
 			perror(ft_itoa(fd[1]));
 	if (ft_strncmp(cmd->redirection[i], ">>", 2) == 0)
-		fd[1] = open(&cmd->redirection[i][2], O_CREAT | O_RDWR | \
+		fd[1] = open(&cmd->redirection[i][++j], O_CREAT | O_RDWR | \
 			O_APPEND, 00644);
 	else if (cmd->redirection[i][0] == '>')
-		fd[1] = open(&cmd->redirection[i][1], O_CREAT | O_RDWR | \
+		fd[1] = open(&cmd->redirection[i][j], O_CREAT | O_RDWR | \
 			O_TRUNC, 00644);
 	if (fd[1] == -1)
-		exit((perror(ft_itoa(fd[1])), 1));
+	{
+		write(2, "minishell: ", 11);
+		exit((perror(&cmd->redirection[i][j]), 1));
+	}
 	if (i == last_redir_out(cmd))
 		redir_output(fd[1], pipe, cmd);
 }
