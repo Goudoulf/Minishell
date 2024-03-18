@@ -6,12 +6,13 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:12:26 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/17 12:04:19 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/18 10:26:13 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "minishell.h"
+#include <readline/readline.h>
 
 #define CYELLOW "\001\e[0;31m\002"
 #define RESET   "\001\e[0m\002"
@@ -39,11 +40,15 @@ int main(int argc, char **argv, char **envp)
 	t_list	*env;
 	t_error	err;
 	char	*input;
+	char *test;
 
 	env = NULL;
 	cmd = NULL;
 	init_all(&cmd, &env, &err, envp);
-	if (argc >= 3 && !ft_strncmp(argv[1], "-c", 3))
+	(void)argv;
+	(void)argc;
+//	rl_catch_signals = 0;
+/*	if (argc >= 3 && !ft_strncmp(argv[1], "-c", 3))
 	{
 		input = argv[2];
 		if (!input)
@@ -60,19 +65,21 @@ int main(int argc, char **argv, char **envp)
 			ft_cmdclear(&cmd);
 		}
 		exit(err.code);
-	}
+	}*/
 	while(1)
 	{
+//		if (isatty(fileno(stdin)))
+		test = get_value(&env, "SHLVL");
 		signal_handling();
-		if (isatty(fileno(stdin)))
-			input = readline(CYELLOW "[Minishell]: " RESET);
-		else
+		input = readline(test);
+		signal_handling_child();
+/*		else
 		{
 			char *line;
 			line = get_next_line(fileno(stdin));
 			input = ft_strtrim(line, "\n");
 			free(line);
-		}
+		}*/
 		//input = readline(CYELLOW "[Minishell]: " RESET);
 		if (!input)
 			quit_eof(&env, &cmd, &err);
