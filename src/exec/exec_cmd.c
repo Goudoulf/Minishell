@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe_minishell.c                                   :+:      :+:    :+:   */
+/*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 13:44:07 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/18 16:12:13 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/19 14:43:42 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ static int	exec_one(t_cmd *cmd, t_list **lst, t_error *err)
 {
 	int	fd;
 
-	if (for_each_here_doc(cmd, lst, err) == 1)
-		return (1);
+	if (for_each_here_doc(cmd, lst, err) == -1)
+		return (-1);
 	if (cmd->cmd && is_builtin(cmd->cmd))
 	{
 		fd = 1;
@@ -25,12 +25,13 @@ static int	exec_one(t_cmd *cmd, t_list **lst, t_error *err)
 			do_redirection_one(cmd, &fd);
 		exec_builtin(cmd->cmd, lst, err, fd);
 		if (fd != 1)
-			close(fd);
+			if (close(fd) != 0)
+				perror(ft_itoa(fd));
 		return (err->code);
 	}
 	cmd->pid = fork();
 	if (cmd->pid == -1)
-		return (1);
+		return (-1);
 	if (cmd->pid == 0)
 		child(cmd, lst, err);
 	if (is_here_doc(cmd))
@@ -40,29 +41,34 @@ static int	exec_one(t_cmd *cmd, t_list **lst, t_error *err)
 
 int	exec(t_cmd *cmd, t_list **lst, t_error *err)
 {
+	int	return_value;
+
 	if (!cmd->next)
 	{
-		if (exec_one(cmd, lst, err) != 0)
-			return (err->code);
+		return_value = exec_one(cmd, lst, err);
+		return (return_value);
 	}
 	else
 	{
-		if (exec_pipe(cmd, lst, err) != 0)
-			return (err->code);
+		return_value = exec_pipe(cmd, lst, err);
+		return (return_value);
 	}
-	return (0);
 }
 
 int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 {
 	int		status;
 	int		last_status;
+	int		ret_value;
 	pid_t	wpid;
 
 	status = 0;
 	wpid = 0;
-	if (exec(cmd, lst, err) != 0)
-		return (err->code);
+	ret_value = exec(cmd, lst, err);
+	if (ret_value == -1)
+		return (1);
+	else if (ret_value != 0)
+		return (ret_value);
 	while (cmd->next)
 		cmd = cmd->next;
 	while (wpid != -1 || errno != ECHILD)
@@ -70,7 +76,6 @@ int	exec_line(t_cmd *cmd, t_list **lst, t_error *err)
 		wpid = waitpid(0, &status, 0);
 		if (wpid == cmd->pid)
 			last_status = status;
-		continue ;
 	}
 	if (WIFEXITED(last_status))
 		return (WEXITSTATUS(last_status));

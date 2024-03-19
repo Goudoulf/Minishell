@@ -6,7 +6,7 @@
 /*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 16:06:13 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/18 16:06:23 by rjacq            ###   ########.fr       */
+/*   Updated: 2024/03/19 13:28:20 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	for_each_here_doc(t_cmd *cmd, t_list **env, t_error *err)
 				closepipe(cmd->pipe_dchevron);
 			first = false;
 			if (pipe(cmd->pipe_dchevron))
-				return (1);
+				return (-1);
 			do_here_doc(&cmd->here_doc[i][2], cmd->pipe_dchevron, env, err);
 		}
 		cmd = cmd->next;
