@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 08:03:34 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/16 13:59:42 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/19 15:43:47 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	ft_pwd(t_error *err, int fd, int size, int i)
 
 	str = malloc(sizeof(char) * size + 1);
 	if (!str)
-		return (1);
+		quit_error(err);
 	while (i * size < 4096)
 	{
 		temp = getcwd(str, size * i);
@@ -38,7 +38,7 @@ int	ft_pwd(t_error *err, int fd, int size, int i)
 			i++;
 			str = malloc(sizeof(char) * size * i + 1);
 			if (!str)
-				return (1);
+				quit_error(err);
 		}
 		else
 			return (print_pwd(temp, fd, err));

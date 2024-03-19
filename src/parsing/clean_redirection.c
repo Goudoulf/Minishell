@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 11:25:03 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/15 22:47:38 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/19 15:41:42 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,27 +30,30 @@ static size_t	size_of_heredoc(char **redirect)
 	return (size);
 }
 
-static char	**create_here_doc(char **redirect)
+static char	**create_here_doc(char **redirect, t_error *err, int i, int j)
 {
 	size_t	size;
-	int		i;
-	int		j;
 	char	**tab;
 
-	i = 0;
-	j = 0;
 	size = size_of_heredoc(redirect);
 	if (!size)
 		return (NULL);
 	tab = create_tab(size);
-	while (redirect[i])
+	if (!tab)
+		quit_error(err);
+	while (redirect[++i])
 	{
 		if (redirect[i][0] == '<' && redirect[i][1] == '<')
 		{
 			tab[j] = ft_strdup(redirect[i]);
+			if (!tab[j])
+			{
+				free_tab(tab);
+				free(tab);
+				quit_error(err);
+			}
 			j++;
 		}
-		i++;
 	}
 	return (tab);
 }
@@ -83,7 +86,7 @@ static char	**delete_here_doc(char **redirect, int i, int j)
 	return (tab);
 }
 
-void	clean_redirection(t_cmd **cmd)
+void	clean_redirection(t_cmd **cmd, t_error *err)
 {
 	t_cmd	*temp;
 
@@ -92,7 +95,7 @@ void	clean_redirection(t_cmd **cmd)
 	{
 		if (temp->redirection)
 		{
-			temp->here_doc = create_here_doc(temp->redirection);
+			temp->here_doc = create_here_doc(temp->redirection, err, -1, 0);
 			temp->redirection = delete_here_doc(temp->redirection, 0, 0);
 		}
 		temp = temp->next;

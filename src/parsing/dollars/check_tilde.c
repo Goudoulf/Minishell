@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 13:13:06 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/18 15:56:45 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/19 12:25:53 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	start_tilde(char *line, int tilde_num)
 	return (-1);
 }
 
-char	*check_tilde(char *line, t_list **env)
+char	*check_tilde(char *line, t_list **env, t_error *err)
 {
 	int		i;
 	int		j;
@@ -74,7 +74,7 @@ char	*check_tilde(char *line, t_list **env)
 	{
 		line = replace_tilde(line, env, j);
 		if (!line)
-			return (NULL);
+			quit_error(err);
 		new_count = count_tilde(line);
 		if (new_count == old_count)
 			j++;

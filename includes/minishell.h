@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/18 17:14:25 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/19 15:23:46 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,9 @@ typedef struct s_error
 {
 	unsigned int	code;
 	bool			do_exit;
+	t_list			**env;
+	t_cmd			**cmd;
+	char			**input;
 }				t_error;
 
 // core
@@ -68,8 +71,9 @@ char	*ft_pwd2(int size, int i);
 
 // init
 
-int		init_all(t_list **env, t_error *err, char **envp);
+int		init_all(t_list **env, t_error *err, char **envp, t_cmd **cmd);
 int		inc_shell_lvl(t_list **env);
+void	quit_error(t_error *err);
 
 // utils
 
@@ -112,21 +116,23 @@ void	ft_cmd_print(t_cmd **cmd);
 // parsing
 
 void	line_parsing(t_cmd **cmd, char *line, t_list **env, t_error *err);
-char	*del_space_chevron(char *line);
+char	*del_space_chevron(char *line, t_error *err);
 int		check_line_error(char *line, t_error *err);
-char	*add_space_chevron(char *line);
+char	*add_space_chevron(char *line, t_error *err);
 char	*check_dollars(char *line, t_list **env, t_error *err);
 char	*replace_dollar(char *line, t_list **env, int start, t_error *err);
 int		start_dollar(char *line, int dollar_num);
-char	**split_pipe(char *line);
-char	*line_to_cmd(t_cmd **cmd, char *line, int i, char *new_line);
-void	line_to_cmd2(t_cmd **cmd, char *line);
-void	clean_quote(t_cmd **cmd);
-void	clean_redirection(t_cmd **cmd);
+char	**split_pipe(char *line, t_error *err);
+char	*line_to_cmd(t_cmd **cmd, char *line, t_error *err, char *new_line);
+void	line_to_cmd2(t_cmd **cmd, char *line, t_error *err);
+void	clean_quote(t_cmd **cmd, t_error *err);
+void	clean_redirection(t_cmd **cmd, t_error *err);
 int		start_tilde(char *line, int tilde_num);
-char	*check_tilde(char *line, t_list **env);
+char	*check_tilde(char *line, t_list **env, t_error *err);
 char	*replace_tilde(char *line, t_list **env, int start);
 void	set_quote(bool *quote, char *c_quote, char char_line);
+int		not_in_quote(char *s, int j);
+char	*env_replace2(char *temp, t_list *env_m, t_error *err);
 
 size_t	cmd_count(char *s);
 size_t	in_count(char *line);

@@ -15,7 +15,7 @@ NAME = minishell
 SRCS_FILE = main.c check_cmd.c signal.c ./utils/ft_echo.c ./utils/ft_pwd.c ./utils/list/ft_lst_add_back.c \
 			./utils/list/ft_lst_clear.c ./utils/list/ft_lst_print.c ./utils/list/ft_lst_new.c\
 			init/init.c ./parsing/parsing.c ./parsing/clean_line/clean_line.c \
-			./parsing/split_pipe/split_pipe.c ./parsing/line_to_cmd.c \
+			./parsing/split_pipe/split_pipe.c ./parsing/line_to_cmd.c ./parsing/line_to_cmd2.c\
 			./utils/count_out_in/count_out_in.c ./utils/ft_strtok_quote.c ./utils/list/ft_cmd_clear.c \
 			./utils/list/ft_cmd_print.c ./parsing/find_path.c ./utils/ft_join.c \
 			./utils/get_value.c ./utils/ft_export.c ./utils/ft_unset.c \

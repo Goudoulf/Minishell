@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 19:08:44 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/18 16:37:01 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/19 15:58:40 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,14 @@ static void	cmd_dollars(t_cmd **cmd, t_list **env, t_error *err, int i)
 	}
 }
 
+static void	final_clean(t_cmd **cmd, t_list **env, t_error *err)
+{
+	cmd_dollars(cmd, env, err, -1);
+	clean_quote(cmd, err);
+	clean_redirection(cmd, err);
+	cmd_add_path(cmd, env);
+}
+
 void	line_parsing(t_cmd **cmd, char *line, t_list **env, t_error *err)
 {
 	char	*line_temp;
@@ -43,27 +51,23 @@ void	line_parsing(t_cmd **cmd, char *line, t_list **env, t_error *err)
 	int		i;
 
 	i = 0;
-	line_temp = del_space_chevron(line);
-	line_temp = add_space_chevron(line_temp);
-	line_temp = check_tilde(line_temp, env);
-	line_tab = split_pipe(line_temp);
+	line_temp = del_space_chevron(line, err);
+	line_temp = add_space_chevron(line_temp, err);
+	line_temp = check_tilde(line_temp, env, err);
+	line_tab = split_pipe(line_temp, err);
 	while (line_tab && line_tab[i])
 	{
-		line_temp = line_to_cmd(cmd, line_tab[i], 0, NULL);
+		line_temp = line_to_cmd(cmd, line_tab[i], err, NULL);
 		if (line_temp)
 		{
 			line_temp = check_dollars(line_temp, env, err);
-			line_to_cmd2(cmd, line_temp);
+			line_to_cmd2(cmd, line_temp, err);
 		}
 		i++;
-	}	
+	}
 	if (line_tab)
 	{
-		cmd_dollars(cmd, env, err, -1);
-		clean_quote(cmd);
-		clean_redirection(cmd);
-		cmd_add_path(cmd, env);
+		final_clean(cmd, env, err);
 		free(line_tab);
 	}
-/*ft_cmd_print(cmd);*/
 }

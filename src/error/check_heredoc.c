@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/16 10:13:07 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/18 14:10:59 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/19 16:08:26 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,22 @@ static void	do_here_doc(char *limiter)
 
 	buf = readline("> ");
 	if (buf == NULL)
-		return ((void)write(2, "minishell: warning: here-document delimited\
-				by end-of-file (wanted `stop')\n", 75));
+	{
+		ft_putstr_fd("minishell: warning: here-document delimited", 2);
+		ft_putstr_fd("by end-of-file (wanted `stop')\n", 2);
+		return ;
+	}
 	size = ft_strlen(limiter) + 1;
 	while (ft_strncmp(buf, limiter, size))
 	{
 		free(buf);
 		buf = readline("> ");
 		if (buf == NULL)
-			return ((void)write(2, "minishell: warning: here-document delimited\
-				by end-of-file (wanted `stop')\n", 75));
+		{
+			ft_putstr_fd("minishell: warning: here-document delimited", 2);
+			ft_putstr_fd("by end-of-file (wanted `stop')\n", 2);
+			return ;
+		}
 	}
 	free(buf);
 }

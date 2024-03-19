@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 13:17:32 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/16 10:09:03 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/19 15:56:09 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,17 @@ static size_t	new_size(char *str, size_t i)
 	return (count);
 }
 
-static char	*delete_quote(char *cmd_arg, size_t i, size_t j, char c_quote)
+static char	*delete_quote(char *cmd_arg, size_t j, char c_quote, t_error *err)
 {
 	char	*temp;
 	size_t	size;
+	size_t	i;
 
+	i = 0;
 	size = new_size(cmd_arg, 0);
 	temp = malloc(sizeof(char) * (size + 1));
 	if (!temp)
-		return (NULL);
+		quit_error(err);
 	while (j < size)
 	{
 		if ((cmd_arg[i] == '\'' || cmd_arg[i] == '\"') && !c_quote)
@@ -58,7 +60,7 @@ static char	*delete_quote(char *cmd_arg, size_t i, size_t j, char c_quote)
 	return (temp);
 }
 
-void	clean_quote(t_cmd **cmd)
+void	clean_quote(t_cmd **cmd, t_error *err)
 {
 	t_cmd	*temp;
 	int		i;
@@ -70,13 +72,14 @@ void	clean_quote(t_cmd **cmd)
 	{
 		i = -1;
 		while (temp->cmd && temp->cmd[++i])
-			temp->cmd[i] = delete_quote(temp->cmd[i], 0, 0, 0);
+			temp->cmd[i] = delete_quote(temp->cmd[i], 0, 0, err);
 		i = -1;
 		while (temp->redirection && temp->redirection[++i])
-			temp->redirection[i] = delete_quote(temp->redirection[i], 0, 0, 0);
+			temp->redirection[i] = delete_quote(temp->redirection[i], \
+				0, 0, err);
 		i = -1;
 		while (temp->here_doc && temp->here_doc[++i])
-			temp->here_doc[i] = delete_quote(temp->here_doc[i], 0, 0, 0);
+			temp->here_doc[i] = delete_quote(temp->here_doc[i], 0, 0, err);
 		temp = temp->next;
 	}
 }

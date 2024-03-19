@@ -6,16 +6,18 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 11:48:48 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/18 15:10:03 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/19 15:52:00 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	init_err(t_error *err)
+static void	init_err(t_error *err, t_list **env, t_cmd **cmd)
 {
 	err->code = 0;
 	err->do_exit = false;
+	err->cmd = cmd;
+	err->env = env;
 }
 
 static size_t	ft_lstsize(t_list *lst)
@@ -35,7 +37,7 @@ static size_t	ft_lstsize(t_list *lst)
 
 static t_list	**init_env_list(t_list **env, char **envp, int i)
 {
-	t_list *temp;
+	t_list	*temp;
 
 	if (!*envp)
 	{
@@ -60,9 +62,9 @@ static t_list	**init_env_list(t_list **env, char **envp, int i)
 	return (env);
 }
 
-int	init_all(t_list **env, t_error *err, char **envp)
+int	init_all(t_list **env, t_error *err, char **envp, t_cmd **cmd)
 {
-	init_err(err);
+	init_err(err, env, cmd);
 	if (!init_env_list(env, envp, -1))
 		return (0);
 	if (*envp)

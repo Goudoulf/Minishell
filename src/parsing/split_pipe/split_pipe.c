@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 09:04:47 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/18 16:13:48 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/19 12:49:14 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,16 @@ static size_t	pipe_count(char *line)
 
 	i = 0;
 	pipe_count = 0;
-	while (line[i])
+	while (line && line[i])
 	{
 		if (line[i] == '|')
 			pipe_count++;
 		i++;
 	}
-	return (pipe_count + 1);
+	return (pipe_count);
 }
 
-char	**split_pipe(char *line)
+char	**split_pipe(char *line, t_error *err)
 {
 	size_t	n_pipe;
 	int		i;
@@ -51,20 +51,21 @@ char	**split_pipe(char *line)
 
 	temp_tab = NULL;
 	i = 0;
-	if (!line)
-		return (NULL);
+	(void)err;
 	n_pipe = pipe_count(line);
 	delim = "|";
-	temp_tab = create_tab(n_pipe);
+	temp_tab = create_tab(n_pipe + 1);
 	token = ft_strtok_quote(line, delim);
-	while (token)
+	while (token && temp_tab)
 	{
 		temp_tab[i] = ft_strdup(token);
 		if (!temp_tab[i])
-			return (clear_tab(temp_tab, i - 1, line));
+			clear_tab(temp_tab, i - 1, line);
 		token = ft_strtok_quote(NULL, delim);
 		i++;
 	}
 	free(line);
+	if (!temp_tab)
+		quit_error(err);
 	return (temp_tab);
 }

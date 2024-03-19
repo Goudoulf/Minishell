@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 08:11:15 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/19 11:38:11 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/19 15:59:46 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,72 +42,55 @@ static int	end_dollar(char *line, int start)
 	return (end);
 }
 
-static char	*env_replace(char *temp, t_list *env_m, t_error *err)
+static char	*set_temp3(char *temp3, t_error *err)
 {
-	if (!env_m && !ft_strncmp("?", temp, 2))
-	{
-		free(temp);
-		temp = ft_itoa(err->code);
-		return (temp);
-	}
-	else if (!env_m)
-	{
-		free(temp);
-		temp = ft_strdup("\0");
-		return (temp);
-	}
-	else
-	{
-		free(temp);
-		temp = ft_strdup(env_m->var_content);
-		return (temp);
-	}
+	t_list	*env_match;
+
+	env_match = check_cmd_env(temp3, err->env);
+	temp3 = env_replace2(temp3, env_match, err);
+	if (!temp3)
+		return (NULL);
+	return (temp3);
 }
 
-static int	not_in_quote(char *s, int j)
+static char	*set_temp(char **line, int start, int end, t_error *err)
 {
-	char	c_quote;
-	bool	quote;
-	int		i;
+	char	*temp1;
+	char	*temp2;
+	char	*temp3;
 
-	i = 0;
-	c_quote = 0;
-	quote = false;
-	while (s[i])
+	temp1 = ft_substr(*line, 0, start);
+	temp2 = ft_substr(*line, start + 1 + end, ft_strlen(*line));
+	temp3 = ft_substr(*line, start + 1, end);
+	free(*line);
+	if (!temp1 || !temp2 || !temp3)
+		quit_error(err);
+	temp3 = set_temp3(temp3, err);
+	*line = ft_strjoin(temp1, temp3);
+	free_temp(temp1, temp3, NULL);
+	if (!*line)
 	{
-		if (quote == false && (s[i] == '\"' || s[i] == '\''))
-			set_quote(&quote, &c_quote, s[i]);
-		else if (quote == true && s[i] == c_quote)
-			set_quote(&quote, &c_quote, s[i]);
-		if (i == j && quote == false)
-			return (1);
-		i++;
+		free(temp2);
+		quit_error(err);
 	}
-	return (0);
+	temp1 = ft_strjoin(*line, temp2);
+	free_temp(*line, temp2, NULL);
+	if (!temp1)
+		quit_error(err);
+	return (temp1);
 }
 
 char	*replace_dollar(char *line, t_list **env, int start, t_error *err)
 {
-	t_list	*env_match;
-	char	*temp1;
-	char	*temp2;
-	char	*temp3;
 	int		end;
+	char	*new_line;
 
+	(void)env;
 	start = start_dollar(line, start);
 	if ((ft_is_end(line[start + 1]) && !not_in_quote(line, start))
 		|| line[start + 1] == '\0' || line[start + 1] == 47)
 		return (line);
 	end = end_dollar(line, start);
-	temp1 = ft_substr(line, 0, start);
-	temp2 = ft_substr(line, start + 1 + end, ft_strlen(line));
-	temp3 = ft_substr(line, start + 1, end);
-	env_match = check_cmd_env(temp3, env);
-	temp3 = env_replace(temp3, env_match, err);
-	free(line);
-	line = ft_strjoin(temp1, temp3);
-	free(temp1);
-	temp1 = ft_strjoin(line, temp2);
-	free_temp(temp2, temp3, line);
-	return (temp1);
+	new_line = set_temp(&line, start, end, err);
+	return (new_line);
 }
