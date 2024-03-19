@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/19 15:23:46 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/19 16:17:25 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,9 @@ void	child_pipe(t_cmd *cmd, int pipefd[2][2], t_list **lst, t_error *err);
 void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err);
 int		for_each_here_doc(t_cmd *cmd, t_list **env, t_error *err);
 int		exec_pipe(t_cmd *cmd, t_list **lst, t_error *err);
+void	quit_error(t_error *err);
+void	quit_exit(t_list **env, t_cmd **cmd, t_error *err);
+void	quit_eof(t_list **env, t_cmd **cmd, t_error *err);
 
 // gnl
 

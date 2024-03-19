@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/16 10:13:07 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/19 16:08:26 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/19 17:04:44 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,25 +39,25 @@ static void	do_here_doc(char *limiter)
 	free(buf);
 }
 
-static size_t	check_hd(char *in, size_t i, size_t j, size_t count)
+static size_t	check_hd(char *p, size_t i, size_t j, size_t count)
 {
 	char	*limiter;
 
-	while (in[i] == ' ')
+	while (p[i] == ' ')
 		i++;
-	if (in[i] == '>' || in[i] == '<' || in[i] == '|')
-		return (ft_strlen(in));
-	while (in[i] != ' ' && in[i] != '>' && in[i] != '<' && in[i] != '|')
+	if (p[i] == '>' || p[i] == '<' || p[i] == '|')
+		return (ft_strlen(p));
+	while (p[i] && p[i] != ' ' && p[i] != '>' && p[i] != '<' && p[i] != '|')
 	{
 		count++;
 		i++;
 	}
 	limiter = malloc(sizeof (char) * count + 1);
 	if (!limiter)
-		return (ft_strlen(in));
+		return (ft_strlen(p));
 	i -= count;
-	while (in[i] != ' ' && in[i] != '>' && in[i] != '<' && in[i] != '|')
-		limiter[j++] = in[i++];
+	while (p[i] && p[i] != ' ' && p[i] != '>' && p[i] != '<' && p[i] != '|')
+		limiter[j++] = p[i++];
 	limiter[j] = '\0';
 	if (limiter && limiter[0])
 	{
@@ -69,7 +69,7 @@ static size_t	check_hd(char *in, size_t i, size_t j, size_t count)
 
 void	check_here_doc(char *in, size_t i)
 {
-	while (in && in[++i])
+	while (in && i < ft_strlen(in))
 	{
 		if (in[i] == '>')
 		{
