@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_cmd_error.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: rjacq < rjacq@student.42lyon.fr >          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 15:48:36 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/20 08:41:10 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/20 09:57:24 by rjacq            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,8 @@ void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 		if (cmd->path)
 			execve(cmd->path, cmd->cmd, envp);
 		free_tab(envp);
-		free(envp);
+		if (envp)
+			free(envp);
 	}
 	if (get_value(lst, "PATH") == NULL)
 		path_null_error(cmd);
