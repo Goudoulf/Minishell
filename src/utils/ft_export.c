@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 08:31:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/19 15:51:11 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/20 08:48:45 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	ft_export(t_list **env, char **cmd, t_error *err, int fd)
 	int		i;
 	t_list	*temp;
 
-	i = -1;
+	i = 0;
 	if (tab_size(cmd) < 2)
 	{
 		env_print(env, fd);

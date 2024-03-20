@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 15:48:36 by rjacq             #+#    #+#             */
-/*   Updated: 2024/03/19 17:20:09 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/20 08:41:10 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static void	path_null_error(t_cmd *cmd)
 		print_error(false, "Command not found", cmd->cmd[0], 127);
 	if (ft_strncmp("./", cmd->cmd[0], 3) == 0)
 		print_error(true, "Is a directory", cmd->cmd[0], 126);
-	if (access(cmd->cmd[0], F_OK) == 0) 
+	if (access(cmd->cmd[0], F_OK) == 0)
 		print_error(true, "Permission denied", cmd->cmd[0], 126);
 	else
 		print_error(true, "No such file or directory", cmd->cmd[0], 127);
@@ -86,6 +86,7 @@ void	do_cmd(t_cmd *cmd, t_list **lst, t_error *err)
 		if (cmd->path)
 			execve(cmd->path, cmd->cmd, envp);
 		free_tab(envp);
+		free(envp);
 	}
 	if (get_value(lst, "PATH") == NULL)
 		path_null_error(cmd);

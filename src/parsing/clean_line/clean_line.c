@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 09:55:53 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/19 12:22:15 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/20 07:48:24 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 static size_t	chevron_space_size(char *str, size_t i, size_t j, char c_quote)
 {
-	while (str[i])
+	while (str && i < ft_strlen(str))
 	{
 		if ((str[i] == '\"' || str[i] == '\''))
 		{

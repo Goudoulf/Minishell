@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 08:30:06 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/18 10:56:30 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/20 07:55:04 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,22 +28,22 @@ t_cmd	*ft_cmd_new(char **redirection)
 	return (new);
 }
 
-void	ft_cmdadd_back(t_cmd **cmd, t_cmd *new)
+void	ft_cmdadd_back(t_cmd **cmd, t_cmd *new_lst)
 {
 	t_cmd	*temp;
 
 	temp = *cmd;
-	if (new == NULL)
+	if (new_lst == NULL)
 		return ;
 	if (*cmd == NULL)
 	{
-		*cmd = new;
-		new->next = NULL;
+		*cmd = new_lst;
+		new_lst->next = NULL;
 		return ;
 	}
 	while (temp->next != NULL)
 		temp = temp->next;
-	temp->next = new;
+	temp->next = new_lst;
 }
 
 void	cmd_add_path(t_cmd **cmd, t_list **env)

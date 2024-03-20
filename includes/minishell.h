@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 10:15:38 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/19 16:17:25 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/20 07:05:09 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void	signal_handling_child(void);
 // list
 
 t_list	*ft_lst_new(char *content);
-void	ft_lstadd_back(t_list **lst, t_list *new);
+void	ft_lstadd_back(t_list **lst, t_list *new_lst);
 void	ft_lst_print(t_list **list, t_error *err, int fd);
 void	ft_lstclear(t_list **lst);
 t_list	*get_next_min(t_list **stack);
@@ -108,7 +108,7 @@ char	*str_from_char(char *str);
 // cmd
 
 t_cmd	*ft_cmd_new(char **redirection);
-void	ft_cmdadd_back(t_cmd **cmd, t_cmd *new);
+void	ft_cmdadd_back(t_cmd **cmd, t_cmd *new_lst);
 t_list	*check_cmd_env(char *arg, t_list **env);
 void	ft_cmdclear(t_cmd **cmd);
 void	ft_cmd_print(t_cmd **cmd);

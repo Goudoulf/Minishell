@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 09:11:43 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/18 14:11:19 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/20 07:22:46 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ static void	sigint_handler(int sig)
 static void	sigint_handler_child(int sig)
 {
 	(void)sig;
+	write(1, "\n", 1);
 	rl_on_new_line();
 }
 
