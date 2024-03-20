@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:12:26 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/20 08:43:12 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/20 10:05:00 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,10 @@
 
 static void	ft_minishell(t_cmd **cmd, t_list **env, t_error *err, char *input)
 {
-	char	*line;
-
 	while (1)
 	{
 		signal_handling();
-		//input = readline(CYELLOW "[Minishell]: " RESET);
-		if (isatty(fileno(stdin)))
-		{
-			input = readline(CYELLOW "[Minishell]: " RESET);
-		}
-		else
-		{
-			line = get_next_line(fileno(stdin));
-			input = ft_strtrim(line, "\n");
-			free(line);
-		}
+		input = readline(CYELLOW "[Minishell]: " RESET);
 		if (!input)
 			quit_eof(env, cmd, err);
 		signal_handling_child();

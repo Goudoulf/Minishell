@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 09:20:17 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/19 16:00:31 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/20 10:08:35 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static void	only_exit(t_error *err)
 {
 	err->do_exit = true;
 	err->code = 0;
-	//ft_putstr_fd("exit\n", 2);
+	ft_putstr_fd("exit\n", 2);
 }
 
 void	ft_exit(char **cmd, t_error *err, unsigned char code)

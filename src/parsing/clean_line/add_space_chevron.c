@@ -6,12 +6,11 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 09:18:20 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/19 12:23:07 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/20 09:22:35 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-// gerer size 0 ou null
 
 static size_t	chevron_add_space_size(char *str, size_t i, size_t space)
 {
@@ -20,7 +19,7 @@ static size_t	chevron_add_space_size(char *str, size_t i, size_t space)
 	c_quote = 0;
 	if (!str)
 		return (0);
-	while (str[i])
+	while (str && i < ft_strlen(str))
 	{
 		if ((str[i] == '\"' || str[i] == '\''))
 		{

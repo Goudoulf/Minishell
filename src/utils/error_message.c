@@ -6,7 +6,7 @@
 /*   By: cassie <cassie@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:34:15 by cassie            #+#    #+#             */
-/*   Updated: 2024/03/16 10:58:28 by cassie           ###   ########.fr       */
+/*   Updated: 2024/03/20 10:09:25 by cassie           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	stderr_exit_f(const char *str1, const char *str2, int r, t_error *err)
 
 void	stderr_exit_t(const char *str1, const char *str2, int r, t_error *err)
 {
-	//ft_putstr_fd("exit\n", 2);
+	ft_putstr_fd("exit\n", 2);
 	write(2, "minishell: exit: ", 17);
 	write(2, str1, ft_strlen(str1));
 	write(2, str2, ft_strlen(str2));
